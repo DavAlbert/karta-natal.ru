@@ -25,9 +25,12 @@ class NatalChartController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'gender' => 'required|in:male,female',
+            'purpose' => 'required|in:love,career,health,finance,personal,general',
             'birth_date' => 'required|date',
             'birth_time' => 'nullable|date_format:H:i',
-            'birth_place' => 'required|string|max:255',
+            'city_id' => 'required|exists:cities,id',
+            'marketing_consent' => 'nullable|boolean',
         ]);
 
         // Find or Create User
@@ -36,33 +39,46 @@ class NatalChartController extends Controller
             [
                 'name' => $validated['name'],
                 'password' => Hash::make(Str::random(16)), // Random password user won't know initially
+                'marketing_consent' => $validated['marketing_consent'] ?? false,
             ]
         );
 
-        // Auto-login to allow viewing the chart immediately
-        Auth::login($user);
+        // Update marketing consent if user already exists
+        if (!$user->wasRecentlyCreated && isset($validated['marketing_consent'])) {
+            $user->marketing_consent = $validated['marketing_consent'];
+            $user->save();
+        }
 
-        // Calculate Data (Mock for now)
+        // DO NOT auto-login - user must access via email link
+
+        // Get city from database
+        $city = \App\Models\City::findOrFail($validated['city_id']);
+
+        // Calculate Data with city coordinates
         $service = new AstrologyCalculationService();
         $chartData = $service->calculate(
             $validated['birth_date'],
-            $validated['birth_time'] ?? '12:00', // Default if not provided
-            55.75,
-            37.61 // Default Lat/Lon
+            $validated['birth_time'] ?? '12:00',
+            $city->latitude,
+            $city->longitude
         );
 
-        // Create Chart
+        // Create Chart with access token
         $chart = NatalChart::create([
             'user_id' => $user->id,
             'name' => $validated['name'] . "'s Chart",
+            'gender' => $validated['gender'],
+            'purpose' => $validated['purpose'],
             'birth_date' => $validated['birth_date'],
             'birth_time' => $validated['birth_time'],
-            'birth_place' => $validated['birth_place'],
-            'latitude' => 55.75, // Placeholder
-            'longitude' => 37.61, // Placeholder
-            'timezone' => 'UTC',
+            'birth_place' => $city->name,
+            'city_id' => $city->id,
+            'latitude' => $city->latitude,
+            'longitude' => $city->longitude,
+            'timezone' => 'GMT+' . $city->timezone_gmt,
             'chart_data' => $chartData,
             'type' => 'natal',
+            'access_token' => Str::random(64), // Secure token for email access
         ]);
 
         // Send Email
@@ -73,9 +89,68 @@ class NatalChartController extends Controller
         }
 
         return response()->json([
-            'message' => 'Chart ready!',
-            'redirect_url' => route('charts.show', $chart)
+            'message' => 'Chart calculated! Check your email for the access link.',
         ]);
+    }
+
+    public function accessViaToken(string $token)
+    {
+        $chart = NatalChart::where('access_token', $token)->firstOrFail();
+        $user = $chart->user;
+
+        // Check if user has set a password (password is not random)
+        // We'll use a simple check: if password was created recently and user never logged in
+        // Better approach: add a 'password_set' boolean to users table
+        // For now, we'll redirect all first-time token users to password setup
+
+        if (!$user->email_verified_at) {
+            // First time access - redirect to password setup
+            return redirect()->route('charts.set-password', ['natalChart' => $chart->id, 'token' => $token]);
+        }
+
+        // User has already set password, just log them in
+        Auth::login($user);
+        return redirect()->route('charts.show', $chart);
+    }
+
+    public function showSetPassword(NatalChart $natalChart, Request $request)
+    {
+        $token = $request->query('token');
+
+        // Verify token matches
+        if ($natalChart->access_token !== $token) {
+            abort(403, 'Invalid access token');
+        }
+
+        return view('auth.set-password', compact('natalChart', 'token'));
+    }
+
+    public function storePassword(NatalChart $natalChart, Request $request)
+    {
+        $token = $request->input('token');
+
+        // Verify token
+        if ($natalChart->access_token !== $token) {
+            abort(403, 'Invalid access token');
+        }
+
+        $validated = $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = $natalChart->user;
+        $user->password = Hash::make($validated['password']);
+        $user->email_verified_at = now(); // Mark as verified
+        $user->save();
+
+        // Clear the access token (one-time use)
+        $natalChart->access_token = null;
+        $natalChart->save();
+
+        // Log in the user
+        Auth::login($user);
+
+        return redirect()->route('charts.show', $natalChart)->with('status', 'Password set successfully!');
     }
 
     public function show(NatalChart $natalChart)

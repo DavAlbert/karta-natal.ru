@@ -32,9 +32,9 @@ class AstrologyCalculationService
             return ($d < 0) ? $d + 360 : $d;
         };
 
-        // Helper: Get Sign and Degree (e.g., 45 deg -> Taurus 15)
+        // Helper: Get Sign and Degree (e.g., 45 deg -> Телец 15)
         $getSignData = function ($long) {
-            $signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+            $signs = ['Овен', 'Телец', 'Близнецы', 'Рак', 'Лев', 'Дева', 'Весы', 'Скорпион', 'Стрелец', 'Козерог', 'Водолей', 'Рыбы'];
             $long = fmod($long, 360);
             if ($long < 0)
                 $long += 360;
@@ -43,7 +43,7 @@ class AstrologyCalculationService
             $deg = $long - ($idx * 30);
 
             return [
-                'sign' => $signs[$idx] ?? 'Aries',
+                'sign' => $signs[$idx] ?? 'Овен',
                 'degree' => $deg,
                 'absolute_degree' => $long
             ];
@@ -125,7 +125,7 @@ class AstrologyCalculationService
         $results = [
             'sun' => array_merge($sunData, [
                 'name' => 'Солнце',
-                'house' => '10', // House calc for planets is Next Step (Complex), using mock/approx houses?
+                'house' => '10',
                 'description' => 'Ваше Я. ' . $sunData['sign'] . ' наделяет вас уникальной энергией.',
             ]),
             'moon' => array_merge($moonData, [
@@ -139,6 +139,19 @@ class AstrologyCalculationService
             ]),
         ];
 
+        // Planet names in Russian
+        $planetNames = [
+            'mercury' => 'Меркурий',
+            'venus' => 'Венера',
+            'mars' => 'Марс',
+            'jupiter' => 'Юпитер',
+            'saturn' => 'Сатурн',
+            'uranus' => 'Уран',
+            'neptune' => 'Нептун',
+            'pluto' => 'Плутон',
+            'node' => 'Сев. Узел',
+        ];
+
         // Planets
         $all_planets = [];
         // Add Sun/Moon
@@ -150,8 +163,8 @@ class AstrologyCalculationService
         foreach ($planets_calc as $key => $deg) {
             $pData = $getSignData($deg);
             $all_planets[$key] = array_merge($pData, [
-                'name' => ucfirst($key),
-                'retrograde' => false // Calculation of retrograde needs speed check (long2 - long1), skip for MVP
+                'name' => $planetNames[$key] ?? ucfirst($key),
+                'retrograde' => false
             ]);
         }
 
@@ -184,11 +197,11 @@ class AstrologyCalculationService
         // 4. Calculate Aspects
         $aspects = [];
         $aspectRules = [
-            'Conjunction' => ['angle' => 0, 'orb' => 8],
-            'Opposition' => ['angle' => 180, 'orb' => 8],
-            'Trine' => ['angle' => 120, 'orb' => 8],
-            'Square' => ['angle' => 90, 'orb' => 8],
-            'Sextile' => ['angle' => 60, 'orb' => 6],
+            'Соединение' => ['angle' => 0, 'orb' => 8],
+            'Оппозиция' => ['angle' => 180, 'orb' => 8],
+            'Трин' => ['angle' => 120, 'orb' => 8],
+            'Квадрат' => ['angle' => 90, 'orb' => 8],
+            'Секстиль' => ['angle' => 60, 'orb' => 6],
         ];
 
         // Define relevant points for aspects
@@ -219,8 +232,7 @@ class AstrologyCalculationService
                             'planet2' => $all_planets[$p2]['name'],
                             'type' => $type,
                             'orb' => round($orb, 1),
-                            // Simple nature logic
-                            'nature' => in_array($type, ['Square', 'Opposition']) ? 'Tension' : 'Harmony'
+                            'nature' => in_array($type, ['Квадрат', 'Оппозиция']) ? 'Напряжение' : 'Гармония'
                         ];
                     }
                 }

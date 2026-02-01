@@ -14,9 +14,12 @@ class NatalChart extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'gender',
+        'purpose',
         'birth_date',
         'birth_time',
         'birth_place',
+        'city_id',
         'latitude',
         'longitude',
         'timezone',
@@ -24,6 +27,7 @@ class NatalChart extends Model
         'type',
         'report_status',
         'report_content',
+        'access_token',
     ];
 
     protected $casts = [
@@ -38,5 +42,10 @@ class NatalChart extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 }

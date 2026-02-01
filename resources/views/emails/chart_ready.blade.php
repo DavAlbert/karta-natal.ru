@@ -48,11 +48,17 @@
         <p>Расчет вашей натальной карты для <strong>{{ $chart->name }}</strong> успешно завершен.</p>
         <p>Мы проанализировали положение планет в момент вашего рождения.</p>
 
-        <a href="{{ route('charts.show', $chart) }}" class="btn">Посмотреть Расшифровку</a>
+        @if($chart->user->email_verified_at)
+            <p><strong>Нажмите на кнопку ниже, чтобы посмотреть вашу карту:</strong></p>
+            <a href="{{ route('charts.access', $chart->access_token) }}" class="btn">Посмотреть карту</a>
+        @else
+            <p><strong>Нажмите на кнопку ниже, чтобы установить пароль и получить доступ к вашей карте:</strong></p>
+            <a href="{{ route('charts.access', $chart->access_token) }}" class="btn">Установить пароль и посмотреть карту</a>
+        @endif
 
         <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">
             Если кнопка не работает, скопируйте ссылку:<br>
-            {{ route('charts.show', $chart) }}
+            {{ route('charts.access', $chart->access_token) }}
         </p>
     </div>
 </body>

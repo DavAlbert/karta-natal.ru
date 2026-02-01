@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $cities = \App\Models\City::orderBy('name')->get(['id', 'name', 'latitude', 'longitude', 'timezone_gmt']);
+    $defaultCity = \App\Models\City::where('name', 'Москва')->first();
+    return view('welcome', compact('cities', 'defaultCity'));
 });
 
 Route::get('/dashboard', [App\Http\Controllers\NatalChartController::class, 'index'])
@@ -12,6 +14,18 @@ Route::get('/dashboard', [App\Http\Controllers\NatalChartController::class, 'ind
     ->name('dashboard');
 
 Route::post('/calculate', [App\Http\Controllers\NatalChartController::class, 'processAsync'])->name('calculate');
+
+// Token-based access (no auth required)
+Route::get('/charts/access/{token}', [App\Http\Controllers\NatalChartController::class, 'accessViaToken'])
+    ->name('charts.access');
+
+Route::get('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'showSetPassword'])
+    ->name('charts.set-password');
+
+Route::post('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'storePassword'])
+    ->name('charts.store-password');
+
+// Protected routes
 // Route::get('/processing'...) removed as it's now AJAX
 Route::get('/charts/{natalChart}', [App\Http\Controllers\NatalChartController::class, 'show'])
     ->middleware(['auth', 'verified'])

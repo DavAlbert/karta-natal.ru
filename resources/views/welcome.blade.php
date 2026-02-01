@@ -18,6 +18,9 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap"
         rel="stylesheet">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
@@ -78,6 +81,22 @@
             background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
             background-size: 30px 30px;
         }
+
+        .gender-btn input:checked + div {
+            border-color: #fbbf24;
+            background-color: rgba(251, 191, 36, 0.1);
+        }
+
+        .gender-btn input:checked + div i {
+            color: #fbbf24;
+        }
+
+        /* Custom date/time input styling */
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -121,10 +140,7 @@
                     @else
                         <a href="{{ route('login') }}"
                             class="text-indigo-300 font-medium hover:text-white transition-colors">Войти</a>
-                        <a href="{{ route('register') }}"
-                            class="border border-indigo-500 text-indigo-300 px-5 py-2 rounded-full hover:bg-indigo-900/50 transition-colors text-sm uppercase tracking-wider">
-                            Регистрация
-                        </a>
+
                     @endauth
                 </div>
             </div>
@@ -187,39 +203,138 @@
                             @csrf
 
                             <div>
-                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">Ваше имя</label>
-                                <input type="text" name="name" required
+                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                    <i class="fas fa-user mr-1"></i>Ваше имя
+                                </label>
+                                <input type="text" name="name" id="name" required
                                     class="w-full input-professional rounded-lg px-4 py-3" placeholder="Как вас зовут?">
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">Email</label>
-                                <input type="email" name="email" required
+                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                    <i class="fas fa-envelope mr-1"></i>Email
+                                </label>
+                                <input type="email" name="email" id="email" required
                                     class="w-full input-professional rounded-lg px-4 py-3" placeholder="ваш@email.com">
                             </div>
 
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">Дата</label>
-                                    <input type="date" name="birth_date" required
-                                        class="w-full input-professional rounded-lg px-4 py-3">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">Время</label>
-                                    <input type="time" name="birth_time"
-                                        class="w-full input-professional rounded-lg px-4 py-3">
+                            <div>
+                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                    <i class="fas fa-venus-mars mr-1"></i>Пол
+                                </label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="gender-btn cursor-pointer">
+                                        <input type="radio" name="gender" value="male" required class="hidden">
+                                        <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30 hover:border-indigo-600 hover:bg-indigo-900/30 transition-all">
+                                            <i class="fas fa-mars text-indigo-400"></i>
+                                            <span class="text-white text-sm font-medium">Мужской</span>
+                                        </div>
+                                    </label>
+                                    <label class="gender-btn cursor-pointer">
+                                        <input type="radio" name="gender" value="female" required class="hidden">
+                                        <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30 hover:border-indigo-600 hover:bg-indigo-900/30 transition-all">
+                                            <i class="fas fa-venus text-indigo-400"></i>
+                                            <span class="text-white text-sm font-medium">Женский</span>
+                                        </div>
+                                    </label>
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">Место
-                                    рождения</label>
-                                <input type="text" name="birth_place" required
-                                    class="w-full input-professional rounded-lg px-4 py-3" placeholder="Москва, Россия">
+                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                    <i class="fas fa-bullseye mr-1"></i>Цель расчета
+                                </label>
+                                <select name="purpose" id="purpose" required
+                                    class="w-full input-professional rounded-lg px-4 py-3">
+                                    <option value="">Выберите цель...</option>
+                                    <option value="love">Любовь и отношения</option>
+                                    <option value="career">Карьера</option>
+                                    <option value="health">Здоровье</option>
+                                    <option value="finance">Финансы</option>
+                                    <option value="personal">Личностный рост</option>
+                                    <option value="general">Общий анализ</option>
+                                </select>
                             </div>
 
-                            <button type="submit"
-                                class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-4 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                        <i class="far fa-calendar-alt mr-1"></i>Дата рождения
+                                    </label>
+                                    <input type="date" name="birth_date" id="birth_date" required
+                                        class="w-full input-professional rounded-lg px-4 py-3">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                        <i class="far fa-clock mr-1"></i>Время
+                                    </label>
+                                    <input type="time" name="birth_time" id="birth_time" required
+                                        class="w-full input-professional rounded-lg px-4 py-3">
+                                </div>
+                            </div>
+
+
+                            <div class="relative">
+                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>Место рождения
+                                </label>
+                                <div class="relative">
+                                    <input type="text" id="birth_place_search" autocomplete="off"
+                                        class="w-full input-professional rounded-lg px-4 py-3 pr-10"
+                                        placeholder="Выберите или найдите город...">
+                                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                                <input type="hidden" id="city_id" name="city_id" required>
+
+                                <!-- Cities Dropdown -->
+                                <div id="cities-dropdown"
+                                    class="hidden absolute z-50 w-full mt-1 bg-[#1e293b] border border-indigo-500/30 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                    @foreach($cities as $city)
+                                    <div class="city-option px-4 py-3 hover:bg-indigo-900/30 cursor-pointer border-b border-indigo-900/20 last:border-0 transition-colors"
+                                        data-city-id="{{ $city->id }}"
+                                        data-city-name="{{ $city->name }}"
+                                        data-city-lat="{{ $city->latitude }}"
+                                        data-city-lon="{{ $city->longitude }}"
+                                        data-city-tz="{{ $city->timezone_gmt }}">
+                                        <div class="text-white text-sm">{{ $city->name }}</div>
+                                    </div>
+                                    @endforeach
+                                </div>
+
+                                <!-- City Details Display -->
+                                <div id="city-details" class="hidden mt-2 p-3 bg-indigo-900/20 rounded-lg border border-indigo-800/30">
+                                    <div class="grid grid-cols-3 gap-2 text-xs">
+                                        <div>
+                                            <span class="text-indigo-400">Широта:</span>
+                                            <span class="text-white font-mono" id="display-latitude">-</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-indigo-400">Долгота:</span>
+                                            <span class="text-white font-mono" id="display-longitude">-</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-indigo-400">GMT:</span>
+                                            <span class="text-gold-400 font-mono" id="display-timezone">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="mt-4">
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <input type="checkbox" name="marketing_consent" value="1"
+                                        class="mt-1 w-4 h-4 text-indigo-600 bg-indigo-950/30 border-indigo-800 rounded focus:ring-indigo-500 focus:ring-2">
+                                    <span class="text-xs text-indigo-300 leading-relaxed group-hover:text-indigo-200 transition-colors">
+                                        Я хочу получать персонализированные рекомендации, информацию о новых возможностях платформы и эксклюзивные предложения на основе моей натальной карты
+                                    </span>
+                                </label>
+                            </div>
+
+                            <button type="submit" id="submit-btn" disabled
+                                class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-4 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                                 Рассчитать сейчас
                             </button>
 
@@ -367,16 +482,14 @@
                 </div>
 
                 <h2 class="text-3xl font-serif font-bold text-white mb-4">Готово!</h2>
-                <p class="text-indigo-200 mb-8 leading-relaxed">
-                    Мы отправили ссылку на вашу карту вам на почту, чтобы вы не потеряли её.
+                <p class="text-indigo-200 mb-4 leading-relaxed">
+                    Мы отправили ссылку на вашу карту вам на почту.
+                </p>
+                <p class="text-gold-400 font-bold mb-8">
+                    Проверьте email и установите пароль для доступа к карте.
                 </p>
 
-                <button id="viewChartBtn"
-                    class="w-full bg-gold-500 hover:bg-gold-400 text-black font-bold py-4 rounded-lg shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all transform hover:scale-[1.02] mb-4">
-                    ОТКРЫТЬ МОЮ КАРТУ
-                </button>
-
-                <button onclick="document.getElementById('processingModal').classList.add('hidden')"
+                <button onclick="document.getElementById('processingModal').classList.add('hidden'); location.reload();"
                     class="text-sm text-indigo-400 hover:text-white transition-colors">
                     Закрыть
                 </button>
@@ -406,6 +519,41 @@
 
     <!-- AJAX Script -->
     <script>
+        // Form validation
+        const calcForm = document.getElementById('calcForm');
+        const submitBtn = document.getElementById('submit-btn');
+        const nameInput = document.querySelector('input[name="name"]');
+        const emailInput = document.querySelector('input[name="email"]');
+        const genderInputs = document.querySelectorAll('input[name="gender"]');
+        const purposeInput = document.querySelector('select[name="purpose"]');
+        const birthDateInput = document.getElementById('birth_date');
+        const birthTimeInput = document.getElementById('birth_time');
+        const cityIdInputValidation = document.getElementById('city_id');
+
+        function validateForm() {
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const gender = Array.from(genderInputs).some(input => input.checked);
+            const purpose = purposeInput.value;
+            const birthDate = birthDateInput.value;
+            const birthTime = birthTimeInput.value;
+            const cityId = cityIdInputValidation.value;
+
+            const isValid = name && email && gender && purpose && birthDate && birthTime && cityId;
+            submitBtn.disabled = !isValid;
+        }
+
+        // Add event listeners for all form fields
+        nameInput.addEventListener('input', validateForm);
+        emailInput.addEventListener('input', validateForm);
+        genderInputs.forEach(input => input.addEventListener('change', validateForm));
+        purposeInput.addEventListener('change', validateForm);
+        birthDateInput.addEventListener('change', validateForm);
+        birthTimeInput.addEventListener('change', validateForm);
+
+        // Initial validation on page load (for Moscow default)
+        validateForm();
+
         document.getElementById('calcForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -467,13 +615,6 @@
                         // Switch to Success State
                         document.getElementById('loadingState').classList.add('hidden');
                         document.getElementById('successState').classList.remove('hidden');
-
-                        // Set the button link
-                        const btn = document.getElementById('viewChartBtn');
-                        btn.onclick = function () {
-                            window.location.href = data.redirect_url;
-                        };
-
                     }, 4000);
                 })
                 .catch(error => {
@@ -482,6 +623,137 @@
                     modal.classList.add('hidden');
                 });
         });
+
+        // City dropdown with client-side search
+        const searchInput = document.getElementById('birth_place_search');
+        const cityIdInput = document.getElementById('city_id');
+        const dropdown = document.getElementById('cities-dropdown');
+        const cityDetails = document.getElementById('city-details');
+        const displayLatitude = document.getElementById('display-latitude');
+        const displayLongitude = document.getElementById('display-longitude');
+        const displayTimezone = document.getElementById('display-timezone');
+        const allCityOptions = dropdown ? Array.from(dropdown.querySelectorAll('.city-option')) : [];
+
+        // Transliteration map (Latin to Cyrillic)
+        const translitMap = {
+            'a': 'а', 'b': 'б', 'v': 'в', 'g': 'г', 'd': 'д', 'e': 'е', 'yo': 'ё', 'zh': 'ж',
+            'z': 'з', 'i': 'и', 'y': 'й', 'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о',
+            'p': 'п', 'r': 'р', 's': 'с', 't': 'т', 'u': 'у', 'f': 'ф', 'h': 'х', 'kh': 'х',
+            'ts': 'ц', 'ch': 'ч', 'sh': 'ш', 'shch': 'щ', 'shh': 'щ', 'w': 'ш', 'yu': 'ю', 'ya': 'я',
+            'j': 'й', 'c': 'ц', 'x': 'кс', 'q': 'к'
+        };
+
+        function transliterate(text) {
+            let result = text.toLowerCase();
+            // Sort by length (longest first) to handle multi-char mappings
+            const sortedKeys = Object.keys(translitMap).sort((a, b) => b.length - a.length);
+            for (const latin of sortedKeys) {
+                result = result.split(latin).join(translitMap[latin]);
+            }
+            return result;
+        }
+
+        function filterCities(query) {
+            const searchTerm = query.toLowerCase().trim();
+            const translitSearchTerm = transliterate(searchTerm);
+
+            if (searchTerm === '') {
+                // Reset to original order
+                allCityOptions.forEach(option => {
+                    dropdown.appendChild(option);
+                });
+                return;
+            }
+
+            // Sort cities: matching ones first, rest after
+            const matchingCities = [];
+            const nonMatchingCities = [];
+
+            allCityOptions.forEach(option => {
+                const cityName = option.dataset.cityName.toLowerCase();
+                // Match both original search and transliterated search
+                if (cityName.includes(searchTerm) || cityName.includes(translitSearchTerm)) {
+                    matchingCities.push(option);
+                } else {
+                    nonMatchingCities.push(option);
+                }
+            });
+
+            // Clear dropdown and re-append in new order
+            dropdown.innerHTML = '';
+
+            // Add matching cities first
+            matchingCities.forEach(city => dropdown.appendChild(city));
+
+            // Add non-matching cities after
+            nonMatchingCities.forEach(city => dropdown.appendChild(city));
+        }
+
+        function selectCity(element) {
+            // Set values
+            searchInput.value = element.dataset.cityName;
+            cityIdInput.value = element.dataset.cityId;
+
+            // Show details
+            displayLatitude.textContent = element.dataset.cityLat + '°';
+            displayLongitude.textContent = element.dataset.cityLon + '°';
+            displayTimezone.textContent = 'GMT+' + element.dataset.cityTz;
+            cityDetails.classList.remove('hidden');
+
+            dropdown.classList.add('hidden');
+
+            // Validate form
+            if (typeof validateForm === 'function') {
+                validateForm();
+            }
+        }
+
+        if (searchInput && dropdown && cityIdInput) {
+            // Setup click handlers for all cities
+            allCityOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectCity(this);
+                });
+            });
+
+            // Open dropdown on focus
+            searchInput.addEventListener('focus', function () {
+                filterCities(this.value);
+                dropdown.classList.remove('hidden');
+            });
+
+            // Search as user types (client-side)
+            searchInput.addEventListener('input', function () {
+                const query = this.value;
+
+                // Clear selection when typing
+                if (cityIdInput.value) {
+                    cityIdInput.value = '';
+                    cityDetails.classList.add('hidden');
+                    if (typeof validateForm === 'function') {
+                        validateForm();
+                    }
+                }
+
+                filterCities(query);
+                dropdown.classList.remove('hidden');
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            // Set Moscow as default
+            @if(isset($defaultCity) && $defaultCity)
+            const defaultCityOption = allCityOptions.find(opt => opt.dataset.cityId === '{{ $defaultCity->id }}');
+            if (defaultCityOption) {
+                selectCity(defaultCityOption);
+            }
+            @endif
+        }
     </script>
 </body>
 
