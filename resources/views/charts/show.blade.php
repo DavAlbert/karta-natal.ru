@@ -509,44 +509,118 @@
                 <div class="analysis-section">
                     <h2 class="analysis-title">Характер и личность</h2>
                     <div class="analysis-grid">
-                        <div class="analysis-card">
+                        <!-- AI-generated character analysis -->
+                        @if($chart->hasAiReport() && $chart->getAiCharacterAnalysis())
+                        <div class="analysis-card" style="grid-column: 1 / -1;">
                             <div class="analysis-card-header">
-                                <img src="/images/zodiac/{{ $signToFile[$houses[1]['sign'] ?? 'aries'] }}.png" alt="">
-                                <span class="analysis-card-title">Общая характеристика</span>
+                                <svg fill="currentColor" viewBox="0 0 24 24" style="width:1.5rem;height:1.5rem;color:var(--accent-indigo)"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                <span class="analysis-card-title">Персональный анализ от ИИ</span>
                             </div>
                             <div class="analysis-card-body">
-                                <p>Ваша натальная карта раскрывает уникальную структуру личности, где каждая планета занимает своё место в определённом доме и знаке. {{ $houses[1]['sign'] ?? 'Овен' }} на Ascendant создаёт первое впечатление, которое вы производите на окружающих — это ваша маска, способ самопрезентации.</p>
-                                <p>Доминирование стихии {{ array_keys($elemCount, max($elemCount))[0] ?? 'огня' }} говорит о вашем темпераменте и подходе к жизни. Вы стремитесь к активным действиям и не боитесь брать инициативу в свои руки.</p>
+                                <p>{!! nl2br(e($chart->getAiCharacterAnalysis())) !!}</p>
                             </div>
                         </div>
+                        @endif
+
+                        <!-- Ascendant -->
+                        @php $ascSign = $houses[1]['sign'] ?? 'Овен'; $ascMeaning = $chart->getSignMeaning($ascSign); @endphp
+                        <div class="analysis-card">
+                            <div class="analysis-card-header">
+                                <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.png" alt="">
+                                <span class="analysis-card-title">Ascendant — {{ $ascSign }}</span>
+                            </div>
+                            <div class="analysis-card-body">
+                                @if($ascMeaning)
+                                <p>{{ $ascMeaning->characteristics }}</p>
+                                @else
+                                <p>{{ $ascSign }} на Ascendant создаёт первое впечатление, которое вы производите на окружающих — это ваша маска и способ самопрезентации.</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Sun -->
+                        @php $sunSign = $planets['sun']['sign'] ?? 'Овен'; $sunMeaning = $chart->getPlanetMeaning('sun'); $sunSignMeaning = $chart->getSignMeaning($sunSign); @endphp
                         <div class="analysis-card">
                             <div class="analysis-card-header">
                                 <img src="/images/planets/sun.png" alt="">
-                                <span class="analysis-card-title">Солнце — Ядро личности</span>
+                                <span class="analysis-card-title">Солнце — {{ $sunSign }}</span>
                             </div>
                             <div class="analysis-card-body">
-                                <p>Солнце в вашей карте указывает на основную жизненную энергию, волю и творческий потенциал. Это ваше «Я» — то, что составляет ядро вашей личности, центральный фокус самореализации.</p>
-                                <p>Солнце в знаке {{ $planets['sun']['sign'] ?? 'Овна' }} говорит о вашем стиле самовыражения. Вы стремитесь к признанию, хотите быть замеченным и оценённым своими талантами и способностями.</p>
+                                @if($sunMeaning)
+                                <p>{{ $sunMeaning->description }}</p>
+                                @else
+                                <p>Солнце указывает на основную жизненную энергию, волю и творческий потенциал.</p>
+                                @endif
+                                @if($sunSignMeaning)
+                                <p><strong>В знаке {{ $sunSign }}:</strong> {{ $sunSignMeaning->characteristics }}</p>
+                                @endif
                             </div>
                         </div>
+
+                        <!-- Moon -->
+                        @php $moonSign = $planets['moon']['sign'] ?? 'Рака'; $moonMeaning = $chart->getPlanetMeaning('moon'); $moonSignMeaning = $chart->getSignMeaning($moonSign); @endphp
                         <div class="analysis-card">
                             <div class="analysis-card-header">
-                                <img src="/images/zodiac/{{ $signToFile[$houses[4]['sign'] ?? 'cancer'] }}.png" alt="">
-                                <span class="analysis-card-title">Луна — Эмоции и интуиция</span>
+                                <img src="/images/planets/moon.png" alt="">
+                                <span class="analysis-card-title">Луна — {{ $moonSign }}</span>
                             </div>
                             <div class="analysis-card-body">
-                                <p>Луна отражает вашу эмоциональную природу, подсознательные реакции и потребность в безопасности. Это ваша внутренняя жизнь, чувствительность и способность приспосабливаться к обстоятельствам.</p>
-                                <p>Ваша Луна в {{ $planets['moon']['sign'] ?? 'Раке' }} показывает, как вы реагируете на эмоциональные ситуации. Вы обладаете развитой интуицией и глубокой эмоциональной памятью.</p>
+                                @if($moonMeaning)
+                                <p>{{ $moonMeaning->description }}</p>
+                                @else
+                                <p>Луна отражает эмоциональную природу, интуицию и подсознательные реакции.</p>
+                                @endif
+                                @if($moonSignMeaning)
+                                <p><strong>В знаке {{ $moonSign }}:</strong> {{ $moonSignMeaning->characteristics }}</p>
+                                @endif
                             </div>
                         </div>
+
+                        <!-- Mercury -->
+                        @php $mercurySign = $planets['mercury']['sign'] ?? 'Близнецов'; $mercuryMeaning = $chart->getPlanetMeaning('mercury'); @endphp
                         <div class="analysis-card">
                             <div class="analysis-card-header">
                                 <img src="/images/planets/mercury.png" alt="">
-                                <span class="analysis-card-title">Меркурий — Мышление и общение</span>
+                                <span class="analysis-card-title">Меркурий — {{ $mercurySign }}</span>
                             </div>
                             <div class="analysis-card-body">
-                                <p>Меркурий управляет мыслительными процессами, способом получения и передачи информации. Это ваш ум, речь, способность к обучению и анализу.</p>
-                                <p>Расположение Меркурия в {{ $planets['mercury']['sign'] ?? 'Близнецах' }} делает вас гибким мыслителем, способным быстро адаптировать свои идеи и находить общий язык с разными людьми.</p>
+                                @if($mercuryMeaning)
+                                <p>{{ $mercuryMeaning->description }}</p>
+                                @else
+                                <p>Меркурий управляет мышлением, речью и способностью к обучению.</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Venus -->
+                        @php $venusSign = $planets['venus']['sign'] ?? 'Тельца'; $venusMeaning = $chart->getPlanetMeaning('venus'); @endphp
+                        <div class="analysis-card">
+                            <div class="analysis-card-header">
+                                <img src="/images/planets/venus.png" alt="">
+                                <span class="analysis-card-title">Венера — {{ $venusSign }}</span>
+                            </div>
+                            <div class="analysis-card-body">
+                                @if($venusMeaning)
+                                <p>{{ $venusMeaning->description }}</p>
+                                @else
+                                <p>Венера символизирует любовь, красоту и гармонию в отношениях.</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Mars -->
+                        @php $marsSign = $planets['mars']['sign'] ?? 'Овна'; $marsMeaning = $chart->getPlanetMeaning('mars'); @endphp
+                        <div class="analysis-card">
+                            <div class="analysis-card-header">
+                                <img src="/images/planets/mars.png" alt="">
+                                <span class="analysis-card-title">Марс — {{ $marsSign }}</span>
+                            </div>
+                            <div class="analysis-card-body">
+                                @if($marsMeaning)
+                                <p>{{ $marsMeaning->description }}</p>
+                                @else
+                                <p>Марс символизирует энергию, действие и волю к победе.</p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -558,14 +632,25 @@
                     <div class="analysis-grid">
                         @foreach(['sun','moon','mercury','venus','mars','jupiter','saturn'] as $planet)
                         @if(isset($planets[$planet]))
+                        @php
+                        $planetMeaning = $chart->getPlanetMeaning($planet);
+                        $houseNum = $planets[$planet]['house'] ?? 1;
+                        $houseMeaning = $chart->getHouseMeaning($houseNum);
+                        @endphp
                         <div class="analysis-card">
                             <div class="analysis-card-header">
                                 <img src="/images/planets/{{ $planetFiles[$planet] }}.png" alt="">
-                                <span class="analysis-card-title">{{ $planetNames[$planet] }} в {{ $planets[$planet]['house'] ?? '-' }} доме</span>
+                                <span class="analysis-card-title">{{ $planetNames[$planet] }} в {{ $houseNum }} доме</span>
                             </div>
                             <div class="analysis-card-body">
-                                <p>{{ $planetNames[$planet] }} в {{ $planets[$planet]['house'] ?? '-' }} доме указывает на сферу жизни, где проявляется влияние этой планеты. Это область, куда вы направляете энергию и где можете достичь наибольших успехов.</p>
-                                <p>В этом доме {{ $planetNames[$planet] }} даёт возможность реализовать свой потенциал через практические действия и конкретный опыт.</p>
+                                @if($planetMeaning)
+                                <p>{{ $planetMeaning->description }}</p>
+                                @endif
+                                @if($houseMeaning)
+                                <p><strong>В {{ $houseNum }} доме:</strong> {{ $houseMeaning->general }}</p>
+                                @else
+                                <p>Положение в {{ $houseNum }} доме указывает на сферу жизни, где проявляется влияние {{ $planetNames[$planet] }}.</p>
+                                @endif
                             </div>
                         </div>
                         @endif
@@ -698,6 +783,49 @@
             </section>
 
             <aside class="sidebar">
+                <!-- AI Chat Section - First for visibility -->
+                <div class="section-card chat-section">
+                    <div class="section-header gold">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        Спросите астролога ИИ
+                        <button id="clear-chat" class="clear-chat-btn" title="Очистить чат">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                    <div class="chat-messages-inline" id="chat-messages">
+                        @forelse($chatMessages as $msg)
+                            <div class="chat-message {{ $msg->role }}" data-raw="{{ e($msg->content) }}">
+                                @if($msg->role === 'assistant')
+                                    {!! nl2br(e($msg->content)) !!}
+                                @else
+                                    {{ $msg->content }}
+                                @endif
+                            </div>
+                        @empty
+                            <div class="chat-message assistant">
+                                Привет! Задайте вопрос о вашей натальной карте или выберите тему ниже.
+                            </div>
+                        @endforelse
+                    </div>
+                    <div class="chat-templates-inline">
+                        @foreach($templates as $key => $template)
+                        <button class="chat-template-btn" data-prompt="{{ $template['prompt'] }}">
+                            <span>{{ $template['icon'] }}</span>
+                            <span>{{ $template['title'] }}</span>
+                        </button>
+                        @endforeach
+                    </div>
+                    <form id="chat-form" class="chat-input-inline">
+                        @csrf
+                        <textarea id="chat-input" class="chat-input" placeholder="Ваш вопрос..." rows="1"></textarea>
+                        <button type="submit" class="chat-send" id="chat-send">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5M5 12l7-7 7 7"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
                 <!-- Key Points -->
                 @if(count($kPoints) > 0)
                 <div class="section-card">
@@ -964,6 +1092,147 @@
         </div>
     </div>
 
+    <style>
+        /* Inline Chat Styles */
+        .chat-section {
+            background: linear-gradient(145deg, var(--bg-secondary) 0%, rgba(129, 140, 248, 0.05) 100%);
+            border: 1px solid rgba(129, 140, 248, 0.2);
+        }
+        .chat-section .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .clear-chat-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            opacity: 0.6;
+            transition: all 0.2s;
+        }
+        .clear-chat-btn:hover {
+            opacity: 1;
+            color: var(--accent-red);
+        }
+        .chat-messages-inline {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 0.5rem;
+            margin: 0.5rem;
+        }
+        .chat-messages-inline::-webkit-scrollbar { width: 4px; }
+        .chat-messages-inline::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages-inline::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .chat-message {
+            max-width: 90%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+        .chat-message.user {
+            align-self: flex-end;
+            background: var(--accent-indigo);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        .chat-message.assistant {
+            align-self: flex-start;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 0.25rem;
+            color: var(--text-secondary);
+        }
+        .chat-message.assistant strong {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+        .chat-message.assistant em {
+            color: var(--accent-indigo);
+        }
+        .chat-message.typing {
+            font-style: italic;
+            color: var(--text-muted);
+        }
+        .chat-templates-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            padding: 0.5rem;
+        }
+        .chat-template-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.3rem 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .chat-template-btn:hover {
+            border-color: var(--accent-indigo);
+            color: var(--text-primary);
+            background: rgba(129, 140, 248, 0.1);
+        }
+        .chat-input-inline {
+            display: flex;
+            gap: 0.375rem;
+            padding: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .chat-input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.4rem 0.6rem;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            resize: none;
+            max-height: 60px;
+            font-family: inherit;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent-indigo);
+        }
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+        .chat-send {
+            padding: 0.4rem 0.6rem;
+            background: var(--accent-indigo);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .chat-send:hover {
+            background: #6366f1;
+        }
+        .chat-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+
     <script>
         // Tooltip
         const tooltip = document.getElementById('tooltip');
@@ -978,6 +1247,129 @@
             });
             g.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
         });
+
+        // Chat
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const chatTemplateBtns = document.querySelectorAll('.chat-template-btn');
+        const clearChatBtn = document.getElementById('clear-chat');
+
+        // Clear chat (server-side)
+        clearChatBtn.addEventListener('click', async () => {
+            if (!confirm('Очистить историю чата?')) return;
+            try {
+                await fetch(`/charts/{{ $chart->id }}/chat`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                });
+                chatMessages.innerHTML = '<div class="chat-message assistant">Привет! Задайте вопрос о вашей натальной карте или выберите тему ниже.</div>';
+            } catch (e) {
+                console.error('Failed to clear chat');
+            }
+        });
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 60) + 'px';
+        });
+
+        // Template click
+        chatTemplateBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                chatInput.value = this.dataset.prompt;
+                chatInput.focus();
+            });
+        });
+
+        // Simple markdown parser
+        function parseMarkdown(text) {
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/^\d+\.\s+/gm, '<br>• ')
+                .replace(/^-\s+/gm, '<br>• ')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Add message
+        function addChatMessage(content, role) {
+            const div = document.createElement('div');
+            div.className = `chat-message ${role}`;
+            div.dataset.raw = content;
+            div.innerHTML = role === 'assistant' ? parseMarkdown(content) : content;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'chat-message assistant typing';
+            div.id = 'typing-indicator';
+            div.textContent = 'Думаю...';
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        // Send message
+        async function sendChatMessage(message) {
+            addChatMessage(message, 'user');
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            showTyping();
+            chatSend.disabled = true;
+
+            try {
+                const response = await fetch(`/charts/{{ $chart->id }}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                hideTyping();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addChatMessage(data.message, 'assistant');
+                } else {
+                    addChatMessage('Ошибка. Попробуйте позже.', 'assistant');
+                }
+            } catch (error) {
+                hideTyping();
+                addChatMessage('Ошибка соединения.', 'assistant');
+            }
+
+            chatSend.disabled = false;
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = chatInput.value.trim();
+            if (!message) return;
+            await sendChatMessage(message);
+        });
+
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const message = chatInput.value.trim();
+                if (message) sendChatMessage(message);
+            }
+        });
+
+        // Scroll to bottom on load
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     </script>
 </body>
 </html>

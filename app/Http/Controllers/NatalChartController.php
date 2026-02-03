@@ -160,7 +160,50 @@ class NatalChartController extends Controller
             abort(403);
         }
 
-        return view('charts.show', ['chart' => $natalChart]);
+        $templates = $this->getChatTemplates();
+        $chatMessages = $natalChart->chatMessages()->get();
+
+        return view('charts.show', [
+            'chart' => $natalChart,
+            'templates' => $templates,
+            'chatMessages' => $chatMessages,
+        ]);
+    }
+
+    protected function getChatTemplates(): array
+    {
+        return [
+            'character' => [
+                'title' => 'Общая характеристика',
+                'icon' => '👤',
+                'prompt' => 'Расскажи подробно о моей личности на основе моей натальной карты.',
+            ],
+            'love' => [
+                'title' => 'Любовь',
+                'icon' => '💕',
+                'prompt' => 'Проанализируй мою карту в вопросах любви и отношений.',
+            ],
+            'career' => [
+                'title' => 'Карьера',
+                'icon' => '💼',
+                'prompt' => 'Расскажи о моём карьерном потенциале и призвании.',
+            ],
+            'finance' => [
+                'title' => 'Финансы',
+                'icon' => '💰',
+                'prompt' => 'Проанализируй мою карту в вопросах финансов.',
+            ],
+            'health' => [
+                'title' => 'Здоровье',
+                'icon' => '🏥',
+                'prompt' => 'Расскажи о моём здоровье на основе карты.',
+            ],
+            'karmic' => [
+                'title' => 'Карма',
+                'icon' => '✨',
+                'prompt' => 'Расскажи о моём кармическом пути.',
+            ],
+        ];
     }
 
     public function generateReport(NatalChart $natalChart)

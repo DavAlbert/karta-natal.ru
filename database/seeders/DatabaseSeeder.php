@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Astrology static meanings (Russian)
+        $this->call(AstrologyMeaningsSeeder::class);
     }
 }
