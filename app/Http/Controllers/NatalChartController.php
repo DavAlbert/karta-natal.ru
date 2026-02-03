@@ -54,13 +54,14 @@ class NatalChartController extends Controller
         // Get city from database
         $city = \App\Models\City::findOrFail($validated['city_id']);
 
-        // Calculate Data with city coordinates
+        // Calculate Data with city coordinates and timezone
         $service = new AstrologyCalculationService();
         $chartData = $service->calculate(
             $validated['birth_date'],
             $validated['birth_time'] ?? '12:00',
             $city->latitude,
-            $city->longitude
+            $city->longitude,
+            $city->timezone_gmt ?? 0
         );
 
         // Create Chart with access token
