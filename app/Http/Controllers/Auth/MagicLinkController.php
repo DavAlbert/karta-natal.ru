@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Rules\ValidHCaptcha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -24,40 +25,15 @@ class MagicLinkController extends Controller
     /**
      * Send a magic login link to the user's email.
      */
-    public function sendLoginLink(Request $request)
+    public function sendLoginLink(Request $Request)
     {
-        // Verify reCAPTCHA v2
-        $recaptchaToken = $request->input('recaptcha_token');
-        if (empty($recaptchaToken)) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => ['email' => ['Пожалуйста, подтвердите, что вы не робот.']]], 422);
-            }
-            return back()->withErrors(['email' => 'Пожалуйста, подтвердите, что вы не робот.']);
-        }
-
-        $secretKey = config('services.recaptcha.secret_key');
-        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-
-        $response = \Http::withoutVerifying()->post($verifyUrl, [
-            'secret' => $secretKey,
-            'response' => $recaptchaToken,
-        ]);
-
-        $responseData = $response->json();
-
-        if (!$responseData['success']) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => ['email' => ['Ошибка проверки reCAPTCHA. Попробуйте еще раз.']]], 422);
-            }
-            return back()->withErrors(['email' => 'Ошибка проверки reCAPTCHA. Попробуйте еще раз.']);
-        }
-
-        $validator = \Validator::make($request->all(), [
+        $validator = \Validator::make($Request->all(), [
+            'hcaptcha_token' => ['required', new ValidHCaptcha()],
             'email' => 'required|email|exists:users,email',
         ]);
 
         if ($validator->fails()) {
-            if ($request->expectsJson()) {
+            if ($Request->expectsJson()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
             return back()->withErrors($validator->errors());

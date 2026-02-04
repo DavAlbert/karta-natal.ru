@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NatalChart;
+use App\Rules\ValidHCaptcha;
 use App\Services\AstrologyCalculationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,34 +21,10 @@ class NatalChartController extends Controller
         return view('dashboard', compact('charts'));
     }
 
-    public function processAsync(Request $request)
+    public function processAsync(Request $Request)
     {
-        // Validate reCAPTCHA v2
-        $recaptchaToken = $request->input('recaptcha_token');
-        \Log::debug('reCAPTCHA token received', ['length' => strlen($recaptchaToken)]);
-
-        if (empty($recaptchaToken)) {
-            return response()->json(['success' => false, 'message' => 'Пожалуйста, подтвердите, что вы не робот.'], 422);
-        }
-
-        $secretKey = config('services.recaptcha.secret_key');
-        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-
-        $response = \Http::withoutVerifying()->post($verifyUrl, [
-            'secret' => $secretKey,
-            'response' => $recaptchaToken,
-        ]);
-
-        $responseData = $response->json();
-        \Log::debug('reCAPTCHA response', $responseData);
-
-        if (!$responseData['success']) {
-            $errorCodes = $responseData['error-codes'] ?? [];
-            \Log::error('reCAPTCHA failed', ['error-codes' => $errorCodes]);
-            return response()->json(['success' => false, 'message' => 'Ошибка проверки reCAPTCHA: ' . implode(', ', $errorCodes)], 422);
-        }
-
-        $validated = $request->validate([
+        $validated = $Request->validate([
+            'hcaptcha_token' => ['required', new ValidHCaptcha()],
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'gender' => 'required|in:male,female',

@@ -14,7 +14,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://karta-natal.ru/">
 
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -391,7 +391,7 @@
                                             </div>
 
                                             <div class="mt-4 flex justify-center">
-                                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
+                                                <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
                                             </div>
 
                                             <button type="submit" id="submit-btn" disabled
@@ -499,7 +499,7 @@
                                     </div>
 
                                     <div class="mt-4 flex justify-center">
-                                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
+                                        <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
                                     </div>
 
                                     <button type="submit" id="submit-btn" disabled
@@ -619,7 +619,7 @@
                                 </div>
 
                                 <div class="mt-4 flex justify-center">
-                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
+                                    <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
                                 </div>
 
                                 <button type="submit" id="submit-btn" disabled
@@ -1150,7 +1150,7 @@
         validateForm();
 
         // reCAPTCHA site key
-        const recaptchaSiteKey = '{{ config("services.recaptcha.site_key") }}';
+        const hcaptchaSiteKey = '{{ config("services.hcaptcha.site_key") }}';
 
         if (calcForm) {
         calcForm.addEventListener('submit', async function (e) {
@@ -1196,18 +1196,18 @@
             // Start Animation
             nextAnimationStep();
 
-            // Get reCAPTCHA token from v2 widget
-            let recaptchaToken = '';
-            if (typeof grecaptcha !== 'undefined') {
-                recaptchaToken = grecaptcha.getResponse();
-                console.log('Token length:', recaptchaToken ? recaptchaToken.length : 0);
+            // Get hCaptcha token
+            let hcaptchaToken = '';
+            if (typeof hcaptcha !== 'undefined') {
+                hcaptchaToken = hcaptcha.getResponse();
+                console.log('Token length:', hcaptchaToken ? hcaptchaToken.length : 0);
             } else {
-                console.log('grecaptcha not defined');
+                console.log('hcaptcha not defined');
             }
 
             // Submit Data via AJAX
             const formData = new FormData(this);
-            formData.append('recaptcha_token', recaptchaToken);
+            formData.append('hcaptcha_token', hcaptchaToken);
 
             fetch("{{ route('calculate') }}", {
                 method: 'POST',
@@ -1224,8 +1224,8 @@
                         const modal = document.getElementById('processingModal');
                         if (modal) modal.classList.add('hidden');
                         // Reset captcha and disable button
-                        if (typeof grecaptcha !== 'undefined') {
-                            grecaptcha.reset();
+                        if (typeof hcaptcha !== 'undefined') {
+                            hcaptcha.reset();
                         }
                         document.getElementById('submit-btn').disabled = true;
                         return;
@@ -1248,8 +1248,8 @@
                     const modal = document.getElementById('processingModal');
                     if (modal) modal.classList.add('hidden');
                     // Reset captcha and disable button
-                    if (typeof grecaptcha !== 'undefined') {
-                        grecaptcha.reset();
+                    if (typeof hcaptcha !== 'undefined') {
+                        hcaptcha.reset();
                     }
                     document.getElementById('submit-btn').disabled = true;
                 });
@@ -1548,7 +1548,7 @@
                         </div>
 
                         <div class="mb-4 flex justify-center">
-                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
+                            <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
                         </div>
 
                         <button type="submit" id="loginSubmitBtn" disabled
@@ -1575,8 +1575,8 @@
             document.getElementById('loginSubmitBtn').textContent = 'Получить ссылку';
             document.getElementById('loginError').classList.add('hidden');
             // Reset captcha
-            if (typeof grecaptcha !== 'undefined') {
-                grecaptcha.reset();
+            if (typeof hcaptcha !== 'undefined') {
+                hcaptcha.reset();
             }
         }
 
@@ -1595,11 +1595,11 @@
 
                 errorMsg.classList.add('hidden');
 
-                // Get reCAPTCHA token from v2 widget
-                if (typeof grecaptcha !== 'undefined') {
-                    const recaptchaToken = grecaptcha.getResponse();
-                    if (recaptchaToken) {
-                        formData.append('recaptcha_token', recaptchaToken);
+                // Get hCaptcha token
+                if (typeof hcaptcha !== 'undefined') {
+                    const hcaptchaToken = hcaptcha.getResponse();
+                    if (hcaptchaToken) {
+                        formData.append('hcaptcha_token', hcaptchaToken);
                     }
                 }
 
@@ -1619,8 +1619,8 @@
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
                         // Reset captcha
-                        if (typeof grecaptcha !== 'undefined') {
-                            grecaptcha.reset();
+                        if (typeof hcaptcha !== 'undefined') {
+                            hcaptcha.reset();
                         }
                         document.getElementById('loginSubmitBtn').disabled = true;
                     } else {
