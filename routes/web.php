@@ -27,6 +27,10 @@ Route::get('/cities/{country}', function (string $country) {
 });
 
 Route::get('/cities/search/{query}', function (string $query) {
+    // Properly decode URL-encoded Cyrillic characters
+    $query = urldecode($query);
+    $query = mb_convert_encoding($query, 'UTF-8', 'auto');
+
     $queryLower = mb_strtolower($query);
     $queryNormalized = str_replace(['-', ' '], '', $queryLower);
 
@@ -34,7 +38,7 @@ Route::get('/cities/search/{query}', function (string $query) {
         ->orderByRaw("
             CASE
                 WHEN LOWER(name) = ? OR LOWER(name_ru) = ? THEN 0
-                WHEN LOWER(name) LIKE ? OR LOWER(name_ru) = ? THEN 1
+                WHEN LOWER(name) LIKE ? OR LOWER(name_ru) LIKE ? THEN 1
                 WHEN LOWER(alternate_names) LIKE ? THEN 2
                 WHEN LOWER(name) LIKE ? OR LOWER(name_ru) LIKE ? THEN 3
                 WHEN LOWER(name_normalized) LIKE ? THEN 4
