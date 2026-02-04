@@ -26,6 +26,32 @@ class MagicLinkController extends Controller
      */
     public function sendLoginLink(Request $request)
     {
+        // Verify reCAPTCHA v2
+        $recaptchaToken = $request->input('recaptcha_token');
+        if (empty($recaptchaToken)) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => ['email' => ['Пожалуйста, подтвердите, что вы не робот.']]], 422);
+            }
+            return back()->withErrors(['email' => 'Пожалуйста, подтвердите, что вы не робот.']);
+        }
+
+        $secretKey = config('services.recaptcha.secret_key');
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+
+        $response = \Http::withoutVerifying()->post($verifyUrl, [
+            'secret' => $secretKey,
+            'response' => $recaptchaToken,
+        ]);
+
+        $responseData = $response->json();
+
+        if (!$responseData['success']) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => ['email' => ['Ошибка проверки reCAPTCHA. Попробуйте еще раз.']]], 422);
+            }
+            return back()->withErrors(['email' => 'Ошибка проверки reCAPTCHA. Попробуйте еще раз.']);
+        }
+
         $validator = \Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
         ]);

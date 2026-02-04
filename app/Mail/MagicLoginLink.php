@@ -31,7 +31,7 @@ class MagicLoginLink extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Вход в аккаунт ✨',
+            subject: 'Войти в аккаунт — Natalnaya-Karta',
         );
     }
 

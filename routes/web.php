@@ -8,6 +8,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+
 Route::get('/cities', function () {
     $cities = City::orderBy('name')->get(['id', 'name', 'name_ru', 'country', 'latitude', 'longitude', 'timezone_gmt']);
     return response()->json($cities);

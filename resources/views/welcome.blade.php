@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="ru" class="scroll-smooth" style="overflow-x: hidden;">
 
 <head>
     <meta charset="utf-8">
@@ -7,9 +7,124 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- SEO Meta Tags -->
-    <title>Натальная карта онлайн — Узнай свою судьбу (AstroChart)</title>
-    <meta name="description"
-        content="Бесплатный расчет натальной карты с расшифровкой. Узнайте свое предназначение, совместимость и прогнозы на будущее.">
+    <title>Натальная карта онлайн бесплатно с расшифровкой — Рассчитать по дате рождения | Karta-Natal.ru</title>
+    <meta name="description" content="Натальная карта онлайн бесплатно с расшифровкой. Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт позиций планет, домов и аспектов. Персональная расшифровка от ИИ-астролога.">
+    <meta name="keywords" content="натальная карта, натальная карта онлайн, натальная карта бесплатно, натальная карта с расшифровкой, натальная карта по дате рождения, рассчитать натальную карту, гороскоп по дате рождения, совместимость по дате рождения, дома в натальной карте, асцендент">
+    <meta name="author" content="SMART CREATOR AI LLC">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://karta-natal.ru/">
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>  
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://karta-natal.ru/">
+    <meta property="og:title" content="Натальная карта онлайн бесплатно с расшифровкой">
+    <meta property="og:description" content="Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт планет, домов и аспектов с персональной расшифровкой.">
+    <meta property="og:image" content="https://karta-natal.ru/images/og-image.jpg">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Karta-Natal.ru">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://karta-natal.ru/">
+    <meta name="twitter:title" content="Натальная карта онлайн бесплатно с расшифровкой">
+    <meta name="twitter:description" content="Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт планет, домов и аспектов.">
+    <meta name="twitter:image" content="https://karta-natal.ru/images/og-image.jpg">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebApplication",
+        "name": "Натальная карта онлайн",
+        "url": "https://karta-natal.ru",
+        "description": "Бесплатный онлайн сервис для расчёта натальной карты по дате рождения с подробной расшифровкой позиций планет, домов и аспектов",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@@type": "Offer",
+            "price": "0",
+            "priceCurrency": "RUB"
+        },
+        "creator": {
+            "@@type": "Organization",
+            "name": "SMART CREATOR AI LLC"
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@@type": "Question",
+                "name": "Что такое натальная карта?",
+                "acceptedAnswer": {
+                    "@@type": "Answer",
+                    "text": "Натальная карта — это астрологическая карта, построенная на момент рождения человека. Она показывает положение Солнца, Луны и планет в знаках зодиака и домах гороскопа, а также аспекты между ними. Натальная карта раскрывает характер, таланты и жизненный путь человека."
+                }
+            },
+            {
+                "@@type": "Question",
+                "name": "Как рассчитать натальную карту онлайн бесплатно?",
+                "acceptedAnswer": {
+                    "@@type": "Answer",
+                    "text": "Для расчёта натальной карты введите дату, точное время и место рождения в форму на нашем сайте. Расчёт выполняется автоматически с использованием швейцарских эфемерид (Swiss Ephemeris) и занимает несколько секунд. Вы получите полную карту с расшифровкой бесплатно."
+                }
+            },
+            {
+                "@@type": "Question",
+                "name": "Зачем нужно точное время рождения?",
+                "acceptedAnswer": {
+                    "@@type": "Answer",
+                    "text": "Точное время рождения необходимо для правильного расчёта асцендента и системы домов. Асцендент меняется примерно каждые 2 часа, поэтому даже небольшая погрешность во времени может существенно изменить интерпретацию карты."
+                }
+            },
+            {
+                "@@type": "Question",
+                "name": "Что показывает натальная карта?",
+                "acceptedAnswer": {
+                    "@@type": "Answer",
+                    "text": "Натальная карта показывает: положение 10 планет в знаках зодиака, 12 астрологических домов и их управителей, аспекты между планетами (соединения, тригоны, квадраты, оппозиции), асцендент и Середину Неба. Всё это позволяет понять характер, таланты, сферы жизни и потенциал человека."
+                }
+            }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "Karta-Natal.ru",
+        "url": "https://karta-natal.ru",
+        "logo": "https://karta-natal.ru/images/logo.png",
+        "legalName": "SMART CREATOR AI LLC",
+        "sameAs": []
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "name": "Натальная карта онлайн",
+        "alternateName": ["Karta-Natal.ru", "Карта Натал"],
+        "url": "https://karta-natal.ru"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [{
+            "@@type": "ListItem",
+            "position": 1,
+            "name": "Главная",
+            "item": "https://karta-natal.ru/"
+        }]
+    }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,9 +170,11 @@
     @endif
 
     <style>
-        body {
+        html, body {
             background-color: #0B1120;
             color: #e2e8f0;
+            overflow-x: hidden;
+            max-width: 100%;
         }
 
         .text-gold {
@@ -98,17 +215,18 @@
             cursor: pointer;
         }
     </style>
+
 </head>
 
 <body class="font-sans antialiased star-bg">
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 border-b border-indigo-900/30 bg-[#0B1120]/95 backdrop-blur-sm">
+    <nav class="fixed w-full z-50 border-b border-indigo-900/30 bg-[#0B1120]/95 backdrop-blur-sm overflow-x-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl font-serif font-bold text-white tracking-widest">
-                        ASTRO<span class="text-gold">CHART</span>
+                        КАРТА<span class="text-gold">НАТАЛ</span>
                     </span>
                 </div>
 
@@ -146,7 +264,7 @@
         style="background-image: url('/images/hero-bg.png');">
 
         <!-- Overlay for readability -->
-        <div class="absolute inset-0 bg-[#0B1120]/80"></div>
+        <div class="absolute inset-0 bg-[#0B1120]/50"></div>
 
         <!-- Minimal Ambient Light (Reduced Glow) -->
         <div
@@ -159,30 +277,29 @@
                 <div class="text-center lg:text-left">
                     <div
                         class="inline-block px-4 py-1.5 rounded-full border border-indigo-800 bg-indigo-950/50 text-indigo-300 text-xs font-bold uppercase tracking-widest mb-6">
-                        ✨ Раскрой тайны звезд
+                        Бесплатный расчёт с расшифровкой
                     </div>
-                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white leading-tight mb-6">
-                        Ваша судьба <br> записана в <span class="text-gold">звездах</span>
+                    <h1 class="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight mb-6">
+                        Натальная карта онлайн <span class="text-gold">бесплатно</span>
                     </h1>
                     <p class="text-lg text-indigo-200 mb-10 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                        Получите подробную расшифровку вашей натальной карты. Узнайте свои сильные стороны,
-                        предназначение и совместимость с партнером.
+                        Рассчитайте натальную карту по дате рождения с подробной расшифровкой. Узнайте положение планет в знаках зодиака, дома гороскопа и аспекты. Персональный анализ от ИИ-астролога.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <div class="flex items-center gap-2 text-indigo-300 text-sm">
-                            <svg class="w-5 h-5 text-gold-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span>450k+ расчетов</span>
-                        </div>
                         <div class="flex items-center gap-2 text-indigo-300 text-sm">
                             <svg class="w-5 h-5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>Точность Swiss Ephemeris</span>
+                            <span>Swiss Ephemeris — точность до угловой секунды</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-indigo-300 text-sm">
+                            <svg class="w-5 h-5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Расчёт за 2 минуты</span>
                         </div>
                     </div>
                 </div>
@@ -218,7 +335,7 @@
                                                 <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
                                                     <i class="fas fa-venus-mars mr-1"></i>Пол
                                                 </label>
-                                                <div class="grid grid-cols-2 gap-3">
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                                     <label class="gender-btn cursor-pointer">
                                                         <input type="radio" name="gender" value="male" required class="hidden" checked>
                                                         <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30">
@@ -238,7 +355,7 @@
 
                                             <input type="hidden" name="purpose" value="general">
 
-                                            <div class="grid grid-cols-2 gap-4">
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div>
                                                     <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
                                                         <i class="far fa-calendar-alt mr-1"></i>Дата рождения
@@ -271,6 +388,10 @@
                                             </div>
 
                                             <div id="cities-dropdown" class="hidden absolute z-50 mt-1 w-full bg-[#1e293b] border border-indigo-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                            </div>
+
+                                            <div class="mt-4 flex justify-center">
+                                                <div id="recaptcha-submit-3"></div>
                                             </div>
 
                                             <button type="submit" id="submit-btn" disabled
@@ -322,7 +443,7 @@
                                         <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
                                             <i class="fas fa-venus-mars mr-1"></i>Пол
                                         </label>
-                                        <div class="grid grid-cols-2 gap-3">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <label class="gender-btn cursor-pointer">
                                                 <input type="radio" name="gender" value="male" required class="hidden" checked>
                                                 <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30 hover:border-indigo-600 hover:bg-indigo-900/30 transition-all">
@@ -342,7 +463,7 @@
 
                                     <input type="hidden" name="purpose" value="general">
 
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
                                                 <i class="far fa-calendar-alt mr-1"></i>Дата рождения
@@ -375,6 +496,10 @@
                                     </div>
 
                                     <div id="cities-dropdown" class="hidden absolute z-50 mt-1 w-full bg-[#1e293b] border border-indigo-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                    </div>
+
+                                    <div class="mt-4 flex justify-center">
+                                        <div id="recaptcha-submit-2"></div>
                                     </div>
 
                                     <button type="submit" id="submit-btn" disabled
@@ -431,7 +556,7 @@
 
                                 <input type="hidden" name="purpose" value="general">
 
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
                                             <i class="far fa-calendar-alt mr-1"></i>Дата рождения
@@ -493,6 +618,10 @@
                                     </label>
                                 </div>
 
+                                <div class="mt-4 flex justify-center">
+                                    <div id="recaptcha-submit"></div>
+                                </div>
+
                                 <button type="submit" id="submit-btn" disabled
                                     class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-4 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                                     Рассчитать сейчас
@@ -513,12 +642,12 @@
     <section class="py-20 bg-[#080d15] border-t border-indigo-900/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="inline-block px-3 py-1 rounded-full bg-indigo-900/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">Знаки зодиака</span>
-                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Узнайте свой знак</h2>
-                <p class="text-indigo-300/80">Каждый знак обладает уникальными качествами и талантами</p>
+                <span class="inline-block px-3 py-1 rounded-full bg-indigo-900/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">12 знаков зодиака</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Знаки зодиака по датам рождения</h2>
+                <p class="text-indigo-300/80">Узнайте свой знак зодиака и его характеристики в натальной карте</p>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                 @php
                     $zodiacSigns = [
                         ['file' => 'aries', 'name' => 'Овен', 'date' => '21 мар — 19 апр', 'traits' => 'Смелость, энергия, лидерство', 'element' => 'fire'],
@@ -546,7 +675,7 @@
                 <div class="group relative p-5 rounded-2xl bg-gradient-to-b {{ $style['bg'] }} to-[#111827] border border-indigo-900/30 {{ $style['border'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/20">
                     <div class="flex items-start gap-4">
                         <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16">
-                            <img src="/images/zodiac/{{ $sign['file'] }}.png" alt="{{ $sign['name'] }}" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300">
+                            <img src="/images/zodiac/{{ $sign['file'] }}.png" alt="Знак зодиака {{ $sign['name'] }} — {{ $sign['date'] }}" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300">
                         </div>
                         <div class="flex-1 min-w-0">
                             <h3 class="text-white font-bold text-lg mb-0.5">{{ $sign['name'] }}</h3>
@@ -564,8 +693,8 @@
     <section class="py-20 bg-[#0B1120] border-t border-indigo-900/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="inline-block px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-4">Что вы получите</span>
-                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Полный анализ вашей карты</h2>
+                <span class="inline-block px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-4">Расшифровка натальной карты</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Что входит в натальную карту с расшифровкой</h2>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -614,9 +743,9 @@
     <section class="py-20 bg-[#0B1120] border-t border-indigo-900/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="inline-block px-3 py-1 rounded-full bg-indigo-900/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">Стихии</span>
-                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Четыре стихии зодиака</h2>
-                <p class="text-indigo-300/80">Стихия вашего знака определяет базовый темперамент и способ взаимодействия с миром</p>
+                <span class="inline-block px-3 py-1 rounded-full bg-indigo-900/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">Стихии в натальной карте</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Четыре стихии знаков зодиака</h2>
+                <p class="text-indigo-300/80">Стихия знака в натальной карте определяет темперамент и способ взаимодействия с миром</p>
             </div>
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -630,9 +759,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Энергия, страсть и стремление к действию. Огненные знаки — прирождённые лидеры.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/aries.png" alt="Овен" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/leo.png" alt="Лев" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/sagittarius.png" alt="Стрелец" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/aries.png" alt="Овен — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/leo.png" alt="Лев — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/sagittarius.png" alt="Стрелец — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
 
@@ -646,9 +775,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Стабильность, практичность и надёжность. Земные знаки строят прочный фундамент.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/taurus.png" alt="Телец" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/virgo.png" alt="Дева" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/capricorn.png" alt="Козерог" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/taurus.png" alt="Телец — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/virgo.png" alt="Дева — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/capricorn.png" alt="Козерог — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
 
@@ -662,9 +791,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Интеллект, общение и новые идеи. Воздушные знаки соединяют людей и концепции.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/gemini.png" alt="Близнецы" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/libra.png" alt="Весы" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/aquarius.png" alt="Водолей" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/gemini.png" alt="Близнецы — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/libra.png" alt="Весы — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/aquarius.png" alt="Водолей — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
 
@@ -678,9 +807,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Эмоции, интуиция и глубина чувств. Водные знаки понимают то, что скрыто.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/cancer.png" alt="Рак" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/scorpio.png" alt="Скорпион" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/pisces.png" alt="Рыбы" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/cancer.png" alt="Рак — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/scorpio.png" alt="Скорпион — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/pisces.png" alt="Рыбы — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
             </div>
@@ -691,7 +820,7 @@
     <section class="py-20 bg-[#080d15] border-t border-indigo-900/20">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-2xl md:text-3xl font-serif font-bold text-white">Как получить карту?</h2>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-white">Как рассчитать натальную карту онлайн бесплатно?</h2>
             </div>
 
             <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
@@ -716,26 +845,161 @@
     <!-- CTA Section -->
     <section class="py-20 bg-[#0B1120] border-t border-indigo-900/20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Узнайте, что говорят звёзды</h2>
-            <p class="text-indigo-300/80 mb-8">Бесплатный расчёт натальной карты с персональной расшифровкой</p>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Рассчитать натальную карту онлайн</h2>
+            <p class="text-indigo-300/80 mb-8">Бесплатно с подробной расшифровкой по дате рождения</p>
             <a href="#calcForm" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-105 border border-indigo-500/50">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
-                Рассчитать бесплатно
+                Построить натальную карту бесплатно
             </a>
+        </div>
+    </section>
+
+    <!-- SEO Content Section -->
+    <section class="py-20 bg-[#080d15] border-t border-indigo-900/20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Main Question -->
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-6">Что такое натальная карта?</h2>
+                <p class="text-indigo-300/90 text-lg leading-relaxed max-w-3xl mx-auto">
+                    <strong class="text-white">Натальная карта</strong> (карта рождения, гороскоп рождения) — это астрологическая схема, которая показывает положение Солнца, Луны и планет в момент вашего рождения. Каждая планета находится в определённом знаке зодиака и доме гороскопа, что определяет её влияние на вашу жизнь.
+                </p>
+            </div>
+
+            <!-- Info Cards Grid -->
+            <div class="grid md:grid-cols-2 gap-6 mb-12">
+                <!-- Card 1: How to calculate -->
+                <div class="bg-[#111827] rounded-2xl border border-indigo-900/30 p-6 md:p-8">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-white">Как рассчитать натальную карту?</h3>
+                    </div>
+                    <p class="text-indigo-300/80 leading-relaxed mb-4">
+                        Для построения натальной карты необходимы три параметра: <strong class="text-white">дата рождения</strong>, <strong class="text-white">точное время рождения</strong> и <strong class="text-white">место рождения</strong>.
+                    </p>
+                    <p class="text-indigo-300/80 leading-relaxed">
+                        Наш сервис использует Swiss Ephemeris — самую точную астрономическую библиотеку для расчёта положения планет.
+                    </p>
+                </div>
+
+                <!-- Card 2: Compatibility -->
+                <div class="bg-[#111827] rounded-2xl border border-indigo-900/30 p-6 md:p-8">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-serif font-bold text-white">Совместимость по натальной карте</h3>
+                    </div>
+                    <p class="text-indigo-300/80 leading-relaxed">
+                        Сравнение натальных карт двух людей (синастрия) позволяет оценить совместимость по дате рождения. Анализируются аспекты между планетами партнёров, положение Венеры и Марса, совместимость Лун и другие показатели.
+                    </p>
+                </div>
+            </div>
+
+            <!-- What's Included -->
+            <div class="bg-gradient-to-br from-[#111827] to-[#0f172a] rounded-2xl border border-indigo-900/30 p-6 md:p-8">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-xl bg-gold-500/10 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-white">Что входит в расшифровку натальной карты?</h3>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-indigo-950/30">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-indigo-300 text-sm font-bold">10</span>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Планет</p>
+                            <p class="text-indigo-400/70 text-sm">Солнце, Луна, Меркурий, Венера, Марс и др.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-indigo-950/30">
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-purple-300 text-sm font-bold">12</span>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Домов гороскопа</p>
+                            <p class="text-indigo-400/70 text-sm">Сферы жизни от личности до духовности</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-indigo-950/30">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Асцендент и MC</p>
+                            <p class="text-indigo-400/70 text-sm">Восходящий знак и Середина Неба</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-indigo-950/30">
+                        <div class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-pink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Аспекты</p>
+                            <p class="text-indigo-400/70 text-sm">Тригоны, квадраты, оппозиции</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-indigo-950/30">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">Лунные узлы</p>
+                            <p class="text-indigo-400/70 text-sm">Кармические точки судьбы</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-indigo-950/30">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">ИИ-астролог</p>
+                            <p class="text-indigo-400/70 text-sm">Персональная расшифровка</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-[#050914] border-t border-indigo-900/20 py-12">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <span class="text-xl font-serif font-bold text-white tracking-widest opacity-50">
-                ASTRO<span class="text-gold">CHART</span>
-            </span>
-            <div class="text-indigo-400 text-sm">
-                &copy; {{ date('Y') }} AstroChart. All rights reserved.
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                <span class="text-xl font-serif font-bold text-white tracking-widest opacity-50">
+                    КАРТА<span class="text-gold">НАТАЛ</span>
+                </span>
+                <nav class="flex flex-wrap justify-center gap-6 text-sm">
+                    <a href="/privacy" class="text-indigo-400 hover:text-white transition-colors">Политика конфиденциальности</a>
+                    <a href="/terms" class="text-indigo-400 hover:text-white transition-colors">Условия использования</a>
+                </nav>
+            </div>
+            <div class="border-t border-indigo-900/20 pt-6 text-center">
+                <p class="text-indigo-500 text-xs mb-2">
+                    Натальная карта онлайн бесплатно с расшифровкой — расчёт по дате рождения
+                </p>
+                <p class="text-indigo-600 text-xs">
+                    &copy; {{ date('Y') }} SMART CREATOR AI LLC. Все права защищены.
+                </p>
             </div>
         </div>
     </footer>
@@ -818,7 +1082,7 @@
         .animate-fade-in-up {
             animation: fadeInUp 0.3s ease-out forwards;
         }
-        @keyframes fadeInUp {
+        @@keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -860,8 +1124,74 @@
         // Initial validation on page load (for Moscow default)
         validateForm();
 
+        // reCAPTCHA site key - make global for all scripts
+        window.recaptchaSiteKey = '{{ config("services.recaptcha.site_key") }}';
+
+        // Explicitly render all v2 captchas - make global for access from all scripts
+        window.recaptchaSubmitWidget = null;
+        window.recaptchaSubmitWidget2 = null;
+        window.recaptchaSubmitWidget3 = null;
+        window.recaptchaLoginWidget = null;
+
+        // Wait for grecaptcha to be ready
+        function initRecaptcha() {
+            if (typeof grecaptcha === 'undefined') {
+                setTimeout(initRecaptcha, 100);
+                return;
+            }
+
+            if (window.recaptchaSiteKey) {
+                // Render captcha for submit forms
+                const recaptchaSubmitEl = document.getElementById('recaptcha-submit');
+                if (recaptchaSubmitEl) {
+                    window.recaptchaSubmitWidget = grecaptcha.render(recaptchaSubmitEl, {
+                        sitekey: window.recaptchaSiteKey,
+                        theme: 'dark',
+                        callback: enableSubmit
+                    });
+                }
+
+                const recaptchaSubmitEl2 = document.getElementById('recaptcha-submit-2');
+                if (recaptchaSubmitEl2) {
+                    window.recaptchaSubmitWidget2 = grecaptcha.render(recaptchaSubmitEl2, {
+                        sitekey: window.recaptchaSiteKey,
+                        theme: 'dark',
+                        callback: enableSubmit
+                    });
+                }
+
+                const recaptchaSubmitEl3 = document.getElementById('recaptcha-submit-3');
+                if (recaptchaSubmitEl3) {
+                    window.recaptchaSubmitWidget3 = grecaptcha.render(recaptchaSubmitEl3, {
+                        sitekey: window.recaptchaSiteKey,
+                        theme: 'dark',
+                        callback: enableSubmit
+                    });
+                }
+
+                // Render captcha for login form
+                const recaptchaLoginEl = document.getElementById('recaptcha-login');
+                if (recaptchaLoginEl) {
+                    window.recaptchaLoginWidget = grecaptcha.render(recaptchaLoginEl, {
+                        sitekey: window.recaptchaSiteKey,
+                        theme: 'dark',
+                        callback: enableLoginSubmit
+                    });
+                }
+                console.log('Captcha widgets rendered:', {
+                    submit: window.recaptchaSubmitWidget,
+                    submit2: window.recaptchaSubmitWidget2,
+                    submit3: window.recaptchaSubmitWidget3,
+                    login: window.recaptchaLoginWidget
+                });
+            }
+        }
+
+        // Start checking for grecaptcha
+        initRecaptcha();
+
         if (calcForm) {
-        calcForm.addEventListener('submit', function (e) {
+        calcForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             // Reset states
@@ -904,8 +1234,18 @@
             // Start Animation
             nextAnimationStep();
 
+            // Get reCAPTCHA token from the correct widget
+            let recaptchaToken = '';
+            if (typeof grecaptcha !== 'undefined') {
+                recaptchaToken = grecaptcha.getResponse(window.recaptchaSubmitWidget);
+                console.log('Captcha token:', recaptchaToken ? recaptchaToken.substring(0, 20) + '...' : 'NULL');
+            } else {
+                console.log('grecaptcha not defined');
+            }
+
             // Submit Data via AJAX
             const formData = new FormData(this);
+            formData.append('recaptcha_token', recaptchaToken);
 
             fetch("{{ route('calculate') }}", {
                 method: 'POST',
@@ -917,6 +1257,17 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    if (data.success === false) {
+                        alert(data.message || 'Произошла ошибка. Пожалуйста, попробуйте еще раз.');
+                        const modal = document.getElementById('processingModal');
+                        if (modal) modal.classList.add('hidden');
+                        // Reset captcha and disable button
+                        if (typeof grecaptcha !== 'undefined' && window.recaptchaSubmitWidget !== null) {
+                            grecaptcha.reset(window.recaptchaSubmitWidget);
+                        }
+                        document.getElementById('submit-btn').disabled = true;
+                        return;
+                    }
                     // Wait for animation to likely finish (min 3s total)
                     setTimeout(() => {
                         // If user is logged in, redirect to chart
@@ -934,6 +1285,11 @@
                     alert('Произошла ошибка. Пожалуйста, попробуйте еще раз.');
                     const modal = document.getElementById('processingModal');
                     if (modal) modal.classList.add('hidden');
+                    // Reset captcha and disable button
+                    if (typeof grecaptcha !== 'undefined') {
+                        grecaptcha.reset();
+                    }
+                    document.getElementById('submit-btn').disabled = true;
                 });
             });
         }
@@ -943,6 +1299,23 @@
             document.getElementById('city_id').value = '';
             document.getElementById('city-details').classList.add('hidden');
             validateForm();
+        }
+
+        // reCAPTCHA callbacks
+        function enableSubmit() {
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+            }
+        }
+
+        function enableLoginSubmit() {
+            const loginBtn = document.getElementById('loginSubmitBtn');
+            if (loginBtn) {
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+            }
         }
 
         // Close processing modal
@@ -1176,7 +1549,13 @@
 
         <!-- Content -->
         <div class="relative z-10 max-w-md w-full px-6">
-            <div class="bg-[#111827] rounded-2xl border border-indigo-900/50 p-8 shadow-2xl">
+            <div class="bg-[#111827] rounded-2xl border border-indigo-900/50 p-8 shadow-2xl relative">
+                <!-- Close Button -->
+                <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-indigo-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
                 <!-- Success State -->
                 <div id="loginSuccessState" class="hidden">
                     <div class="text-center">
@@ -1206,8 +1585,12 @@
                             <p id="loginError" class="text-red-400 text-sm mt-2 text-center hidden"></p>
                         </div>
 
-                        <button type="submit" id="loginSubmitBtn"
-                            class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors">
+                        <div class="mb-4 flex justify-center">
+                            <div id="recaptcha-login"></div>
+                        </div>
+
+                        <button type="submit" id="loginSubmitBtn" disabled
+                            class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600">
                             Получить ссылку
                         </button>
                     </form>
@@ -1221,12 +1604,24 @@
         // Close modal function
         function closeLoginModal() {
             document.getElementById('loginModal').classList.add('hidden');
+            // Reset to form state
+            document.getElementById('loginFormState').classList.remove('hidden');
+            document.getElementById('loginSuccessState').classList.add('hidden');
+            // Reset form
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginSubmitBtn').disabled = true;
+            document.getElementById('loginSubmitBtn').textContent = 'Получить ссылку';
+            document.getElementById('loginError').classList.add('hidden');
+            // Reset captcha
+            if (typeof grecaptcha !== 'undefined' && window.recaptchaLoginWidget !== null) {
+                grecaptcha.reset(window.recaptchaLoginWidget);
+            }
         }
 
         // Login Form
         const loginForm = document.getElementById('loginForm');
         if (loginForm) {
-            loginForm.addEventListener('submit', function(e) {
+            loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
                 const formData = new FormData(this);
@@ -1237,6 +1632,15 @@
                 submitBtn.textContent = 'Отправка...';
 
                 errorMsg.classList.add('hidden');
+
+                // Get reCAPTCHA token from login widget
+                if (typeof grecaptcha !== 'undefined') {
+                    const recaptchaToken = grecaptcha.getResponse(window.recaptchaLoginWidget);
+                    if (recaptchaToken) {
+                        formData.append('recaptcha_token', recaptchaToken);
+                    }
+                    console.log('Login captcha token:', recaptchaToken ? recaptchaToken.substring(0, 20) + '...' : 'NULL');
+                }
 
                 fetch(this.action, {
                     method: 'POST',
@@ -1253,6 +1657,11 @@
                         errorMsg.classList.remove('hidden');
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
+                        // Reset captcha
+                        if (typeof grecaptcha !== 'undefined' && window.recaptchaLoginWidget !== null) {
+                            grecaptcha.reset(window.recaptchaLoginWidget);
+                        }
+                        document.getElementById('loginSubmitBtn').disabled = true;
                     } else {
                         document.getElementById('loginFormState').classList.add('hidden');
                         document.getElementById('loginSuccessState').classList.remove('hidden');

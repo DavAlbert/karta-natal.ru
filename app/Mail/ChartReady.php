@@ -30,7 +30,7 @@ class ChartReady extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ваша натальная карта готова ✨',
+            subject: 'Ваша натальная карта готова — Natalnaya-Karta',
         );
     }
 

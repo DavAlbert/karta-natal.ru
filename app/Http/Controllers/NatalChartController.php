@@ -22,6 +22,26 @@ class NatalChartController extends Controller
 
     public function processAsync(Request $request)
     {
+        // Validate reCAPTCHA v2
+        $recaptchaToken = $request->input('recaptcha_token');
+        if (empty($recaptchaToken)) {
+            return response()->json(['success' => false, 'message' => 'Пожалуйста, подтвердите, что вы не робот.'], 422);
+        }
+
+        $secretKey = config('services.recaptcha.secret_key');
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+
+        $response = \Http::withoutVerifying()->post($verifyUrl, [
+            'secret' => $secretKey,
+            'response' => $recaptchaToken,
+        ]);
+
+        $responseData = $response->json();
+
+        if (!$responseData['success']) {
+            return response()->json(['success' => false, 'message' => 'Ошибка проверки reCAPTCHA. Попробуйте еще раз.'], 422);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
