@@ -112,26 +112,6 @@
                     </span>
                 </div>
 
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#features"
-                        class="flex items-center gap-2 text-indigo-200 hover:text-white font-medium transition-colors text-sm uppercase tracking-wider group">
-                        <svg class="w-4 h-4 text-indigo-400 group-hover:text-gold-400 transition-colors" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
-                        Гороскоп
-                    </a>
-                    <a href="#compatibility"
-                        class="flex items-center gap-2 text-indigo-200 hover:text-white font-medium transition-colors text-sm uppercase tracking-wider group">
-                        <svg class="w-4 h-4 text-indigo-400 group-hover:text-gold-400 transition-colors" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                        Совместимость
-                    </a>
-                </div>
 
                 <div class="flex items-center gap-4">
                     @auth
@@ -224,7 +204,7 @@
                                 </label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <label class="gender-btn cursor-pointer">
-                                        <input type="radio" name="gender" value="male" required class="hidden">
+                                        <input type="radio" name="gender" value="male" required class="hidden" checked>
                                         <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30 hover:border-indigo-600 hover:bg-indigo-900/30 transition-all">
                                             <i class="fas fa-mars text-indigo-400"></i>
                                             <span class="text-white text-sm font-medium">Мужской</span>
@@ -240,21 +220,7 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                    <i class="fas fa-bullseye mr-1"></i>Цель расчета
-                                </label>
-                                <select name="purpose" id="purpose" required
-                                    class="w-full input-professional rounded-lg px-4 py-3">
-                                    <option value="">Выберите цель...</option>
-                                    <option value="love">Любовь и отношения</option>
-                                    <option value="career">Карьера</option>
-                                    <option value="health">Здоровье</option>
-                                    <option value="finance">Финансы</option>
-                                    <option value="personal">Личностный рост</option>
-                                    <option value="general">Общий анализ</option>
-                                </select>
-                            </div>
+                            <input type="hidden" name="purpose" value="general">
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
@@ -272,56 +238,43 @@
                                         class="w-full input-professional rounded-lg px-4 py-3">
                                 </div>
                             </div>
-
-
-                            <div class="relative">
+                            <div>
                                 <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>Место рождения
+                                    <i class="fas fa-city mr-1"></i>Город рождения
                                 </label>
                                 <div class="relative">
                                     <input type="text" id="birth_place_search" autocomplete="off"
                                         class="w-full input-professional rounded-lg px-4 py-3 pr-10"
-                                        placeholder="Выберите или найдите город...">
-                                    <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        placeholder="Начните вводить название города...">
+                                    <div id="search-spinner" class="hidden absolute right-3 top-1/2 -translate-y-1/2">
+                                        <svg class="animate-spin h-5 w-5 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    </div>
+                                    <svg id="search-icon" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                                </div>
-                                <input type="hidden" id="city_id" name="city_id" required>
-
-                                <!-- Cities Dropdown -->
-                                <div id="cities-dropdown"
-                                    class="hidden absolute z-50 w-full mt-1 bg-[#1e293b] border border-indigo-500/30 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                                    @foreach($cities as $city)
-                                    <div class="city-option px-4 py-3 hover:bg-indigo-900/30 cursor-pointer border-b border-indigo-900/20 last:border-0 transition-colors"
-                                        data-city-id="{{ $city->id }}"
-                                        data-city-name="{{ $city->name }}"
-                                        data-city-lat="{{ $city->latitude }}"
-                                        data-city-lon="{{ $city->longitude }}"
-                                        data-city-tz="{{ $city->timezone_gmt }}">
-                                        <div class="text-white text-sm">{{ $city->name }}</div>
+                                    <!-- Cities Dropdown -->
+                                    <div id="cities-dropdown"
+                                        class="hidden absolute z-50 mt-1 bg-[#1e293b] border border-indigo-500/30 rounded-lg shadow-xl max-h-60 overflow-y-auto w-full left-0">
                                     </div>
-                                    @endforeach
                                 </div>
+                                <p class="text-xs text-indigo-400/60 mt-1">Можно вводить на русском или латиницей</p>
+                            </div>
+                            <input type="hidden" id="city_id" name="city_id" required>
 
-                                <!-- City Details Display -->
-                                <div id="city-details" class="hidden mt-2 p-3 bg-indigo-900/20 rounded-lg border border-indigo-800/30">
-                                    <div class="grid grid-cols-3 gap-2 text-xs">
-                                        <div>
-                                            <span class="text-indigo-400">Широта:</span>
-                                            <span class="text-white font-mono" id="display-latitude">-</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-indigo-400">Долгота:</span>
-                                            <span class="text-white font-mono" id="display-longitude">-</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-indigo-400">GMT:</span>
-                                            <span class="text-gold-400 font-mono" id="display-timezone">-</span>
-                                        </div>
-                                    </div>
+                            <!-- City Details Display -->
+                            <div id="city-details" class="hidden mt-2 p-3 bg-indigo-900/20 rounded-lg border border-indigo-800/30 text-xs">
+                                <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                                    <span class="text-white" id="display-city">-</span>
+                                    <span class="text-indigo-500">•</span>
+                                    <span class="text-indigo-300" id="display-country">-</span>
+                                    <span class="text-indigo-500">•</span>
+                                    <span class="text-indigo-400 font-mono"><span id="display-latitude">-</span>, <span id="display-longitude">-</span></span>
                                 </div>
                             </div>
-
+                            </div>
 
                             <div class="mt-4">
                                 <label class="flex items-start gap-3 cursor-pointer group">
@@ -348,61 +301,221 @@
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-24 bg-[#0B1120] border-t border-indigo-900/20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Что расскажет ваша карта?</h2>
-                <div class="h-1 w-20 bg-gold-500 mx-auto rounded-full"></div>
+    <!-- Zodiac Signs Section -->
+    <section class="py-20 bg-[#080d15] border-t border-indigo-900/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="inline-block px-3 py-1 rounded-full bg-indigo-900/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">Знаки зодиака</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Узнайте свой знак</h2>
+                <p class="text-indigo-300/80">Каждый знак обладает уникальными качествами и талантами</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div
-                    class="p-8 rounded-xl bg-[#111827] border border-indigo-900/30 hover:border-gold-500/30 transition-colors">
-                    <div
-                        class="w-12 h-12 bg-indigo-900/30 rounded-full flex items-center justify-center mb-6 text-2xl border border-indigo-800 text-gold-500">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                @php
+                    $zodiacSigns = [
+                        ['file' => 'aries', 'name' => 'Овен', 'date' => '21 мар — 19 апр', 'traits' => 'Смелость, энергия, лидерство', 'element' => 'fire'],
+                        ['file' => 'taurus', 'name' => 'Телец', 'date' => '20 апр — 20 май', 'traits' => 'Надёжность, терпение, верность', 'element' => 'earth'],
+                        ['file' => 'gemini', 'name' => 'Близнецы', 'date' => '21 май — 20 июн', 'traits' => 'Общительность, ум, гибкость', 'element' => 'air'],
+                        ['file' => 'cancer', 'name' => 'Рак', 'date' => '21 июн — 22 июл', 'traits' => 'Забота, интуиция, преданность', 'element' => 'water'],
+                        ['file' => 'leo', 'name' => 'Лев', 'date' => '23 июл — 22 авг', 'traits' => 'Харизма, щедрость, творчество', 'element' => 'fire'],
+                        ['file' => 'virgo', 'name' => 'Дева', 'date' => '23 авг — 22 сен', 'traits' => 'Аналитика, трудолюбие, забота', 'element' => 'earth'],
+                        ['file' => 'libra', 'name' => 'Весы', 'date' => '23 сен — 22 окт', 'traits' => 'Гармония, дипломатия, эстетика', 'element' => 'air'],
+                        ['file' => 'scorpio', 'name' => 'Скорпион', 'date' => '23 окт — 21 ноя', 'traits' => 'Страсть, глубина, решимость', 'element' => 'water'],
+                        ['file' => 'sagittarius', 'name' => 'Стрелец', 'date' => '22 ноя — 21 дек', 'traits' => 'Оптимизм, честность, свобода', 'element' => 'fire'],
+                        ['file' => 'capricorn', 'name' => 'Козерог', 'date' => '22 дек — 19 янв', 'traits' => 'Амбиции, дисциплина, мудрость', 'element' => 'earth'],
+                        ['file' => 'aquarius', 'name' => 'Водолей', 'date' => '20 янв — 18 фев', 'traits' => 'Оригинальность, гуманизм, интеллект', 'element' => 'air'],
+                        ['file' => 'pisces', 'name' => 'Рыбы', 'date' => '19 фев — 20 мар', 'traits' => 'Эмпатия, творчество, мечтательность', 'element' => 'water'],
+                    ];
+                    $elementStyles = [
+                        'fire' => ['border' => 'hover:border-red-500/50', 'bg' => 'from-red-500/5', 'text' => 'text-red-400'],
+                        'earth' => ['border' => 'hover:border-amber-500/50', 'bg' => 'from-amber-500/5', 'text' => 'text-amber-400'],
+                        'air' => ['border' => 'hover:border-cyan-500/50', 'bg' => 'from-cyan-500/5', 'text' => 'text-cyan-400'],
+                        'water' => ['border' => 'hover:border-blue-500/50', 'bg' => 'from-blue-500/5', 'text' => 'text-blue-400'],
+                    ];
+                @endphp
+                @foreach($zodiacSigns as $sign)
+                @php $style = $elementStyles[$sign['element']]; @endphp
+                <div class="group relative p-5 rounded-2xl bg-gradient-to-b {{ $style['bg'] }} to-[#111827] border border-indigo-900/30 {{ $style['border'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/20">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16">
+                            <img src="/images/zodiac/{{ $sign['file'] }}.png" alt="{{ $sign['name'] }}" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-white font-bold text-lg mb-0.5">{{ $sign['name'] }}</h3>
+                            <p class="text-indigo-400/60 text-xs mb-2">{{ $sign['date'] }}</p>
+                            <p class="{{ $style['text'] }} text-xs leading-relaxed">{{ $sign['traits'] }}</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Личность (Солнце)</h3>
-                    <p class="text-indigo-300 text-sm leading-relaxed">
-                        Ваше истинное "Я", жизненная энергия и основные черты характера. То, кем вы являетесь на самом
-                        деле.
-                    </p>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Get Section -->
+    <section class="py-20 bg-[#0B1120] border-t border-indigo-900/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="inline-block px-3 py-1 rounded-full bg-gold-500/10 text-gold-400 text-xs font-semibold uppercase tracking-wider mb-4">Что вы получите</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Полный анализ вашей карты</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 rounded-2xl bg-[#111827] border border-indigo-900/30 hover:border-indigo-500/30 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-4">
+                        <img src="/images/planets/sun.png" alt="" class="w-8 h-8">
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Позиции планет</h3>
+                    <p class="text-indigo-300/70 text-sm leading-relaxed">10 планет в знаках зодиака с точными градусами и расшифровкой значений</p>
                 </div>
 
-                <div
-                    class="p-8 rounded-xl bg-[#111827] border border-indigo-900/30 hover:border-gold-500/30 transition-colors">
-                    <div
-                        class="w-12 h-12 bg-indigo-900/30 rounded-full flex items-center justify-center mb-6 text-2xl border border-indigo-800 text-indigo-300">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                <div class="p-6 rounded-2xl bg-[#111827] border border-indigo-900/30 hover:border-indigo-500/30 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Эмоции (Луна)</h3>
-                    <p class="text-indigo-300 text-sm leading-relaxed">
-                        Ваш внутренний мир, подсознание и эмоциональные потребности. Как вы любите и чувствуете.
-                    </p>
+                    <h3 class="text-lg font-bold text-white mb-2">12 домов</h3>
+                    <p class="text-indigo-300/70 text-sm leading-relaxed">Сферы жизни от личности до карьеры — где проявляется энергия планет</p>
                 </div>
 
-                <div
-                    class="p-8 rounded-xl bg-[#111827] border border-indigo-900/30 hover:border-gold-500/30 transition-colors">
-                    <div
-                        class="w-12 h-12 bg-indigo-900/30 rounded-full flex items-center justify-center mb-6 text-2xl border border-indigo-800 text-purple-400">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                <div class="p-6 rounded-2xl bg-[#111827] border border-indigo-900/30 hover:border-indigo-500/30 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Маска (Асцендент)</h3>
-                    <p class="text-indigo-300 text-sm leading-relaxed">
-                        Первое впечатление, которое вы производите на окружающих. Ваш социальный "интерфейс".
-                    </p>
+                    <h3 class="text-lg font-bold text-white mb-2">Аспекты</h3>
+                    <p class="text-indigo-300/70 text-sm leading-relaxed">Связи между планетами — гармоничные трины и напряжённые квадраты</p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-[#111827] border border-indigo-900/30 hover:border-indigo-500/30 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-gold-500/10 flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">ИИ-астролог</h3>
+                    <p class="text-indigo-300/70 text-sm leading-relaxed">Задавайте вопросы о любви, карьере, здоровье — получайте ответы</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Elements Section -->
+    <section class="py-20 bg-[#0B1120] border-t border-indigo-900/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="inline-block px-3 py-1 rounded-full bg-indigo-900/50 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4">Стихии</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Четыре стихии зодиака</h2>
+                <p class="text-indigo-300/80">Стихия вашего знака определяет базовый темперамент и способ взаимодействия с миром</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Fire -->
+                <div class="group p-6 rounded-2xl bg-gradient-to-b from-red-900/20 to-[#111827] border border-red-500/20 hover:border-red-500/40 transition-all hover:-translate-y-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
+                            <span class="text-2xl">🔥</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-red-400">Огонь</h3>
+                    </div>
+                    <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Энергия, страсть и стремление к действию. Огненные знаки — прирождённые лидеры.</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
+                        <img src="/images/zodiac/aries.png" alt="Овен" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/leo.png" alt="Лев" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/sagittarius.png" alt="Стрелец" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                    </div>
+                </div>
+
+                <!-- Earth -->
+                <div class="group p-6 rounded-2xl bg-gradient-to-b from-amber-900/20 to-[#111827] border border-amber-500/20 hover:border-amber-500/40 transition-all hover:-translate-y-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                            <span class="text-2xl">🌍</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-amber-400">Земля</h3>
+                    </div>
+                    <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Стабильность, практичность и надёжность. Земные знаки строят прочный фундамент.</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
+                        <img src="/images/zodiac/taurus.png" alt="Телец" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/virgo.png" alt="Дева" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/capricorn.png" alt="Козерог" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                    </div>
+                </div>
+
+                <!-- Air -->
+                <div class="group p-6 rounded-2xl bg-gradient-to-b from-cyan-900/20 to-[#111827] border border-cyan-500/20 hover:border-cyan-500/40 transition-all hover:-translate-y-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                            <span class="text-2xl">💨</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-cyan-400">Воздух</h3>
+                    </div>
+                    <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Интеллект, общение и новые идеи. Воздушные знаки соединяют людей и концепции.</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
+                        <img src="/images/zodiac/gemini.png" alt="Близнецы" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/libra.png" alt="Весы" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/aquarius.png" alt="Водолей" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                    </div>
+                </div>
+
+                <!-- Water -->
+                <div class="group p-6 rounded-2xl bg-gradient-to-b from-blue-900/20 to-[#111827] border border-blue-500/20 hover:border-blue-500/40 transition-all hover:-translate-y-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                            <span class="text-2xl">💧</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-blue-400">Вода</h3>
+                    </div>
+                    <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Эмоции, интуиция и глубина чувств. Водные знаки понимают то, что скрыто.</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
+                        <img src="/images/zodiac/cancer.png" alt="Рак" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/scorpio.png" alt="Скорпион" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/pisces.png" alt="Рыбы" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-20 bg-[#080d15] border-t border-indigo-900/20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-white">Как получить карту?</h2>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold">1</div>
+                    <span class="text-indigo-200 text-sm">Введите дату и место рождения</span>
+                </div>
+                <svg class="hidden md:block w-8 h-8 text-indigo-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">2</div>
+                    <span class="text-indigo-200 text-sm">Получите ссылку на email</span>
+                </div>
+                <svg class="hidden md:block w-8 h-8 text-indigo-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gold-500/20 border border-gold-500/30 flex items-center justify-center text-gold-400 font-bold">3</div>
+                    <span class="text-indigo-200 text-sm">Изучите карту и чат с ИИ</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-[#0B1120] border-t border-indigo-900/20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Узнайте, что говорят звёзды</h2>
+            <p class="text-indigo-300/80 mb-8">Бесплатный расчёт натальной карты с персональной расшифровкой</p>
+            <a href="#calcForm" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-105 border border-indigo-500/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+                Рассчитать бесплатно
+            </a>
         </div>
     </section>
 
@@ -422,98 +535,78 @@
     <!-- Processing Modal -->
     <div id="processingModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-[#0B1120]/95 backdrop-blur-md"></div>
+        <div class="absolute inset-0 bg-[#0B1120]/98 backdrop-blur-sm"></div>
 
         <!-- Content -->
-        <div class="relative z-10 max-w-md w-full px-6 text-center">
+        <div class="relative z-10 max-w-sm w-full px-6">
 
             <!-- 1. LOADING STATE -->
             <div id="loadingState">
-                <!-- Zodiac Circle Loader -->
-                <div class="relative w-64 h-64 mx-auto mb-10 flex items-center justify-center">
-                    <!-- Central Pulse -->
-                    <div class="absolute w-32 h-32 bg-indigo-900/30 rounded-full blur-2xl animate-pulse"></div>
-
-                    <!-- Calculates positions for 12 zodiacs -->
-                    @php
-                        $zodiacs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'];
-                    @endphp
-
-                    <div class="relative w-full h-full animate-[spin_20s_linear_infinite]">
-                        @foreach($zodiacs as $index => $sign)
-                            @php
-                                $angle = ($index * 30); // 360 / 12
-                                $rad = deg2rad($angle);
-                                // Radius = 45% to keep inside container
-                                $x = 50 + (45 * cos($rad));
-                                $y = 50 + (45 * sin($rad));
-                            @endphp
-                            <div class="absolute w-8 h-8 -ml-4 -mt-4 transition-all duration-500"
-                                style="left: {{ $x }}%; top: {{ $y }}%; transform: rotate({{ $angle + 90 }}deg)">
-                                <img src="/images/zodiac/{{ $sign }}.png" class="w-full h-full object-contain opacity-60">
+                <div class="bg-[#111827] rounded-2xl border border-indigo-900/50 p-8 shadow-2xl">
+                    <!-- Loader Animation -->
+                    <div class="flex justify-center mb-8">
+                        <div class="relative">
+                            <!-- Outer ring -->
+                            <div class="w-20 h-20 rounded-full border-2 border-indigo-900/50"></div>
+                            <!-- Spinning arc -->
+                            <div class="absolute inset-0 w-20 h-20 rounded-full border-2 border-transparent border-t-indigo-500 animate-spin"></div>
+                            <!-- Inner glow -->
+                            <div class="absolute inset-3 w-14 h-14 rounded-full bg-indigo-500/10 animate-pulse"></div>
+                            <!-- Center icon -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                </svg>
                             </div>
-                        @endforeach
+                        </div>
                     </div>
-                </div>
 
-                <h2 class="text-3xl font-serif font-bold text-white mb-2 tracking-widest">CALCULATING</h2>
-                <p class="text-indigo-300 text-sm mb-8 font-mono tracking-widest uppercase" id="statusText">CONNECTING
-                    TO SWISS EPHEMERIS...</p>
+                    <!-- Status Text -->
+                    <h3 class="text-xl font-semibold text-white text-center mb-2">Рассчитываем карту</h3>
+                    <p class="text-indigo-400 text-sm text-center mb-6" id="statusText">Подключение к эфемеридам...</p>
 
-                <!-- Progress Bar -->
-                <div class="relative w-full h-1 bg-indigo-900/50 rounded-full overflow-hidden">
-                    <div class="bg-gold-500 h-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(251,191,36,0.8)]"
-                        style="width: 0%" id="progressBar"></div>
-                </div>
-                <div class="flex justify-between mt-2 text-[10px] text-indigo-500 font-mono uppercase tracking-widest">
-                    <span>Progress</span>
-                    <span id="percentage">0%</span>
+                    <!-- Progress Bar -->
+                    <div class="relative w-full h-2 bg-indigo-900/30 rounded-full overflow-hidden mb-2">
+                        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full transition-all duration-500 ease-out rounded-full"
+                            style="width: 0%" id="progressBar"></div>
+                    </div>
+                    <p class="text-indigo-500 text-xs text-right" id="percentage">0%</p>
                 </div>
             </div>
 
-            <!-- 2. SUCCESS STATE (Hidden initially) -->
+            <!-- 2. SUCCESS STATE -->
             <div id="successState" class="hidden animate-fade-in-up">
-                <div
-                    class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/30">
-                    <svg class="w-10 h-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+                <div class="bg-[#111827] rounded-2xl border border-emerald-900/50 p-8 shadow-2xl text-center">
+                    <!-- Success Icon -->
+                    <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/30">
+                        <svg class="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+
+                    <h3 class="text-xl font-semibold text-white mb-2">Карта готова!</h3>
+                    <p class="text-indigo-300 text-sm mb-6">
+                        Ссылка отправлена на вашу почту
+                    </p>
+
+                    <button onclick="document.getElementById('processingModal').classList.add('hidden'); location.reload();"
+                        class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl transition-colors">
+                        Закрыть
+                    </button>
                 </div>
-
-                <h2 class="text-3xl font-serif font-bold text-white mb-4">Готово!</h2>
-                <p class="text-indigo-200 mb-4 leading-relaxed">
-                    Мы отправили ссылку на вашу карту вам на почту.
-                </p>
-                <p class="text-gold-400 font-bold mb-8">
-                    Проверьте email и установите пароль для доступа к карте.
-                </p>
-
-                <button onclick="document.getElementById('processingModal').classList.add('hidden'); location.reload();"
-                    class="text-sm text-indigo-400 hover:text-white transition-colors">
-                    Закрыть
-                </button>
             </div>
 
         </div>
     </div>
 
-    <!-- Styles for custom animations -->
+    <!-- Styles -->
     <style>
         .animate-fade-in-up {
-            animation: fadeInUp 0.5s ease-out forwards;
+            animation: fadeInUp 0.3s ease-out forwards;
         }
-
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 
@@ -525,7 +618,7 @@
         const nameInput = document.querySelector('input[name="name"]');
         const emailInput = document.querySelector('input[name="email"]');
         const genderInputs = document.querySelectorAll('input[name="gender"]');
-        const purposeInput = document.querySelector('select[name="purpose"]');
+        const purposeInput = document.querySelector('input[name="purpose"]');
         const birthDateInput = document.getElementById('birth_date');
         const birthTimeInput = document.getElementById('birth_time');
         const cityIdInputValidation = document.getElementById('city_id');
@@ -534,7 +627,7 @@
             const name = nameInput.value.trim();
             const email = emailInput.value.trim();
             const gender = Array.from(genderInputs).some(input => input.checked);
-            const purpose = purposeInput.value;
+            const purpose = purposeInput ? purposeInput.value : 'general';
             const birthDate = birthDateInput.value;
             const birthTime = birthTimeInput.value;
             const cityId = cityIdInputValidation.value;
@@ -547,7 +640,6 @@
         nameInput.addEventListener('input', validateForm);
         emailInput.addEventListener('input', validateForm);
         genderInputs.forEach(input => input.addEventListener('change', validateForm));
-        purposeInput.addEventListener('change', validateForm);
         birthDateInput.addEventListener('change', validateForm);
         birthTimeInput.addEventListener('change', validateForm);
 
@@ -624,80 +716,152 @@
                 });
         });
 
-        // City dropdown with client-side search
+        // City search with backend API
         const searchInput = document.getElementById('birth_place_search');
         const cityIdInput = document.getElementById('city_id');
         const dropdown = document.getElementById('cities-dropdown');
         const cityDetails = document.getElementById('city-details');
+        const displayCountry = document.getElementById('display-country');
+        const displayCity = document.getElementById('display-city');
         const displayLatitude = document.getElementById('display-latitude');
         const displayLongitude = document.getElementById('display-longitude');
-        const displayTimezone = document.getElementById('display-timezone');
-        const allCityOptions = dropdown ? Array.from(dropdown.querySelectorAll('.city-option')) : [];
+        const searchSpinner = document.getElementById('search-spinner');
+        const searchIcon = document.getElementById('search-icon');
+        let searchTimeout = null;
+        let currentQuery = '';
 
-        // Transliteration map (Latin to Cyrillic)
-        const translitMap = {
-            'a': 'а', 'b': 'б', 'v': 'в', 'g': 'г', 'd': 'д', 'e': 'е', 'yo': 'ё', 'zh': 'ж',
-            'z': 'з', 'i': 'и', 'y': 'й', 'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о',
-            'p': 'п', 'r': 'р', 's': 'с', 't': 'т', 'u': 'у', 'f': 'ф', 'h': 'х', 'kh': 'х',
-            'ts': 'ц', 'ch': 'ч', 'sh': 'ш', 'shch': 'щ', 'shh': 'щ', 'w': 'ш', 'yu': 'ю', 'ya': 'я',
-            'j': 'й', 'c': 'ц', 'x': 'кс', 'q': 'к'
+        // Country code to Russian name mapping
+        const countryNames = {
+            'AD': 'Андорра', 'AE': 'ОАЭ', 'AL': 'Албания', 'AM': 'Армения', 'AT': 'Австрия',
+            'AU': 'Австралия', 'AX': 'Аландские о-ва', 'AZ': 'Азербайджан',
+            'BA': 'Босния и Герцеговина', 'BE': 'Бельгия', 'BG': 'Болгария', 'BR': 'Бразилия', 'BY': 'Беларусь',
+            'CA': 'Канада', 'CH': 'Швейцария', 'CN': 'Китай', 'CO': 'Колумбия',
+            'CU': 'Куба', 'CY': 'Кипр', 'CZ': 'Чехия', 'DE': 'Германия',
+            'DK': 'Дания', 'EE': 'Эстония', 'EG': 'Египет', 'ES': 'Испания',
+            'FI': 'Финляндия', 'FJ': 'Фиджи', 'FR': 'Франция', 'GB': 'Великобритания',
+            'GE': 'Грузия', 'GG': 'Гернси', 'GI': 'Гибралтар', 'GR': 'Греция',
+            'HK': 'Гонконг', 'HR': 'Хорватия', 'HU': 'Венгрия', 'IE': 'Ирландия',
+            'IL': 'Израиль', 'IM': 'Остров Мэн', 'IN': 'Индия', 'IR': 'Иран',
+            'IT': 'Италия', 'JE': 'Джерси', 'JP': 'Япония', 'KE': 'Кения',
+            'KG': 'Киргизия', 'KR': 'Южная Корея', 'KZ': 'Казахстан',
+            'LI': 'Лихтенштейн', 'LT': 'Литва', 'LU': 'Люксембург',
+            'LV': 'Латвия', 'MC': 'Монако', 'MD': 'Молдова', 'ME': 'Черногория',
+            'MK': 'Северная Македония', 'MT': 'Мальта', 'MX': 'Мексика', 'NG': 'Нигерия',
+            'NL': 'Нидерланды', 'NO': 'Норвегия', 'NP': 'Непал', 'NZ': 'Новая Зеландия',
+            'OM': 'Оман', 'PE': 'Перу', 'PL': 'Польша', 'PS': 'Палестина',
+            'PT': 'Португалия', 'RO': 'Румыния', 'RS': 'Сербия', 'RU': 'Россия',
+            'SA': 'Саудовская Аравия', 'SE': 'Швеция', 'SG': 'Сингапур', 'SI': 'Словения',
+            'SK': 'Словакия', 'SM': 'Сан-Марино', 'TH': 'Таиланд', 'TJ': 'Таджикистан',
+            'TM': 'Туркменистан', 'TR': 'Турция', 'TW': 'Тайвань',
+            'UA': 'Украина', 'US': 'США', 'UZ': 'Узбекистан', 'VA': 'Ватикан',
+            'VN': 'Вьетнам', 'XK': 'Косово', 'ZA': 'ЮАР',
         };
 
-        function transliterate(text) {
-            let result = text.toLowerCase();
-            // Sort by length (longest first) to handle multi-char mappings
-            const sortedKeys = Object.keys(translitMap).sort((a, b) => b.length - a.length);
-            for (const latin of sortedKeys) {
-                result = result.split(latin).join(translitMap[latin]);
-            }
-            return result;
+        function getCountryName(code) {
+            return countryNames[code] || code;
         }
 
-        function filterCities(query) {
-            const searchTerm = query.toLowerCase().trim();
-            const translitSearchTerm = transliterate(searchTerm);
+        function showSpinner() {
+            searchSpinner.classList.remove('hidden');
+            searchIcon.classList.add('hidden');
+        }
 
-            if (searchTerm === '') {
-                // Reset to original order
-                allCityOptions.forEach(option => {
-                    dropdown.appendChild(option);
-                });
+        function hideSpinner() {
+            searchSpinner.classList.add('hidden');
+            searchIcon.classList.remove('hidden');
+        }
+
+        function renderCities(cities, query) {
+            dropdown.innerHTML = '';
+
+            if (cities.length === 0) {
+                dropdown.innerHTML = `
+                    <div class="px-4 py-3 text-indigo-400 text-sm">
+                        <i class="fas fa-search mr-2"></i>Город не найден. Попробуйте другое написание.
+                    </div>`;
+                dropdown.classList.remove('hidden');
                 return;
             }
 
-            // Sort cities: matching ones first, rest after
-            const matchingCities = [];
-            const nonMatchingCities = [];
+            cities.forEach(city => {
+                const div = document.createElement('div');
+                div.className = 'city-option px-4 py-3 hover:bg-indigo-900/30 cursor-pointer border-b border-indigo-900/20 last:border-0 transition-colors';
+                div.dataset.cityId = city.id;
+                div.dataset.cityName = city.name_ru || city.name;
+                div.dataset.cityNameLatin = city.name;
+                div.dataset.cityCountry = city.country;
+                div.dataset.cityLat = city.latitude;
+                div.dataset.cityLon = city.longitude;
+                div.dataset.cityTz = city.timezone_gmt;
 
-            allCityOptions.forEach(option => {
-                const cityName = option.dataset.cityName.toLowerCase();
-                // Match both original search and transliterated search
-                if (cityName.includes(searchTerm) || cityName.includes(translitSearchTerm)) {
-                    matchingCities.push(option);
-                } else {
-                    nonMatchingCities.push(option);
-                }
+                // Show both Russian and Latin names if different
+                const displayName = city.name_ru || city.name;
+                const secondaryName = city.name_ru && city.name_ru !== city.name ? city.name : null;
+                const countryName = getCountryName(city.country);
+
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-white text-sm font-medium">${displayName}</span>
+                            ${secondaryName ? `<span class="text-indigo-400 text-xs ml-2">(${secondaryName})</span>` : ''}
+                        </div>
+                        <span class="text-indigo-500 text-xs">${countryName}</span>
+                    </div>`;
+
+                div.addEventListener('click', function() {
+                    selectCity(this);
+                });
+
+                dropdown.appendChild(div);
             });
 
-            // Clear dropdown and re-append in new order
-            dropdown.innerHTML = '';
+            dropdown.classList.remove('hidden');
+        }
 
-            // Add matching cities first
-            matchingCities.forEach(city => dropdown.appendChild(city));
+        async function searchCities(query) {
+            query = query.trim();
 
-            // Add non-matching cities after
-            nonMatchingCities.forEach(city => dropdown.appendChild(city));
+            if (query.length < 2) {
+                dropdown.classList.add('hidden');
+                hideSpinner();
+                return;
+            }
+
+            currentQuery = query;
+            showSpinner();
+
+            try {
+                const response = await fetch(`/cities/search/${encodeURIComponent(query)}`);
+                const cities = await response.json();
+
+                // Only render if this is still the current query
+                if (query === currentQuery) {
+                    renderCities(cities, query);
+                    hideSpinner();
+                }
+            } catch (error) {
+                console.error('Failed to search cities:', error);
+                hideSpinner();
+                dropdown.innerHTML = `
+                    <div class="px-4 py-3 text-red-400 text-sm">
+                        <i class="fas fa-exclamation-circle mr-2"></i>Ошибка поиска. Попробуйте позже.
+                    </div>`;
+                dropdown.classList.remove('hidden');
+            }
         }
 
         function selectCity(element) {
-            // Set values
-            searchInput.value = element.dataset.cityName;
+            // Set values - display Russian name, store ID
+            const displayName = element.dataset.cityName;
+            searchInput.value = displayName;
             cityIdInput.value = element.dataset.cityId;
 
-            // Show details
-            displayLatitude.textContent = element.dataset.cityLat + '°';
-            displayLongitude.textContent = element.dataset.cityLon + '°';
-            displayTimezone.textContent = 'GMT+' + element.dataset.cityTz;
+            // Show details with Russian country name
+            const countryCode = element.dataset.cityCountry || '-';
+            displayCountry.textContent = getCountryName(countryCode);
+            displayCity.textContent = displayName;
+            displayLatitude.textContent = parseFloat(element.dataset.cityLat).toFixed(2) + '°';
+            displayLongitude.textContent = parseFloat(element.dataset.cityLon).toFixed(2) + '°';
             cityDetails.classList.remove('hidden');
 
             dropdown.classList.add('hidden');
@@ -709,34 +873,27 @@
         }
 
         if (searchInput && dropdown && cityIdInput) {
-            // Setup click handlers for all cities
-            allCityOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    selectCity(this);
-                });
-            });
-
-            // Open dropdown on focus
-            searchInput.addEventListener('focus', function () {
-                filterCities(this.value);
-                dropdown.classList.remove('hidden');
-            });
-
-            // Search as user types (client-side)
+            // Search as user types with debounce
             searchInput.addEventListener('input', function () {
-                const query = this.value;
-
                 // Clear selection when typing
                 if (cityIdInput.value) {
                     cityIdInput.value = '';
                     cityDetails.classList.add('hidden');
-                    if (typeof validateForm === 'function') {
-                        validateForm();
-                    }
+                    validateForm();
                 }
 
-                filterCities(query);
-                dropdown.classList.remove('hidden');
+                // Debounce search
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchCities(this.value);
+                }, 300);
+            });
+
+            // Show dropdown on focus if there's text
+            searchInput.addEventListener('focus', function () {
+                if (this.value.trim().length >= 2) {
+                    searchCities(this.value);
+                }
             });
 
             // Hide dropdown when clicking outside
@@ -746,13 +903,35 @@
                 }
             });
 
-            // Set Moscow as default
-            @if(isset($defaultCity) && $defaultCity)
-            const defaultCityOption = allCityOptions.find(opt => opt.dataset.cityId === '{{ $defaultCity->id }}');
-            if (defaultCityOption) {
-                selectCity(defaultCityOption);
-            }
-            @endif
+            // Keyboard navigation
+            searchInput.addEventListener('keydown', function(e) {
+                const options = dropdown.querySelectorAll('.city-option');
+                const activeOption = dropdown.querySelector('.city-option.bg-indigo-900/50');
+                let currentIndex = Array.from(options).indexOf(activeOption);
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (activeOption) activeOption.classList.remove('bg-indigo-900/50');
+                    currentIndex = (currentIndex + 1) % options.length;
+                    options[currentIndex]?.classList.add('bg-indigo-900/50');
+                    options[currentIndex]?.scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (activeOption) activeOption.classList.remove('bg-indigo-900/50');
+                    currentIndex = currentIndex <= 0 ? options.length - 1 : currentIndex - 1;
+                    options[currentIndex]?.classList.add('bg-indigo-900/50');
+                    options[currentIndex]?.scrollIntoView({ block: 'nearest' });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (activeOption) {
+                        selectCity(activeOption);
+                    } else if (options.length === 1) {
+                        selectCity(options[0]);
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                }
+            });
         }
     </script>
 </body>

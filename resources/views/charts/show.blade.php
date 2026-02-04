@@ -156,8 +156,7 @@
             align-items: start;
         }
         .chart-column {
-            position: sticky;
-            top: 1rem;
+            /* No sticky - scrolls with page */
         }
 
         /* Chart Card */
@@ -599,7 +598,7 @@
 
     function getAbsDeg($s, $d) { $idx = array_search($s, ['Овен','Телец','Близнецы','Рак','Лев','Дева','Весы','Скорпион','Стрелец','Козерог','Водолей','Рыбы']); return ($idx?:0)*30+$d; }
     function toSvgAngle($deg, $asc) { return 180 - ($deg - $asc); }
-    function polar($cx, $cy, $r, $a) { $rad = $a * M_PI / 180; return ['x' => $cx + $r * cos($rad), 'y' => $cy - $r * sin($rad)]; }
+    function polar($cx, $cy, $r, $a) { $rad = deg2rad($a); return ['x' => $cx + $r * cos($rad), 'y' => $cy - $r * sin($rad)]; }
 
     $houses = $chart->chart_data['houses'] ?? [];
     $planets = $chart->chart_data['planets'] ?? [];
@@ -615,8 +614,8 @@
     $sunSign = $planets['sun']['sign'] ?? 'Овен';
     $moonSign = $planets['moon']['sign'] ?? 'Рак';
 
-    // SVG Calculations
-    $cx = 350; $cy = 350; $rOuter = 330; $rHouse = 290; $rInner = 100; $rPlanet = 210;
+    // SVG Calculations - centered at 400,400 with viewBox 800x800
+    $cx = 400; $cy = 400; $rOuter = 330; $rHouse = 290; $rInner = 100; $rPlanet = 210;
     $zodiac = []; foreach ($signOrder as $i => $s) { $ang = toSvgAngle($i*30, $ascAbs); $zodiac[$i] = ['file' => $signToFile[$s] ?? strtolower($s), 'pos' => polar($cx,$cy,$rOuter+18,$ang), 'ls' => polar($cx,$cy,$rOuter,$ang), 'le' => polar($cx,$cy,$rOuter-15,$ang)]; }
     $hLines = []; for($i=1;$i<=12;$i++){ $h=$houses[$i]??['sign'=>'Овен','degree'=>0]; $abs=getAbsDeg($h['sign'],$h['degree']); $ang=toSvgAngle($abs,$ascAbs); $angH=in_array($i,[1,4,7,10]); $hLines[$i] = ['in'=>polar($cx,$cy,$rInner,$ang), 'out'=>polar($cx,$cy,$angH?$rOuter:$rHouse,$ang), 'col'=>$angH?'#FFD700':'#475569','w'=>$angH?2:1]; }
     $hNums = []; for($i=1;$i<=12;$i++){ $n=$i==12?1:$i+1; $h1=$houses[$i]??['sign'=>'Овен','degree'=>0]; $h2=$houses[$n]??['sign'=>'Овен','degree'=>30]; $d1=getAbsDeg($h1['sign'],$h1['degree']); $d2=getAbsDeg($h2['sign'],$h2['degree']); if($d2<$d1)$d2+=360; $hNums[$i]=polar($cx,$cy,($rHouse+$rInner)/2,toSvgAngle(($d1+$d2)/2,$ascAbs)); }
@@ -709,13 +708,13 @@
                 <div class="chart-column">
                     <div class="chart-card">
                         <div class="tooltip" id="tooltip"></div>
-                        <svg viewBox="0 0 700 700">
+                        <svg viewBox="0 0 800 800">
                             <defs><filter id="glow"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-                            <circle cx="350" cy="350" r="345" fill="#0B0E14" stroke="#2A3441"/>
-                            <circle cx="350" cy="350" r="290" fill="none" stroke="#2A3441"/>
-                            <circle cx="350" cy="350" r="100" fill="#080B0E" stroke="#2A3441"/>
+                            <circle cx="400" cy="400" r="345" fill="#0B0E14" stroke="#2A3441"/>
+                            <circle cx="400" cy="400" r="290" fill="none" stroke="#2A3441"/>
+                            <circle cx="400" cy="400" r="100" fill="#080B0E" stroke="#2A3441"/>
                             @for($i=0;$i<12;$i++) @php $s=$signOrder[$i]; $c=$signElems[$elemMap[$s]??'fire']; @endphp
-                            <path d="M350,350 L{{ 350+345*cos(deg2rad($i*30-90)) }},{{ 350+345*sin(deg2rad($i*30-90)) }} A345,345 0 0,1 {{ 350+345*cos(deg2rad(($i+1)*30-90)) }},{{ 350+345*sin(deg2rad(($i+1)*30-90)) }} Z" fill="{{ $c }}"/>@endfor
+                            <path d="M400,400 L{{ 400+345*cos(deg2rad($i*30-90)) }},{{ 400+345*sin(deg2rad($i*30-90)) }} A345,345 0 0,1 {{ 400+345*cos(deg2rad(($i+1)*30-90)) }},{{ 400+345*sin(deg2rad(($i+1)*30-90)) }} Z" fill="{{ $c }}"/>@endfor
                             @foreach($zodiac as $z)
                             <line x1="{{ $z['ls']['x'] }}" y1="{{ $z['ls']['y'] }}" x2="{{ $z['le']['x'] }}" y2="{{ $z['le']['y'] }}" stroke="#475569" opacity="0.5"/>
                             <image href="/images/zodiac/{{ $z['file'] }}.png" x="{{ $z['pos']['x'] - 33 }}" y="{{ $z['pos']['y'] - 33 }}" width="66" height="66" opacity="0.8"/>
@@ -732,8 +731,8 @@
                                 @if(isset($planetFiles[$k]))<image href="/images/planets/{{ $planetFiles[$k] }}.png" x="{{ $c['x']-13 }}" y="{{ $c['y']-13 }}" width="26" height="26"/>@endif
                                 <text x="{{ $d['x'] }}" y="{{ $d['y'] }}" text-anchor="middle" dominant-baseline="middle" fill="#94A3B8" font-size="8">{{ floor($p['degree'] ?? 0) }}°</text>
                             </g>@endforeach
-                            <text x="350" y="347" text-anchor="middle" fill="#647887" font-size="7">PLACIDUS</text>
-                            <text x="350" y="359" text-anchor="middle" fill="#647887" font-size="8">{{ $chart->birth_date->format('d.m.Y') }}</text>
+                            <text x="400" y="397" text-anchor="middle" fill="#647887" font-size="7">PLACIDUS</text>
+                            <text x="400" y="409" text-anchor="middle" fill="#647887" font-size="8">{{ $chart->birth_date->format('d.m.Y') }}</text>
                         </svg>
                     </div>
 
@@ -937,105 +936,87 @@
                 </div>
             </div>
 
-            <!-- Accordion Sections -->
-            <div x-data="{ openSection: null }">
+            <!-- Analysis Sections (always open) -->
+            <div class="analysis-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
                 <!-- Career -->
-                <div class="accordion">
-                    <button class="accordion-header" @click="openSection = openSection === 'career' ? null : 'career'" :aria-expanded="openSection === 'career'">
-                        <span class="icon">💼</span>
-                        Карьера и профессия
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="accordion-content" :class="{ 'open': openSection === 'career' }">
-                        <div class="accordion-inner">
-                            @php $houseMeaning10 = $chart->getHouseMeaning(10); @endphp
-                            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7;">
-                                <strong style="color: var(--accent-gold);">MC в {{ $mcSign }}:</strong>
-                                @if($houseMeaning10) {{ $houseMeaning10->general }}@else
-                                Ваша карьера и общественное положение связаны с качествами знака {{ $mcSign }}.
-                                @endif
-                            </p>
-                        </div>
+                <div class="analysis-card">
+                    <div class="analysis-card-header">
+                        <span style="font-size: 1.1rem;">💼</span>
+                        <span class="analysis-card-title">Карьера и профессия</span>
+                    </div>
+                    <div class="analysis-card-body">
+                        @php $houseMeaning10 = $chart->getHouseMeaning(10); @endphp
+                        <p><strong style="color: var(--accent-gold);">MC в {{ $mcSign }}:</strong>
+                        @if($houseMeaning10) {{ $houseMeaning10->general }}@else
+                        Ваша карьера и общественное положение связаны с качествами знака {{ $mcSign }}.
+                        @endif</p>
                     </div>
                 </div>
 
                 <!-- Love -->
-                <div class="accordion">
-                    <button class="accordion-header" @click="openSection = openSection === 'love' ? null : 'love'" :aria-expanded="openSection === 'love'">
-                        <span class="icon">❤️</span>
-                        Любовь и отношения
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="accordion-content" :class="{ 'open': openSection === 'love' }">
-                        <div class="accordion-inner">
-                            @php $venusMeaning = $chart->getPlanetMeaning('venus'); $venusSign = $planets['venus']['sign'] ?? 'Телец'; @endphp
-                            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7;">
-                                <strong style="color: var(--accent-pink);">Венера в {{ $venusSign }}:</strong>
-                                @if($venusMeaning) {{ $venusMeaning->description }}@else
-                                Венера определяет ваш стиль любви и то, что вы цените в отношениях.
-                                @endif
-                            </p>
-                        </div>
+                <div class="analysis-card">
+                    <div class="analysis-card-header">
+                        <span style="font-size: 1.1rem;">❤️</span>
+                        <span class="analysis-card-title">Любовь и отношения</span>
+                    </div>
+                    <div class="analysis-card-body">
+                        @php $venusMeaning = $chart->getPlanetMeaning('venus'); $venusSign = $planets['venus']['sign'] ?? 'Телец'; @endphp
+                        <p><strong style="color: var(--accent-pink);">Венера в {{ $venusSign }}:</strong>
+                        @if($venusMeaning) {{ $venusMeaning->description }}@else
+                        Венера определяет ваш стиль любви и то, что вы цените в отношениях.
+                        @endif</p>
                     </div>
                 </div>
 
                 <!-- Karma -->
-                <div class="accordion">
-                    <button class="accordion-header" @click="openSection = openSection === 'karma' ? null : 'karma'" :aria-expanded="openSection === 'karma'">
-                        <span class="icon">🔮</span>
-                        Кармические уроки
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="accordion-content" :class="{ 'open': openSection === 'karma' }">
-                        <div class="accordion-inner">
-                            @if(isset($planets['north_node']))
-                            @php $nnSign = $planets['north_node']['sign'] ?? ''; @endphp
-                            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7;">
-                                <strong style="color: var(--accent-purple);">Северный узел в {{ $nnSign }}:</strong>
-                                Указывает направление духовного роста — качества, которые нужно развивать.
-                            </p>
-                            @endif
-                            @if(isset($planets['chiron']))
-                            @php $chSign = $planets['chiron']['sign'] ?? ''; @endphp
-                            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7; margin-top: 0.75rem;">
-                                <strong style="color: var(--accent-teal);">Хирон в {{ $chSign }}:</strong>
-                                «Раненый целитель» — область глубокой раны, которая становится вашим даром.
-                            </p>
-                            @endif
-                        </div>
+                <div class="analysis-card">
+                    <div class="analysis-card-header">
+                        <span style="font-size: 1.1rem;">🔮</span>
+                        <span class="analysis-card-title">Кармические уроки</span>
+                    </div>
+                    <div class="analysis-card-body">
+                        @if(isset($planets['north_node']))
+                        @php $nnSign = $planets['north_node']['sign'] ?? ''; @endphp
+                        <p><strong style="color: var(--accent-purple);">Северный узел в {{ $nnSign }}:</strong>
+                        Указывает направление духовного роста — качества, которые нужно развивать.</p>
+                        @endif
+                        @if(isset($planets['chiron']))
+                        @php $chSign = $planets['chiron']['sign'] ?? ''; @endphp
+                        <p style="margin-top: 0.75rem;"><strong style="color: var(--accent-teal);">Хирон в {{ $chSign }}:</strong>
+                        «Раненый целитель» — область глубокой раны, которая становится вашим даром.</p>
+                        @endif
                     </div>
                 </div>
+            </div>
 
-                <!-- Planets in Houses -->
-                <div class="accordion">
-                    <button class="accordion-header" @click="openSection = openSection === 'houses' ? null : 'houses'" :aria-expanded="openSection === 'houses'">
-                        <span class="icon">🏠</span>
-                        Планеты в домах
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="accordion-content" :class="{ 'open': openSection === 'houses' }">
-                        <div class="accordion-inner">
-                            @foreach(['sun','moon','mercury','venus','mars','jupiter','saturn'] as $planet)
-                            @if(isset($planets[$planet]))
-                            @php
-                            $pMeaning = $chart->getPlanetMeaning($planet);
-                            $houseNum = $planets[$planet]['house'] ?? 1;
-                            $hMeaning = $chart->getHouseMeaning($houseNum);
-                            @endphp
-                            <div style="margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);">
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
-                                    <img src="/images/planets/{{ $planetFiles[$planet] }}.png" alt="" style="width: 1.25rem; height: 1.25rem;">
-                                    <strong style="color: var(--text-primary); font-size: 0.85rem;">{{ $planetNames[$planet] }} в {{ $houseNum }} доме</strong>
-                                </div>
-                                <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
-                                    @if($hMeaning) {{ $hMeaning->general }}@else
-                                    Проявление энергии {{ $planetNames[$planet] }} в сфере {{ $houseNum }} дома.
-                                    @endif
-                                </p>
+            <!-- Planets in Houses -->
+            <div class="section-card" style="margin-top: 1rem;">
+                <div class="section-header" style="color: var(--accent-cyan);">
+                    <span style="font-size: 1rem;">🏠</span>
+                    Планеты в домах
+                </div>
+                <div class="section-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem;">
+                        @foreach(['sun','moon','mercury','venus','mars','jupiter','saturn'] as $planet)
+                        @if(isset($planets[$planet]))
+                        @php
+                        $pMeaning = $chart->getPlanetMeaning($planet);
+                        $houseNum = $planets[$planet]['house'] ?? 1;
+                        $hMeaning = $chart->getHouseMeaning($houseNum);
+                        @endphp
+                        <div style="padding: 0.75rem; background: var(--bg-tertiary); border-radius: 0.5rem; border: 1px solid var(--border);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+                                <img src="/images/planets/{{ $planetFiles[$planet] }}.png" alt="" style="width: 1.25rem; height: 1.25rem;">
+                                <strong style="color: var(--text-primary); font-size: 0.85rem;">{{ $planetNames[$planet] }} в {{ $houseNum }} доме</strong>
                             </div>
-                            @endif
-                            @endforeach
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+                                @if($hMeaning) {{ Str::limit($hMeaning->general, 120) }}@else
+                                Проявление энергии {{ $planetNames[$planet] }} в сфере {{ $houseNum }} дома.
+                                @endif
+                            </p>
                         </div>
+                        @endif
+                        @endforeach
                     </div>
                 </div>
             </div>

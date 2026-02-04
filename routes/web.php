@@ -2,11 +2,48 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\City;
 
 Route::get('/', function () {
-    $cities = \App\Models\City::orderBy('name')->get(['id', 'name', 'latitude', 'longitude', 'timezone_gmt']);
-    $defaultCity = \App\Models\City::where('name', 'Москва')->first();
-    return view('welcome', compact('cities', 'defaultCity'));
+    return view('welcome');
+});
+
+Route::get('/cities', function () {
+    $cities = City::orderBy('name')->get(['id', 'name', 'name_ru', 'country', 'latitude', 'longitude', 'timezone_gmt']);
+    return response()->json($cities);
+});
+
+Route::get('/cities/{country}', function (string $country) {
+    $cities = City::where('country', $country)->orderBy('name')->get(['id', 'name', 'name_ru', 'country', 'latitude', 'longitude', 'timezone_gmt']);
+    return response()->json($cities);
+});
+
+Route::get('/cities/search/{query}', function (string $query) {
+    $queryLower = mb_strtolower($query);
+    $queryNormalized = str_replace(['-', ' '], '', $queryLower);
+
+    $cities = City::search($query)
+        ->orderByRaw("
+            CASE
+                WHEN LOWER(name) = ? OR LOWER(name_ru) = ? THEN 0
+                WHEN LOWER(name) LIKE ? OR LOWER(name_ru) = ? THEN 1
+                WHEN LOWER(alternate_names) LIKE ? THEN 2
+                WHEN LOWER(name) LIKE ? OR LOWER(name_ru) LIKE ? THEN 3
+                WHEN LOWER(name_normalized) LIKE ? THEN 4
+                ELSE 5
+            END
+        ", [
+            $queryLower, $queryLower,
+            $queryLower . '%', $queryLower,
+            '%,' . $queryLower . ',%',
+            $queryLower . '%', $queryLower . '%',
+            $queryLower . '%'
+        ])
+        ->orderByRaw("CASE WHEN country = 'RU' THEN 0 WHEN country = 'UA' THEN 1 WHEN country = 'BY' THEN 2 ELSE 3 END")
+        ->orderBy('name')
+        ->limit(50)
+        ->get(['id', 'name', 'name_ru', 'country', 'latitude', 'longitude', 'timezone_gmt']);
+    return response()->json($cities);
 });
 
 Route::post('/calculate', [App\Http\Controllers\NatalChartController::class, 'processAsync'])->name('calculate');

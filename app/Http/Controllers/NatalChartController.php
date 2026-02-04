@@ -99,17 +99,13 @@ class NatalChartController extends Controller
         $chart = NatalChart::where('access_token', $token)->firstOrFail();
         $user = $chart->user;
 
-        // Check if user has set a password (password is not random)
-        // We'll use a simple check: if password was created recently and user never logged in
-        // Better approach: add a 'password_set' boolean to users table
-        // For now, we'll redirect all first-time token users to password setup
-
+        // Mark email as verified on first access
         if (!$user->email_verified_at) {
-            // First time access - redirect to password setup
-            return redirect()->route('charts.set-password', ['natalChart' => $chart->id, 'token' => $token]);
+            $user->email_verified_at = now();
+            $user->save();
         }
 
-        // User has already set password, just log them in
+        // Log user in and redirect to chart
         Auth::login($user);
         return redirect()->route('charts.show', $chart);
     }

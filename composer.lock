@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4049c75dd7a215dc19e0e105a123d7a9",
+    "content-hash": "51ac7fa27b00d1acc144833ebca6bcf1",
     "packages": [
         {
             "name": "brick/math",
@@ -1051,6 +1051,45 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "kunjara/swetest",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kunjara/swetest.git",
+                "reference": "b7c1e1bd2acd0597926f0e0071724beae1e39587"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kunjara/swetest/zipball/b7c1e1bd2acd0597926f0e0071724beae1e39587",
+                "reference": "b7c1e1bd2acd0597926f0e0071724beae1e39587",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Astrodienst",
+                    "email": "order@astro.com",
+                    "homepage": "http://www.astro.com"
+                }
+            ],
+            "description": "Command line program which computes planetary positions",
+            "keywords": [
+                "astrology",
+                "astronomy",
+                "ephemeris",
+                "planets"
+            ],
+            "support": {
+                "issues": "https://github.com/kunjara/swetest/issues",
+                "source": "https://github.com/kunjara/swetest/tree/master"
+            },
+            "time": "2016-01-20T07:06:05+00:00"
         },
         {
             "name": "laravel/framework",
