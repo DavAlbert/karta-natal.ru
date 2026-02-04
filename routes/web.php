@@ -52,14 +52,27 @@ Route::post('/calculate', [App\Http\Controllers\NatalChartController::class, 'pr
 Route::get('/charts/access/{token}', [App\Http\Controllers\NatalChartController::class, 'accessViaToken'])
     ->name('charts.access');
 
+Route::get('/charts/preview/{token}', [App\Http\Controllers\NatalChartController::class, 'preview'])
+    ->name('charts.preview');
+
 Route::get('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'showSetPassword'])
     ->name('charts.set-password');
 
 Route::post('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'storePassword'])
     ->name('charts.store-password');
 
+// Magic login routes
+Route::get('/login', [App\Http\Controllers\Auth\MagicLinkController::class, 'showLoginForm'])
+    ->name('login');
+Route::post('/login/send', [App\Http\Controllers\Auth\MagicLinkController::class, 'sendLoginLink'])
+    ->name('magic.login.send');
+    
+Route::get('/login/{token}', [App\Http\Controllers\Auth\MagicLinkController::class, 'loginViaToken'])
+    ->name('magic.login.token');
+Route::post('/logout', [App\Http\Controllers\Auth\MagicLinkController::class, 'logout'])
+    ->name('logout');
+
 // Protected routes
-// Route::get('/processing'...) removed as it's now AJAX
 Route::get('/charts/{natalChart}', [App\Http\Controllers\NatalChartController::class, 'show'])
     ->middleware('auth')
     ->name('charts.show');
@@ -72,7 +85,7 @@ Route::get('/charts/{natalChart}/status', [App\Http\Controllers\NatalChartContro
     ->middleware('auth')
     ->name('charts.status');
 
-// Chat routes (auth only, verified not required after password set)
+// Chat routes (auth only)
 Route::get('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatController::class, 'index'])
     ->middleware('auth')
     ->name('charts.chat');
@@ -89,9 +102,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Also apply auth to dashboard
-    Route::get('/dashboard', [App\Http\Controllers\NatalChartController::class, 'index'])->name('dashboard');
 });
-
-require __DIR__ . '/auth.php';

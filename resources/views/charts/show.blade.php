@@ -636,6 +636,26 @@
     $stressAspects = ['Square','Opposition','Квадрат','Оппозиция'];
     @endphp
 
+    @if(isset($showEmailBanner) && $showEmailBanner)
+    <!-- Email Sent Banner -->
+    <div class="fixed top-4 left-4 right-4 z-50">
+        <div class="bg-emerald-900/90 backdrop-blur-sm border border-emerald-700/50 rounded-xl p-4 flex items-center justify-between max-w-xl mx-auto">
+            <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <div>
+                    <p class="text-white font-medium">Ссылка отправлена на почту!</p>
+                    <p class="text-emerald-300 text-sm">Сохраните ссылку для доступа к карте</p>
+                </div>
+            </div>
+            <a href="/" class="text-emerald-400 hover:text-white transition-colors text-sm">
+                На главную
+            </a>
+        </div>
+    </div>
+    @endif
+
     <div class="container">
         <!-- ==================== HEADER ==================== -->
         <header class="page-header">
@@ -652,6 +672,17 @@
                 </div>
             </div>
             <div style="display: flex; gap: 0.5rem;">
+                @if(!isset($showEmailBanner) || !$showEmailBanner)
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span>Выйти</span>
+                    </button>
+                </form>
+                @endif
                 <button class="btn btn-gold">
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     <span>PDF</span>

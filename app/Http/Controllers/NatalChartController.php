@@ -33,23 +33,8 @@ class NatalChartController extends Controller
             'marketing_consent' => 'nullable|boolean',
         ]);
 
-        // Find or Create User
-        $user = User::firstOrCreate(
-            ['email' => $validated['email']],
-            [
-                'name' => $validated['name'],
-                'password' => Hash::make(Str::random(16)), // Random password user won't know initially
-                'marketing_consent' => $validated['marketing_consent'] ?? false,
-            ]
-        );
-
-        // Update marketing consent if user already exists
-        if (!$user->wasRecentlyCreated && isset($validated['marketing_consent'])) {
-            $user->marketing_consent = $validated['marketing_consent'];
-            $user->save();
-        }
-
-        // DO NOT auto-login - user must access via email link
+        $isAuthenticated = Auth::check();
+        $authenticatedUser = $isAuthenticated ? Auth::user() : null;
 
         // Get city from database
         $city = \App\Models\City::findOrFail($validated['city_id']);
@@ -63,6 +48,54 @@ class NatalChartController extends Controller
             $city->longitude,
             $city->timezone_gmt ?? 0
         );
+
+        if ($isAuthenticated && $authenticatedUser) {
+            // Delete existing chart - user can only have ONE chart
+            $authenticatedUser->natalCharts()->delete();
+
+            // User is logged in - create chart directly
+            $chart = NatalChart::create([
+                'user_id' => $authenticatedUser->id,
+                'name' => $authenticatedUser->name . "'s Chart",
+                'gender' => $validated['gender'],
+                'purpose' => $validated['purpose'],
+                'birth_date' => $validated['birth_date'],
+                'birth_time' => $validated['birth_time'],
+                'birth_place' => $city->name,
+                'city_id' => $city->id,
+                'latitude' => $city->latitude,
+                'longitude' => $city->longitude,
+                'timezone' => 'GMT+' . $city->timezone_gmt,
+                'chart_data' => $chartData,
+                'type' => 'natal',
+                'access_token' => null, // No token needed - user is logged in
+            ]);
+
+            // Redirect to welcome with success message
+            return response()->json([
+                'success' => true,
+                'redirect' => route('welcome') . '?chart_created=1',
+            ]);
+        }
+
+        // User is NOT logged in - find or create user and send magic link
+        $user = User::firstOrCreate(
+            ['email' => $validated['email']],
+            [
+                'name' => $validated['name'],
+                'password' => Hash::make(Str::random(16)),
+                'marketing_consent' => $validated['marketing_consent'] ?? false,
+            ]
+        );
+
+        // Update marketing consent if user already exists
+        if (!$user->wasRecentlyCreated && isset($validated['marketing_consent'])) {
+            $user->marketing_consent = $validated['marketing_consent'];
+            $user->save();
+        }
+
+        // Delete existing charts - user can only have ONE chart
+        $user->natalCharts()->delete();
 
         // Create Chart with access token
         $chart = NatalChart::create([
@@ -79,7 +112,7 @@ class NatalChartController extends Controller
             'timezone' => 'GMT+' . $city->timezone_gmt,
             'chart_data' => $chartData,
             'type' => 'natal',
-            'access_token' => Str::random(64), // Secure token for email access
+            'access_token' => Str::random(64),
         ]);
 
         // Send Email
@@ -89,9 +122,7 @@ class NatalChartController extends Controller
             \Log::error('Email send failed: ' . $e->getMessage());
         }
 
-        return response()->json([
-            'message' => 'Chart calculated! Check your email for the access link.',
-        ]);
+        return response()->json(['success' => true]);
     }
 
     public function accessViaToken(string $token)
@@ -105,9 +136,30 @@ class NatalChartController extends Controller
             $user->save();
         }
 
+        // Delete all other charts - user can only have ONE chart
+        $user->natalCharts()->where('id', '!=', $chart->id)->delete();
+
         // Log user in and redirect to chart
         Auth::login($user);
         return redirect()->route('charts.show', $chart);
+    }
+
+    /**
+     * Preview chart without login (after calculation).
+     */
+    public function preview(string $token)
+    {
+        $chart = NatalChart::where('access_token', $token)->firstOrFail();
+
+        $templates = $this->getChatTemplates();
+        $chatMessages = $chart->chatMessages()->get();
+
+        return view('charts.show', [
+            'chart' => $chart,
+            'templates' => $templates,
+            'chatMessages' => $chatMessages,
+            'showEmailBanner' => true,
+        ]);
     }
 
     public function showSetPassword(NatalChart $natalChart, Request $request)
