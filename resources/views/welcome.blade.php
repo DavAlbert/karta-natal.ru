@@ -177,6 +177,28 @@
             max-width: 100%;
         }
 
+        /* Prevent hCaptcha iframe overflow */
+        .h-captcha iframe {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Prevent dropdown overflow */
+        #cities-dropdown {
+            max-width: calc(100% - 2rem);
+            overflow-x: auto;
+        }
+
+        /* Mobile overflow prevention */
+        @media (max-width: 640px) {
+            .hero-form {
+                overflow-x: hidden;
+            }
+            .input-professional {
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+        }
+
         .text-gold {
             color: #fbbf24;
         }
@@ -1205,7 +1227,8 @@
                         if (typeof hcaptcha !== 'undefined') {
                             hcaptcha.reset();
                         }
-                        document.getElementById('submit-btn').disabled = true;
+                        // Re-validate form to enable/disable button correctly
+                        validateForm();
                         return;
                     }
 
@@ -1265,7 +1288,8 @@
                     if (typeof hcaptcha !== 'undefined') {
                         hcaptcha.reset();
                     }
-                    document.getElementById('submit-btn').disabled = true;
+                    // Re-validate form to enable/disable button correctly
+                    validateForm();
                 });
             });
         }
