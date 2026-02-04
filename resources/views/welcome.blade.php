@@ -1160,42 +1160,6 @@
             document.getElementById('loadingState')?.classList.remove('hidden');
             document.getElementById('successState')?.classList.add('hidden');
 
-            // Show Modal
-            const modal = document.getElementById('processingModal');
-            if (modal) modal.classList.remove('hidden');
-
-            // Animation Steps
-            const steps = [
-                { pct: 15, text: "Расчет координат Солнца..." },
-                { pct: 30, text: "Определение лунных узлов..." },
-                { pct: 55, text: "Вычисление системы домов..." },
-                { pct: 75, text: "Анализ мажорных аспектов..." },
-                { pct: 90, text: "Формирование отчета..." },
-                { pct: 100, text: "Готово!" }
-            ];
-
-            let currentStep = 0;
-            const progressBar = document.getElementById('progressBar');
-            const statusText = document.getElementById('statusText');
-            const percentageText = document.getElementById('percentage');
-
-            function nextAnimationStep() {
-                if (currentStep >= steps.length) return;
-
-                const step = steps[currentStep];
-                if (progressBar) progressBar.style.width = step.pct + '%';
-                if (statusText) statusText.innerText = step.text;
-                if (percentageText) percentageText.innerText = step.pct + '%';
-                currentStep++;
-
-                if (currentStep < steps.length) {
-                    setTimeout(nextAnimationStep, 800);
-                }
-            }
-
-            // Start Animation
-            nextAnimationStep();
-
             // Get hCaptcha token
             let hcaptchaToken = '';
             if (typeof hcaptcha !== 'undefined') {
@@ -1217,19 +1181,71 @@
                 },
                 body: formData
             })
-                .then(response => response.json())
+                .then(response => {
+                    // Check for any error status (4xx, 5xx)
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            // Build error message from validation errors
+                            let errorMessage = errorData.message || 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
+                            if (errorData.errors) {
+                                const firstError = Object.values(errorData.errors)[0];
+                                if (Array.isArray(firstError)) {
+                                    errorMessage = firstError[0];
+                                }
+                            }
+                            throw new Error(errorMessage);
+                        });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success === false) {
                         alert(data.message || 'Произошла ошибка. Пожалуйста, попробуйте еще раз.');
-                        const modal = document.getElementById('processingModal');
-                        if (modal) modal.classList.add('hidden');
-                        // Reset captcha and disable button
+                        // Reset captcha
                         if (typeof hcaptcha !== 'undefined') {
                             hcaptcha.reset();
                         }
                         document.getElementById('submit-btn').disabled = true;
                         return;
                     }
+
+                    // === ERFOLG: Modal und Animation starten ===
+                    // Show Modal
+                    const modal = document.getElementById('processingModal');
+                    if (modal) modal.classList.remove('hidden');
+
+                    // Animation Steps
+                    const steps = [
+                        { pct: 15, text: "Расчет координат Солнца..." },
+                        { pct: 30, text: "Определение лунных узлов..." },
+                        { pct: 55, text: "Вычисление системы домов..." },
+                        { pct: 75, text: "Анализ мажорных аспектов..." },
+                        { pct: 90, text: "Формирование отчета..." },
+                        { pct: 100, text: "Готово!" }
+                    ];
+
+                    let currentStep = 0;
+                    const progressBar = document.getElementById('progressBar');
+                    const statusText = document.getElementById('statusText');
+                    const percentageText = document.getElementById('percentage');
+
+                    function nextAnimationStep() {
+                        if (currentStep >= steps.length) return;
+
+                        const step = steps[currentStep];
+                        if (progressBar) progressBar.style.width = step.pct + '%';
+                        if (statusText) statusText.innerText = step.text;
+                        if (percentageText) percentageText.innerText = step.pct + '%';
+                        currentStep++;
+
+                        if (currentStep < steps.length) {
+                            setTimeout(nextAnimationStep, 800);
+                        }
+                    }
+
+                    // Start Animation
+                    nextAnimationStep();
+
                     // Wait for animation to likely finish (min 3s total)
                     setTimeout(() => {
                         // If user is logged in, redirect to chart
@@ -1244,10 +1260,8 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Произошла ошибка. Пожалуйста, попробуйте еще раз.');
-                    const modal = document.getElementById('processingModal');
-                    if (modal) modal.classList.add('hidden');
-                    // Reset captcha and disable button
+                    alert(error.message || 'Произошла ошибка. Пожалуйста, попробуйте еще раз.');
+                    // Reset captcha
                     if (typeof hcaptcha !== 'undefined') {
                         hcaptcha.reset();
                     }
