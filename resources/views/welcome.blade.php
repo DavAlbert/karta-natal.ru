@@ -133,41 +133,10 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap"
         rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/js/all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/fontawesome.min.css" rel="stylesheet">
 
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            serif: ['Cinzel', 'serif'],
-                            sans: ['Lato', 'sans-serif'],
-                        },
-                        colors: {
-                            mystic: {
-                                900: '#0B1120',
-                                800: '#1e1b4b',
-                                700: '#312e81',
-                            },
-                            gold: {
-                                400: '#fbbf24',
-                                500: '#f59e0b',
-                                600: '#d97706',
-                            }
-                        },
-                        backgroundImage: {
-                            'stars': "radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px)",
-                        }
-                    }
-                }
-            }
-        </script>
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         html, body {
