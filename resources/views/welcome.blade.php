@@ -21,7 +21,7 @@
     <meta property="og:url" content="https://karta-natal.ru/">
     <meta property="og:title" content="Натальная карта онлайн бесплатно с расшифровкой">
     <meta property="og:description" content="Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт планет, домов и аспектов с персональной расшифровкой.">
-    <meta property="og:image" content="https://karta-natal.ru/images/og-image.jpg">
+    <meta property="og:image" content="{{ asset('images/demo.png') }}">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:site_name" content="Karta-Natal.ru">
 
@@ -30,7 +30,7 @@
     <meta name="twitter:url" content="https://karta-natal.ru/">
     <meta name="twitter:title" content="Натальная карта онлайн бесплатно с расшифровкой">
     <meta name="twitter:description" content="Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт планет, домов и аспектов.">
-    <meta name="twitter:image" content="https://karta-natal.ru/images/og-image.jpg">
+    <meta name="twitter:image" content="{{ asset('images/demo.png') }}">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -633,6 +633,31 @@
                             </form>
                         @endauth
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Preview Section -->
+    <section class="py-16 bg-[#0B1120] border-t border-indigo-900/20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Как выглядит ваша натальная карта</h2>
+                <p class="text-indigo-300/80">Вот пример того, что вы получите после расчёта</p>
+            </div>
+            <div class="relative rounded-2xl overflow-hidden border border-indigo-900/50 shadow-2xl">
+                <img src="{{ asset('images/demo.png') }}" alt="Пример натальной карты" class="w-full h-auto">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent"></div>
+            </div>
+            <div class="mt-8 grid md:grid-cols-3 gap-4 text-center">
+                <div class="p-4 rounded-xl bg-[#080d15] border border-indigo-900/30">
+                    <p class="text-indigo-300 text-sm">10 планет в знаках зодиака</p>
+                </div>
+                <div class="p-4 rounded-xl bg-[#080d15] border border-indigo-900/30">
+                    <p class="text-indigo-300 text-sm">12 астрологических домов</p>
+                </div>
+                <div class="p-4 rounded-xl bg-[#080d15] border border-indigo-900/30">
+                    <p class="text-indigo-300 text-sm">Аспекты и интерпретации</p>
                 </div>
             </div>
         </div>
