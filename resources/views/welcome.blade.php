@@ -14,7 +14,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://karta-natal.ru/">
 
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>  
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -391,7 +391,7 @@
                                             </div>
 
                                             <div class="mt-4 flex justify-center">
-                                                <div id="recaptcha-submit-3"></div>
+                                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
                                             </div>
 
                                             <button type="submit" id="submit-btn" disabled
@@ -499,7 +499,7 @@
                                     </div>
 
                                     <div class="mt-4 flex justify-center">
-                                        <div id="recaptcha-submit-2"></div>
+                                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
                                     </div>
 
                                     <button type="submit" id="submit-btn" disabled
@@ -619,7 +619,7 @@
                                 </div>
 
                                 <div class="mt-4 flex justify-center">
-                                    <div id="recaptcha-submit"></div>
+                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
                                 </div>
 
                                 <button type="submit" id="submit-btn" disabled
@@ -1124,71 +1124,8 @@
         // Initial validation on page load (for Moscow default)
         validateForm();
 
-        // reCAPTCHA site key - make global for all scripts
-        window.recaptchaSiteKey = '{{ config("services.recaptcha.site_key") }}';
-
-        // Explicitly render all v2 captchas - make global for access from all scripts
-        window.recaptchaSubmitWidget = null;
-        window.recaptchaSubmitWidget2 = null;
-        window.recaptchaSubmitWidget3 = null;
-        window.recaptchaLoginWidget = null;
-
-        // Wait for grecaptcha to be ready
-        function initRecaptcha() {
-            if (typeof grecaptcha === 'undefined') {
-                setTimeout(initRecaptcha, 100);
-                return;
-            }
-
-            if (window.recaptchaSiteKey) {
-                // Render captcha for submit forms
-                const recaptchaSubmitEl = document.getElementById('recaptcha-submit');
-                if (recaptchaSubmitEl) {
-                    window.recaptchaSubmitWidget = grecaptcha.render(recaptchaSubmitEl, {
-                        sitekey: window.recaptchaSiteKey,
-                        theme: 'dark',
-                        callback: enableSubmit
-                    });
-                }
-
-                const recaptchaSubmitEl2 = document.getElementById('recaptcha-submit-2');
-                if (recaptchaSubmitEl2) {
-                    window.recaptchaSubmitWidget2 = grecaptcha.render(recaptchaSubmitEl2, {
-                        sitekey: window.recaptchaSiteKey,
-                        theme: 'dark',
-                        callback: enableSubmit
-                    });
-                }
-
-                const recaptchaSubmitEl3 = document.getElementById('recaptcha-submit-3');
-                if (recaptchaSubmitEl3) {
-                    window.recaptchaSubmitWidget3 = grecaptcha.render(recaptchaSubmitEl3, {
-                        sitekey: window.recaptchaSiteKey,
-                        theme: 'dark',
-                        callback: enableSubmit
-                    });
-                }
-
-                // Render captcha for login form
-                const recaptchaLoginEl = document.getElementById('recaptcha-login');
-                if (recaptchaLoginEl) {
-                    window.recaptchaLoginWidget = grecaptcha.render(recaptchaLoginEl, {
-                        sitekey: window.recaptchaSiteKey,
-                        theme: 'dark',
-                        callback: enableLoginSubmit
-                    });
-                }
-                console.log('Captcha widgets rendered:', {
-                    submit: window.recaptchaSubmitWidget,
-                    submit2: window.recaptchaSubmitWidget2,
-                    submit3: window.recaptchaSubmitWidget3,
-                    login: window.recaptchaLoginWidget
-                });
-            }
-        }
-
-        // Start checking for grecaptcha
-        initRecaptcha();
+        // reCAPTCHA site key
+        const recaptchaSiteKey = '{{ config("services.recaptcha.site_key") }}';
 
         if (calcForm) {
         calcForm.addEventListener('submit', async function (e) {
@@ -1234,11 +1171,11 @@
             // Start Animation
             nextAnimationStep();
 
-            // Get reCAPTCHA token from the correct widget
+            // Get reCAPTCHA token from v2 widget
             let recaptchaToken = '';
             if (typeof grecaptcha !== 'undefined') {
-                recaptchaToken = grecaptcha.getResponse(window.recaptchaSubmitWidget);
-                console.log('Captcha token:', recaptchaToken ? recaptchaToken.substring(0, 20) + '...' : 'NULL');
+                recaptchaToken = grecaptcha.getResponse();
+                console.log('Token length:', recaptchaToken ? recaptchaToken.length : 0);
             } else {
                 console.log('grecaptcha not defined');
             }
@@ -1262,8 +1199,8 @@
                         const modal = document.getElementById('processingModal');
                         if (modal) modal.classList.add('hidden');
                         // Reset captcha and disable button
-                        if (typeof grecaptcha !== 'undefined' && window.recaptchaSubmitWidget !== null) {
-                            grecaptcha.reset(window.recaptchaSubmitWidget);
+                        if (typeof grecaptcha !== 'undefined') {
+                            grecaptcha.reset();
                         }
                         document.getElementById('submit-btn').disabled = true;
                         return;
@@ -1586,7 +1523,7 @@
                         </div>
 
                         <div class="mb-4 flex justify-center">
-                            <div id="recaptcha-login"></div>
+                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}" data-theme="dark"></div>
                         </div>
 
                         <button type="submit" id="loginSubmitBtn" disabled
@@ -1613,8 +1550,8 @@
             document.getElementById('loginSubmitBtn').textContent = 'Получить ссылку';
             document.getElementById('loginError').classList.add('hidden');
             // Reset captcha
-            if (typeof grecaptcha !== 'undefined' && window.recaptchaLoginWidget !== null) {
-                grecaptcha.reset(window.recaptchaLoginWidget);
+            if (typeof grecaptcha !== 'undefined') {
+                grecaptcha.reset();
             }
         }
 
@@ -1633,13 +1570,12 @@
 
                 errorMsg.classList.add('hidden');
 
-                // Get reCAPTCHA token from login widget
+                // Get reCAPTCHA token from v2 widget
                 if (typeof grecaptcha !== 'undefined') {
-                    const recaptchaToken = grecaptcha.getResponse(window.recaptchaLoginWidget);
+                    const recaptchaToken = grecaptcha.getResponse();
                     if (recaptchaToken) {
                         formData.append('recaptcha_token', recaptchaToken);
                     }
-                    console.log('Login captcha token:', recaptchaToken ? recaptchaToken.substring(0, 20) + '...' : 'NULL');
                 }
 
                 fetch(this.action, {
@@ -1658,8 +1594,8 @@
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
                         // Reset captcha
-                        if (typeof grecaptcha !== 'undefined' && window.recaptchaLoginWidget !== null) {
-                            grecaptcha.reset(window.recaptchaLoginWidget);
+                        if (typeof grecaptcha !== 'undefined') {
+                            grecaptcha.reset();
                         }
                         document.getElementById('loginSubmitBtn').disabled = true;
                     } else {

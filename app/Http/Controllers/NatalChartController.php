@@ -24,6 +24,8 @@ class NatalChartController extends Controller
     {
         // Validate reCAPTCHA v2
         $recaptchaToken = $request->input('recaptcha_token');
+        \Log::debug('reCAPTCHA token received', ['length' => strlen($recaptchaToken)]);
+
         if (empty($recaptchaToken)) {
             return response()->json(['success' => false, 'message' => 'Пожалуйста, подтвердите, что вы не робот.'], 422);
         }
@@ -37,9 +39,12 @@ class NatalChartController extends Controller
         ]);
 
         $responseData = $response->json();
+        \Log::debug('reCAPTCHA response', $responseData);
 
         if (!$responseData['success']) {
-            return response()->json(['success' => false, 'message' => 'Ошибка проверки reCAPTCHA. Попробуйте еще раз.'], 422);
+            $errorCodes = $responseData['error-codes'] ?? [];
+            \Log::error('reCAPTCHA failed', ['error-codes' => $errorCodes]);
+            return response()->json(['success' => false, 'message' => 'Ошибка проверки reCAPTCHA: ' . implode(', ', $errorCodes)], 422);
         }
 
         $validated = $request->validate([
