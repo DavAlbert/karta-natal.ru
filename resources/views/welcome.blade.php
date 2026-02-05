@@ -1581,9 +1581,11 @@
 
         // Login Form
         const loginForm = document.getElementById('loginForm');
+        console.log('loginForm found:', loginForm);
         if (loginForm) {
             loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
+                console.log('Form submit triggered');
 
                 const formData = new FormData(this);
                 const submitBtn = document.getElementById('loginSubmitBtn');
@@ -1592,6 +1594,7 @@
                 errorMsg.classList.add('hidden');
 
                 // Get hCaptcha token - require it
+                console.log('hcaptcha defined:', typeof hcaptcha !== 'undefined');
                 if (typeof hcaptcha === 'undefined') {
                     errorMsg.textContent = 'Ошибка загрузки капчи. Обновите страницу.';
                     errorMsg.classList.remove('hidden');
@@ -1599,6 +1602,7 @@
                 }
 
                 const hcaptchaToken = hcaptcha.getResponse();
+                console.log('hcaptchaToken:', hcaptchaToken ? 'exists (' + hcaptchaToken.length + ' chars)' : 'empty');
                 if (!hcaptchaToken) {
                     errorMsg.textContent = 'Пожалуйста, пройдите проверку капчи.';
                     errorMsg.classList.remove('hidden');
