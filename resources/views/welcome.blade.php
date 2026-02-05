@@ -1602,13 +1602,25 @@
 
                 errorMsg.classList.add('hidden');
 
-                // Get hCaptcha token
-                if (typeof hcaptcha !== 'undefined') {
-                    const hcaptchaToken = hcaptcha.getResponse();
-                    if (hcaptchaToken) {
-                        formData.append('hcaptcha_token', hcaptchaToken);
-                    }
+                // Get hCaptcha token - require it
+                if (typeof hcaptcha === 'undefined') {
+                    errorMsg.textContent = 'Ошибка загрузки капчи. Обновите страницу.';
+                    errorMsg.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Получить ссылку';
+                    return;
                 }
+
+                const hcaptchaToken = hcaptcha.getResponse();
+                if (!hcaptchaToken) {
+                    errorMsg.textContent = 'Пожалуйста, пройдите проверку капчи.';
+                    errorMsg.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Получить ссылку';
+                    return;
+                }
+
+                formData.append('hcaptcha_token', hcaptchaToken);
 
                 fetch(this.action, {
                     method: 'POST',
@@ -1620,16 +1632,16 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.errors && data.errors.email) {
-                        errorMsg.textContent = data.errors.email[0];
+                    if (data.errors) {
+                        // Get first error message from any field
+                        const firstError = data.errors.email?.[0] || data.errors.hcaptcha_token?.[0] || 'Ошибка. Попробуйте еще раз.';
+                        errorMsg.textContent = firstError;
                         errorMsg.classList.remove('hidden');
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
                         // Reset captcha
-                        if (typeof hcaptcha !== 'undefined') {
-                            hcaptcha.reset();
-                        }
-                        document.getElementById('loginSubmitBtn').disabled = true;
+                        hcaptcha.reset();
+                        submitBtn.disabled = true;
                     } else {
                         document.getElementById('loginFormState').classList.add('hidden');
                         document.getElementById('loginSuccessState').classList.remove('hidden');
@@ -1637,10 +1649,12 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    errorMsg.textContent = 'Ошибка. Попробуйте еще раз.';
+                    errorMsg.textContent = 'Ошибка сети. Попробуйте еще раз.';
                     errorMsg.classList.remove('hidden');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Получить ссылку';
+                    hcaptcha.reset();
+                    submitBtn.disabled = true;
                 });
             });
         }

@@ -16,7 +16,7 @@ class ValidHCaptcha implements ValidationRule
 
         if (empty($secret)) {
             \Log::error('hCaptcha secret key not configured');
-            $fail('hCaptcha ist nicht konfiguriert.');
+            $fail('Ошибка конфигурации капчи.');
         }
 
         $response = \Http::asForm()->post('https://hcaptcha.com/siteverify', [
@@ -29,7 +29,7 @@ class ValidHCaptcha implements ValidationRule
         if (!$data['success']) {
             $errorCodes = $data['error-codes'] ?? [];
             \Log::error('hCaptcha validation failed', ['error-codes' => $errorCodes]);
-            $fail('Bitte bestätigen Sie, dass Sie kein Roboter sind.');
+            $fail('Пожалуйста, подтвердите, что вы не робот.');
         }
     }
 }
