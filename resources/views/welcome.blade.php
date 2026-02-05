@@ -1279,13 +1279,6 @@
             }
         }
 
-        function enableLoginSubmit() {
-            const loginBtn = document.getElementById('loginSubmitBtn');
-            if (loginBtn) {
-                loginBtn.disabled = false;
-            }
-        }
-
         // Close processing modal
         function closeProcessingModal() {
             document.getElementById('processingModal').classList.add('hidden');
@@ -1554,10 +1547,10 @@
                         </div>
 
                         <div class="mb-4 flex justify-center">
-                            <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark" data-callback="enableLoginSubmit"></div>
+                            <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
                         </div>
 
-                        <button type="submit" id="loginSubmitBtn" disabled
+                        <button type="submit" id="loginSubmitBtn"
                             class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600">
                             Получить ссылку
                         </button>
@@ -1577,7 +1570,7 @@
             document.getElementById('loginSuccessState').classList.add('hidden');
             // Reset form
             document.getElementById('loginForm').reset();
-            document.getElementById('loginSubmitBtn').disabled = true;
+            document.getElementById('loginSubmitBtn').disabled = false;
             document.getElementById('loginSubmitBtn').textContent = 'Получить ссылку';
             document.getElementById('loginError').classList.add('hidden');
             // Reset captcha
@@ -1596,17 +1589,12 @@
                 const submitBtn = document.getElementById('loginSubmitBtn');
                 const errorMsg = document.getElementById('loginError');
 
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Отправка...';
-
                 errorMsg.classList.add('hidden');
 
                 // Get hCaptcha token - require it
                 if (typeof hcaptcha === 'undefined') {
                     errorMsg.textContent = 'Ошибка загрузки капчи. Обновите страницу.';
                     errorMsg.classList.remove('hidden');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Получить ссылку';
                     return;
                 }
 
@@ -1614,46 +1602,48 @@
                 if (!hcaptchaToken) {
                     errorMsg.textContent = 'Пожалуйста, пройдите проверку капчи.';
                     errorMsg.classList.remove('hidden');
-                    submitBtn.textContent = 'Получить ссылку';
-                    submitBtn.disabled = true;
                     return;
                 }
 
+                // Disable button during request
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Отправка...';
+
                 formData.append('hcaptcha_token', hcaptchaToken);
 
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    });
+                    const data = await response.json();
+
                     if (data.errors) {
                         // Get first error message from any field
                         const firstError = data.errors.email?.[0] || data.errors.hcaptcha_token?.[0] || 'Ошибка. Попробуйте еще раз.';
                         errorMsg.textContent = firstError;
                         errorMsg.classList.remove('hidden');
-                        submitBtn.textContent = 'Получить ссылку';
-                        // Reset captcha - button stays disabled until captcha solved again
+                        // Reset captcha and re-enable button
                         hcaptcha.reset();
-                        submitBtn.disabled = true;
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Получить ссылку';
                     } else {
                         document.getElementById('loginFormState').classList.add('hidden');
                         document.getElementById('loginSuccessState').classList.remove('hidden');
                     }
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Error:', error);
                     errorMsg.textContent = 'Ошибка сети. Попробуйте еще раз.';
                     errorMsg.classList.remove('hidden');
-                    submitBtn.textContent = 'Получить ссылку';
-                    // Reset captcha - button stays disabled until captcha solved again
+                    // Reset captcha and re-enable button
                     hcaptcha.reset();
-                    submitBtn.disabled = true;
-                });
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Получить ссылку';
+                }
             });
         }
 
