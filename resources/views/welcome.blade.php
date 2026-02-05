@@ -1555,7 +1555,7 @@
                         </div>
 
                         <div class="mb-4 flex justify-center">
-                            <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
+                            <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark" data-callback="enableLoginSubmit"></div>
                         </div>
 
                         <button type="submit" id="loginSubmitBtn" disabled
