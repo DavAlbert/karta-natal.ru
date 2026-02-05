@@ -1283,7 +1283,6 @@
             const loginBtn = document.getElementById('loginSubmitBtn');
             if (loginBtn) {
                 loginBtn.disabled = false;
-                loginBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
             }
         }
 
@@ -1615,8 +1614,8 @@
                 if (!hcaptchaToken) {
                     errorMsg.textContent = 'Пожалуйста, пройдите проверку капчи.';
                     errorMsg.classList.remove('hidden');
-                    submitBtn.disabled = false;
                     submitBtn.textContent = 'Получить ссылку';
+                    submitBtn.disabled = true;
                     return;
                 }
 
@@ -1637,9 +1636,8 @@
                         const firstError = data.errors.email?.[0] || data.errors.hcaptcha_token?.[0] || 'Ошибка. Попробуйте еще раз.';
                         errorMsg.textContent = firstError;
                         errorMsg.classList.remove('hidden');
-                        submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
-                        // Reset captcha
+                        // Reset captcha - button stays disabled until captcha solved again
                         hcaptcha.reset();
                         submitBtn.disabled = true;
                     } else {
@@ -1651,8 +1649,8 @@
                     console.error('Error:', error);
                     errorMsg.textContent = 'Ошибка сети. Попробуйте еще раз.';
                     errorMsg.classList.remove('hidden');
-                    submitBtn.disabled = false;
                     submitBtn.textContent = 'Получить ссылку';
+                    // Reset captcha - button stays disabled until captcha solved again
                     hcaptcha.reset();
                     submitBtn.disabled = true;
                 });
