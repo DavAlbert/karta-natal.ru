@@ -25,15 +25,15 @@ class MagicLinkController extends Controller
     /**
      * Send a magic login link to the user's email.
      */
-    public function sendLoginLink(Request $Request)
+    public function sendLoginLink(Request $request)
     {
-        $validator = \Validator::make($Request->all(), [
+        $validator = \Validator::make($request->all(), [
             'hcaptcha_token' => ['required', new ValidHCaptcha()],
             'email' => 'required|email|exists:users,email',
         ]);
 
         if ($validator->fails()) {
-            if ($Request->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
             return back()->withErrors($validator->errors());
