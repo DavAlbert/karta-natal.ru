@@ -1573,14 +1573,17 @@
             document.getElementById('loginSubmitBtn').disabled = false;
             document.getElementById('loginSubmitBtn').textContent = 'Получить ссылку';
             document.getElementById('loginError').classList.add('hidden');
-            // Reset captcha
-            if (typeof hcaptcha !== 'undefined') {
-                hcaptcha.reset();
+            // Reset captcha for login form widget
+            const loginWidget = document.querySelector('#loginForm .h-captcha');
+            const widgetId = loginWidget?.getAttribute('data-hcaptcha-widget-id');
+            if (widgetId && typeof hcaptcha !== 'undefined') {
+                hcaptcha.reset(widgetId);
             }
         }
 
         // Login Form
         const loginForm = document.getElementById('loginForm');
+        const loginCaptchaWidget = loginForm ? loginForm.querySelector('.h-captcha') : null;
         console.log('loginForm found:', loginForm);
         if (loginForm) {
             loginForm.addEventListener('submit', async function(e) {
@@ -1593,15 +1596,9 @@
 
                 errorMsg.classList.add('hidden');
 
-                // Get hCaptcha token - require it
-                console.log('hcaptcha defined:', typeof hcaptcha !== 'undefined');
-                if (typeof hcaptcha === 'undefined') {
-                    errorMsg.textContent = 'Ошибка загрузки капчи. Обновите страницу.';
-                    errorMsg.classList.remove('hidden');
-                    return;
-                }
-
-                const hcaptchaToken = hcaptcha.getResponse();
+                // Get hCaptcha token from this form's widget
+                const hcaptchaResponse = this.querySelector('[name="h-captcha-response"]');
+                const hcaptchaToken = hcaptchaResponse ? hcaptchaResponse.value : '';
                 console.log('hcaptchaToken:', hcaptchaToken ? 'exists (' + hcaptchaToken.length + ' chars)' : 'empty');
                 if (!hcaptchaToken) {
                     errorMsg.textContent = 'Пожалуйста, пройдите проверку капчи.';
@@ -1632,7 +1629,8 @@
                         errorMsg.textContent = firstError;
                         errorMsg.classList.remove('hidden');
                         // Reset captcha and re-enable button
-                        hcaptcha.reset();
+                        const widgetId = loginCaptchaWidget?.getAttribute('data-hcaptcha-widget-id');
+                        if (widgetId && typeof hcaptcha !== 'undefined') hcaptcha.reset(widgetId);
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
                     } else {
@@ -1644,7 +1642,8 @@
                     errorMsg.textContent = 'Ошибка сети. Попробуйте еще раз.';
                     errorMsg.classList.remove('hidden');
                     // Reset captcha and re-enable button
-                    hcaptcha.reset();
+                    const widgetId = loginCaptchaWidget?.getAttribute('data-hcaptcha-widget-id');
+                    if (widgetId && typeof hcaptcha !== 'undefined') hcaptcha.reset(widgetId);
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Получить ссылку';
                 }
