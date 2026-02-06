@@ -499,11 +499,21 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Рассчитываем...';
 
-            const hcaptchaToken = await hcaptcha.execute(this.querySelector('.h-captcha'), { async: true })
-                .catch(() => null);
+            // Get hCaptcha token from visible checkbox widget
+            let hcaptchaToken = '';
+            if (typeof hcaptcha !== 'undefined') {
+                hcaptchaToken = hcaptcha.getResponse();
+            }
+
+            if (!hcaptchaToken) {
+                alert('Пожалуйста, пройдите проверку капчи.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-heart mr-2"></i>Рассчитать совместимость';
+                return;
+            }
 
             const formData = new FormData(this);
-            formData.append('hcaptcha_token', hcaptchaToken?.response || '');
+            formData.append('hcaptcha_token', hcaptchaToken);
 
             try {
                 const response = await fetch(this.action, {
@@ -527,12 +537,14 @@
                 } else {
                     alert('Ошибка: ' + (data.error || 'Попробуйте снова'));
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-calculator mr-2"></i>Рассчитать совместимость';
+                    btn.innerHTML = '<i class="fas fa-heart mr-2"></i>Рассчитать совместимость';
+                    if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
                 }
             } catch (err) {
                 alert('Произошла ошибка. Попробуйте ещё раз.');
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-calculator mr-2"></i>Рассчитать совместимость';
+                btn.innerHTML = '<i class="fas fa-heart mr-2"></i>Рассчитать совместимость';
+                if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
             }
         });
     </script>
