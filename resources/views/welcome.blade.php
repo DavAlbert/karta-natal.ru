@@ -223,6 +223,10 @@
 
 
                 <div class="flex items-center gap-4">
+                    <a href="{{ route('compatibility') }}" class="flex items-center gap-2 text-indigo-300 font-medium hover:text-white transition-colors">
+                        <i class="fas fa-heart text-sm"></i>
+                        Совместимость
+                    </a>
                     @auth
                         @php $chart = Auth::user()->natalCharts()->first(); @endphp
                         @if($chart)

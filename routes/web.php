@@ -6,7 +6,7 @@ use App\Models\City;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/privacy', function () {
     return view('privacy');
@@ -57,6 +57,21 @@ Route::get('/cities/search/{query}', function (string $query) {
         ->get(['id', 'name', 'name_ru', 'country', 'latitude', 'longitude', 'timezone_gmt']);
     return response()->json($cities);
 });
+
+Route::get('/compatibility', function () {
+    return view('compatibility.index');
+})->name('compatibility');
+
+// Compatibility calculation
+Route::post('/compatibility/calculate', [App\Http\Controllers\CompatibilityController::class, 'calculate'])->name('compatibility.calculate');
+
+// Compatibility result page (via token)
+Route::get('/compatibility/result/{token}', [App\Http\Controllers\CompatibilityController::class, 'result'])
+    ->name('compatibility.result');
+
+// Public sharing of compatibility
+Route::get('/compatibility/shared/{token}', [App\Http\Controllers\CompatibilityController::class, 'shared'])
+    ->name('compatibility.shared');
 
 Route::post('/calculate', [App\Http\Controllers\NatalChartController::class, 'processAsync'])->name('calculate');
 

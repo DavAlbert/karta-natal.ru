@@ -237,4 +237,164 @@ class AiAstrologyService
         // This is a placeholder - actual streaming requires SSE or similar
         return $this->chat($question, $chartData, $history);
     }
+
+    /**
+     * Generate comprehensive compatibility report with structured outputs.
+     * Includes scores (1-10), detailed analysis, and specific recommendations.
+     */
+    public function generateCompatibilityReport(array $chart1, array $chart2, array $synastry): array
+    {
+        $toolSchema = [
+            'type' => 'function',
+            'function' => [
+                'name' => 'generate_compatibility_report',
+                'description' => 'Generate detailed compatibility analysis between two natal charts in Russian.',
+                'parameters' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'overall_score' => [
+                            'type' => 'integer',
+                            'description' => 'Overall compatibility score from 1 to 10 based on synastry analysis.'
+                        ],
+                        'overall_analysis' => [
+                            'type' => 'string',
+                            'description' => 'Detailed overall compatibility analysis in Russian.'
+                        ],
+                        'emotional_score' => [
+                            'type' => 'integer',
+                            'description' => 'Emotional compatibility score from 1 to 10 (Moon/Moon aspects).'
+                        ],
+                        'emotional_analysis' => [
+                            'type' => 'string',
+                            'description' => 'Analysis of emotional compatibility and needs.'
+                        ],
+                        'communication_score' => [
+                            'type' => 'integer',
+                            'description' => 'Communication compatibility score from 1 to 10 (Mercury/Mercury aspects).'
+                        ],
+                        'communication_analysis' => [
+                            'type' => 'string',
+                            'description' => 'Analysis of how well partners communicate.'
+                        ],
+                        'romantic_score' => [
+                            'type' => 'integer',
+                            'description' => 'Romantic compatibility score from 1 to 10 (Venus/Mars/Venus aspects).'
+                        ],
+                        'romantic_analysis' => [
+                            'type' => 'string',
+                            'description' => 'Analysis of romantic and sexual chemistry.'
+                        ],
+                        'values_score' => [
+                            'type' => 'integer',
+                            'description' => 'Value alignment score from 1 to 10 (Jupiter/Saturn aspects).'
+                        ],
+                        'values_analysis' => [
+                            'type' => 'string',
+                            'description' => 'Analysis of shared values and life goals.'
+                        ],
+                        'growth_score' => [
+                            'type' => 'integer',
+                            'description' => 'Mutual growth potential score from 1 to 10 (Nodes/Chiron aspects).'
+                        ],
+                        'growth_analysis' => [
+                            'type' => 'string',
+                            'description' => 'How partners can help each other grow.'
+                        ],
+                        'strengths' => [
+                            'type' => 'array',
+                            'items' => ['type' => 'string'],
+                            'description' => 'List of key strengths of this compatibility (3-5 items).'
+                        ],
+                        'challenges' => [
+                            'type' => 'array',
+                            'items' => ['type' => 'string'],
+                            'description' => 'List of main challenges to work through (3-5 items).'
+                        ],
+                        'recommendations' => [
+                            'type' => 'array',
+                            'items' => ['type' => 'string'],
+                            'description' => 'Practical recommendations for the relationship (3-5 items).'
+                        ]
+                    ],
+                    'required' => [
+                        'overall_score', 'overall_analysis',
+                        'emotional_score', 'emotional_analysis',
+                        'communication_score', 'communication_analysis',
+                        'romantic_score', 'romantic_analysis',
+                        'values_score', 'values_analysis',
+                        'growth_score', 'growth_analysis',
+                        'strengths', 'challenges', 'recommendations'
+                    ]
+                ]
+            ]
+        ];
+
+        try {
+            Log::info('Starting AI Compatibility Report Generation');
+
+            $context1 = $this->buildChartContext($chart1);
+            $context2 = $this->buildChartContext($chart2);
+
+            // Build synastry context
+            $synastryContext = "СИНАСТРИЯ (аспекты между картами):\n";
+            $synastryContext .= "Общий балл совместимости: {$synastry['score']}/100\n";
+            $synastryContext .= "Гармоничные аспекты: {$synastry['harmony']}\n";
+            $synastryContext .= "Напряжённые аспекты: {$synastry['tension']}\n\n";
+
+            foreach (($synastry['aspects'] ?? []) as $aspect) {
+                $nature = $aspect['nature'] === 'harmony' ? '⚡ Гармония' : '⚠ Напряжение';
+                $synastryContext .= "- {$aspect['planet1']} → {$aspect['planet2']}: {$aspect['type']} ({$nature})\n";
+            }
+
+            $fullContext = "ПЕРВАЯ НАТАЛЬНАЯ КАРТА:\n{$context1}\n\n";
+            $fullContext .= "ВТОРАЯ НАТАЛЬНАЯ КАРТА:\n{$context2}\n\n";
+            $fullContext .= $synastryContext;
+
+            $response = Http::withToken($this->apiKey)
+                ->timeout(180)
+                ->retry(3, 5000)
+                ->post($this->baseUrl . '/chat/completions', [
+                    'model' => $this->model,
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Ты — эксперт в астрологии совместимости (синастрии). Твоя задача — давать глубокий, профессиональный анализ совместимости двух людей на основе их натальных карт. Говори на русском языке. Всегда ссылайся на конкретные планеты, знаки и аспекты. Давай честную, но тактичную оценку с практическими рекомендациями.'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $fullContext . "\n\nСгенерируй подробный отчёт о совместимости в следующем формате:\n\n1. Общий балл совместимости (1-10)\n2. Эмоциональная совместимость (Луна-Луна)\n3. Коммуникация (Меркурий-Мерурий)\n4. Романтика и страсть (Венера/Марс)\n5. Ценности и цели (Юпитер/Сатурн)\n6. Потенциал роста (Узлы/Хирон)\n7. Сильные стороны\n8. Вызовы\n9. Рекомендации\n\nИспользуй строго структурированный вывод (structured output).'"
+                        ]
+                    ],
+                    'tools' => [$toolSchema],
+                    'tool_choice' => [
+                        'type' => 'function',
+                        'function' => ['name' => 'generate_compatibility_report']
+                    ],
+                    'temperature' => 0.7,
+                ]);
+
+            if ($response->successful()) {
+                $content = $response->json();
+                $toolCalls = $content['choices'][0]['message']['tool_calls'] ?? [];
+
+                if (!empty($toolCalls)) {
+                    $jsonStr = $toolCalls[0]['function']['arguments'];
+                    $data = json_decode($jsonStr, true);
+
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        // Add synastry data to report
+                        $data['synastry'] = $synastry;
+                        return $data;
+                    }
+                    Log::error('Compatibility AI JSON Decode Error: ' . json_last_error_msg());
+                }
+            } else {
+                Log::error('Compatibility AI API Error: ' . $response->body());
+            }
+        } catch (\Exception $e) {
+            Log::error('Compatibility AI Exception: ' . $e->getMessage());
+        }
+
+        return [];
+    }
 }
