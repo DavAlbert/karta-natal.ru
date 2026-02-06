@@ -207,7 +207,7 @@ class CompatibilityController extends Controller
      */
     protected function calculateSynastry(array $chart1, array $chart2): array
     {
-        $synastry = [];
+        $synastry = ['aspects' => []];
         $aspectRules = [
             'Соединение' => ['angle' => 0, 'orb' => 8, 'power' => 10],
             'Оппозиция' => ['angle' => 180, 'orb' => 8, 'power' => 8],
@@ -260,7 +260,7 @@ class CompatibilityController extends Controller
             }
         }
 
-        usort($synastry['aspects'] ?? [], fn($a, $b) => $b['power'] <=> $a['power']);
+        usort($synastry['aspects'], fn($a, $b) => $b['power'] <=> $a['power']);
 
         // Calculate overall score
         $score = 50;
@@ -271,7 +271,7 @@ class CompatibilityController extends Controller
         $score = max(20, min(98, round($score)));
 
         return [
-            'aspects' => $synastry['aspects'] ?? [],
+            'aspects' => $synastry['aspects'],
             'score' => $score,
             'harmony' => round($harmony, 1),
             'tension' => round($tension, 1),
