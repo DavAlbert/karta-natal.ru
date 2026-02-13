@@ -14,7 +14,20 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://karta-natal.ru/">
 
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=106818761', 'ym');
+
+        ym(106818761, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/106818761" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -146,8 +159,8 @@
             max-width: 100%;
         }
 
-        /* Prevent hCaptcha iframe overflow */
-        .h-captcha iframe {
+        /* Prevent SmartCaptcha overflow */
+        .smart-captcha iframe {
             max-width: 100% !important;
             width: 100% !important;
         }
@@ -223,13 +236,13 @@
 
 
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('compatibility') }}" class="flex items-center gap-2 text-indigo-300 font-medium hover:text-white transition-colors">
-                        <i class="fas fa-heart text-sm"></i>
-                        Совместимость
-                    </a>
                     @auth
                         @php $chart = Auth::user()->natalCharts()->first(); @endphp
                         @if($chart)
+                            <a href="{{ route('charts.show', $chart) }}" class="flex items-center gap-2 text-indigo-300 font-medium hover:text-white transition-colors" onclick="localStorage.setItem('activeTab', 'compatibility')">
+                                <i class="fas fa-heart text-sm"></i>
+                                Совместимость
+                            </a>
                             <a href="{{ route('charts.show', $chart) }}" class="flex items-center gap-2 text-indigo-300 font-semibold hover:text-white transition-colors">
                                 <i class="fas fa-user text-sm"></i>
                                 Моя карта
@@ -247,7 +260,6 @@
                             <i class="fas fa-user text-sm"></i>
                             Войти
                         </button>
-
                     @endauth
                 </div>
             </div>
@@ -386,7 +398,7 @@
                                             </div>
 
                                             <div class="mt-4 flex justify-center">
-                                                <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
+                                                <div id="captcha-container" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
                                             </div>
 
                                             <button type="submit" id="submit-btn" disabled
@@ -494,7 +506,7 @@
                                     </div>
 
                                     <div class="mt-4 flex justify-center">
-                                        <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
+                                        <div id="captcha-container" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
                                     </div>
 
                                     <button type="submit" id="submit-btn" disabled
@@ -614,7 +626,7 @@
                                 </div>
 
                                 <div class="mt-4 flex justify-center">
-                                    <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
+                                    <div id="captcha-container" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
                                 </div>
 
                                 <button type="submit" id="submit-btn" disabled
@@ -1144,8 +1156,8 @@
         // Initial validation on page load (for Moscow default)
         validateForm();
 
-        // reCAPTCHA site key
-        const hcaptchaSiteKey = '{{ config("services.hcaptcha.site_key") }}';
+        // Yandex SmartCaptcha site key
+        const captchaSiteKey = '{{ config("services.yandex_captcha.site_key") }}';
 
         if (calcForm) {
         calcForm.addEventListener('submit', async function (e) {
@@ -1155,18 +1167,15 @@
             document.getElementById('loadingState')?.classList.remove('hidden');
             document.getElementById('successState')?.classList.add('hidden');
 
-            // Get hCaptcha token
-            let hcaptchaToken = '';
-            if (typeof hcaptcha !== 'undefined') {
-                hcaptchaToken = hcaptcha.getResponse();
-                console.log('Token length:', hcaptchaToken ? hcaptchaToken.length : 0);
-            } else {
-                console.log('hcaptcha not defined');
-            }
+            // Get SmartCaptcha token
+            let captchaToken = '';
+            const captchaInput = document.querySelector('#calcForm input[name="smart-token"]');
+            captchaToken = captchaInput ? captchaInput.value : '';
+            console.log('Token length:', captchaToken ? captchaToken.length : 0);
 
             // Submit Data via AJAX
             const formData = new FormData(this);
-            formData.append('hcaptcha_token', hcaptchaToken);
+            formData.append('captcha_token', captchaToken);
 
             fetch("{{ route('calculate') }}", {
                 method: 'POST',
@@ -1197,8 +1206,8 @@
                     if (data.success === false) {
                         alert(data.message || 'Произошла ошибка. Пожалуйста, попробуйте еще раз.');
                         // Reset captcha
-                        if (typeof hcaptcha !== 'undefined') {
-                            hcaptcha.reset();
+                        if (typeof window.smartCaptcha !== 'undefined') {
+                            window.smartCaptcha.reset();
                         }
                         // Re-validate form to enable/disable button correctly
                         validateForm();
@@ -1258,8 +1267,8 @@
                     console.error('Error:', error);
                     alert(error.message || 'Произошла ошибка. Пожалуйста, попробуйте еще раз.');
                     // Reset captcha
-                    if (typeof hcaptcha !== 'undefined') {
-                        hcaptcha.reset();
+                    if (typeof window.smartCaptcha !== 'undefined') {
+                        window.smartCaptcha.reset();
                     }
                     // Re-validate form to enable/disable button correctly
                     validateForm();
@@ -1551,7 +1560,7 @@
                         </div>
 
                         <div class="mb-4 flex justify-center">
-                            <div class="h-captcha" data-sitekey="{{ config('services.hcaptcha.site_key') }}" data-theme="dark"></div>
+                            <div id="login-captcha" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
                         </div>
 
                         <button type="submit" id="loginSubmitBtn"
@@ -1578,16 +1587,14 @@
             document.getElementById('loginSubmitBtn').textContent = 'Получить ссылку';
             document.getElementById('loginError').classList.add('hidden');
             // Reset captcha for login form widget
-            const loginWidget = document.querySelector('#loginForm .h-captcha');
-            const widgetId = loginWidget?.getAttribute('data-hcaptcha-widget-id');
-            if (widgetId && typeof hcaptcha !== 'undefined') {
-                hcaptcha.reset(widgetId);
+            if (typeof window.smartCaptcha !== 'undefined') {
+                window.smartCaptcha.reset();
             }
         }
 
         // Login Form
         const loginForm = document.getElementById('loginForm');
-        const loginCaptchaWidget = loginForm ? loginForm.querySelector('.h-captcha') : null;
+        const loginCaptchaWidget = loginForm ? loginForm.querySelector('.smart-captcha') : null;
         console.log('loginForm found:', loginForm);
         if (loginForm) {
             loginForm.addEventListener('submit', async function(e) {
@@ -1600,11 +1607,12 @@
 
                 errorMsg.classList.add('hidden');
 
-                // Get hCaptcha token from this form's widget
-                const hcaptchaResponse = this.querySelector('[name="h-captcha-response"]');
-                const hcaptchaToken = hcaptchaResponse ? hcaptchaResponse.value : '';
-                console.log('hcaptchaToken:', hcaptchaToken ? 'exists (' + hcaptchaToken.length + ' chars)' : 'empty');
-                if (!hcaptchaToken) {
+                // Get SmartCaptcha token from this form's widget
+                const captchaContainer = document.getElementById('login-captcha');
+                const captchaInput = captchaContainer ? captchaContainer.querySelector('input[name="smart-token"]') : null;
+                const captchaToken = captchaInput ? captchaInput.value : '';
+                console.log('captchaToken:', captchaToken ? 'exists (' + captchaToken.length + ' chars)' : 'empty');
+                if (!captchaToken) {
                     errorMsg.textContent = 'Пожалуйста, пройдите проверку капчи.';
                     errorMsg.classList.remove('hidden');
                     return;
@@ -1614,7 +1622,7 @@
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Отправка...';
 
-                formData.append('hcaptcha_token', hcaptchaToken);
+                formData.append('captcha_token', captchaToken);
 
                 try {
                     const response = await fetch(this.action, {
@@ -1629,12 +1637,11 @@
 
                     if (data.errors) {
                         // Get first error message from any field
-                        const firstError = data.errors.email?.[0] || data.errors.hcaptcha_token?.[0] || 'Ошибка. Попробуйте еще раз.';
+                        const firstError = data.errors.email?.[0] || data.errors.captcha_token?.[0] || 'Ошибка. Попробуйте еще раз.';
                         errorMsg.textContent = firstError;
                         errorMsg.classList.remove('hidden');
                         // Reset captcha and re-enable button
-                        const widgetId = loginCaptchaWidget?.getAttribute('data-hcaptcha-widget-id');
-                        if (widgetId && typeof hcaptcha !== 'undefined') hcaptcha.reset(widgetId);
+                        if (typeof window.smartCaptcha !== 'undefined') window.smartCaptcha.reset();
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Получить ссылку';
                     } else {
@@ -1646,8 +1653,7 @@
                     errorMsg.textContent = 'Ошибка сети. Попробуйте еще раз.';
                     errorMsg.classList.remove('hidden');
                     // Reset captcha and re-enable button
-                    const widgetId = loginCaptchaWidget?.getAttribute('data-hcaptcha-widget-id');
-                    if (widgetId && typeof hcaptcha !== 'undefined') hcaptcha.reset(widgetId);
+                    if (typeof window.smartCaptcha !== 'undefined') window.smartCaptcha.reset();
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Получить ссылку';
                 }

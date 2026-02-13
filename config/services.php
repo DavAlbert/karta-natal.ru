@@ -41,9 +41,9 @@ return [
         'model' => env('OPENAI_MODEL', 'gpt-4o'),
     ],
 
-    'hcaptcha' => [
-        'site_key' => env('HCAPTCHA_SITE_KEY'),
-        'secret_key' => env('HCAPTCHA_SECRET_KEY'),
+    'yandex_captcha' => [
+        'site_key' => env('YANDEX_CAPTCHA_SITE_KEY'),
+        'secret_key' => env('YANDEX_CAPTCHA_SECRET_KEY'),
     ],
 
 ];

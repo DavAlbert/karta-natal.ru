@@ -269,9 +269,9 @@
         <div class="navbar-inner">
             <a href="{{ route('welcome') }}" class="logo">КАРТА<span>НАТАЛ</span></a>
             <div class="nav-links">
-                <a href="{{ route('compatibility') }}" class="nav-link">
-                    <i class="fas fa-heart"></i>
-                    <span>Совместимость</span>
+                <a href="{{ route('welcome') }}" class="nav-link">
+                    <i class="fas fa-star"></i>
+                    <span>Натальная карта</span>
                 </a>
             </div>
         </div>
@@ -388,10 +388,10 @@
             <!-- CTA -->
             <div class="cta-section">
                 <h3>Хотите полный анализ?</h3>
-                <p>Две натальные карты + детальная расшифровка синастрии от ИИ-астролога</p>
-                <a href="{{ route('compatibility') }}" class="cta-btn">
-                    <i class="fas fa-heart"></i>
-                    Рассчитать совместимость
+                <p>Создайте свою натальную карту и получите детальный анализ от ИИ-астролога</p>
+                <a href="{{ route('welcome') }}" class="cta-btn">
+                    <i class="fas fa-star"></i>
+                    Создать натальную карту
                 </a>
             </div>
 

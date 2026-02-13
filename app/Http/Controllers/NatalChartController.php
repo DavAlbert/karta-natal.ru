@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NatalChart;
-use App\Rules\ValidHCaptcha;
+use App\Rules\ValidYandexCaptcha;
 use App\Services\AstrologyCalculationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ class NatalChartController extends Controller
     public function processAsync(Request $Request)
     {
         $validated = $Request->validate([
-            'hcaptcha_token' => ['required', new ValidHCaptcha()],
+            'captcha_token' => ['required', new ValidYandexCaptcha()],
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'gender' => 'required|in:male,female',

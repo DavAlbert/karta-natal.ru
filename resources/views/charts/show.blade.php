@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $chart->name }} — Натальная карта</title>
-    <@vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/js/all.min.js"></script>
+    <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -522,6 +524,475 @@
         ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+        /* Compatibility Tab Styles */
+        .compat-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section for Form */
+        .compat-hero {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(139, 92, 246, 0.08));
+            border-radius: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(236, 72, 153, 0.15);
+        }
+        .compat-hero-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.25rem;
+            background: linear-gradient(135deg, #EC4899, #8B5CF6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3);
+        }
+        .compat-hero h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem;
+            color: var(--text-primary);
+        }
+        .compat-hero p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        @media (max-width: 500px) {
+            .compat-hero {
+                padding: 1.5rem 1rem;
+            }
+            .compat-hero-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 1.5rem;
+            }
+            .compat-hero h2 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Form Card */
+        .compat-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.75rem;
+        }
+        @media (max-width: 500px) {
+            .compat-form {
+                padding: 1.25rem;
+            }
+        }
+        .compat-form-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+        .compat-form-title i { color: var(--accent-pink); }
+        .compat-form-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        .compat-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.625rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+        .compat-checkbox:hover {
+            border-color: var(--accent-indigo);
+        }
+        .compat-checkbox input {
+            margin-top: 2px;
+            flex-shrink: 0;
+            accent-color: var(--accent-indigo);
+            width: 16px;
+            height: 16px;
+        }
+        .compat-checkbox a {
+            color: var(--accent-indigo);
+            text-decoration: underline;
+        }
+        .compat-checkbox a:hover { color: var(--accent-gold); }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        @media (min-width: 500px) {
+            .form-row.two-col { grid-template-columns: 1fr 1fr; }
+        }
+        .form-group { }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.625rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+
+        /* Gender Buttons */
+        .gender-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .gender-btn { cursor: pointer; }
+        .gender-btn input { display: none; }
+        .gender-btn-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            padding: 0.875rem 1rem;
+            border-radius: 0.625rem;
+            border: 2px solid var(--border);
+            background: var(--bg-tertiary);
+            transition: all 0.2s;
+        }
+        .gender-btn-inner:hover {
+            border-color: var(--accent-indigo);
+            background: rgba(99, 102, 241, 0.08);
+        }
+        .gender-btn input:checked + .gender-btn-inner {
+            border-color: var(--accent-pink);
+            background: rgba(236, 72, 153, 0.12);
+        }
+        .gender-btn input:checked + .gender-btn-inner i { color: var(--accent-pink); }
+        .gender-btn-inner i { font-size: 1.125rem; color: var(--text-muted); transition: color 0.2s; }
+        .gender-btn-inner span { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
+
+        .compat-submit {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #EC4899, #8B5CF6);
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
+            margin-top: 0.5rem;
+        }
+        .compat-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(236, 72, 153, 0.45);
+        }
+        .compat-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Compatibility Result */
+        .compat-result {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            overflow: hidden;
+        }
+        .compat-result-header {
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.1));
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+        @media (max-width: 500px) {
+            .compat-result-header {
+                padding: 1.5rem 1rem;
+            }
+        }
+        .compat-score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(var(--score-color) calc(var(--score) * 3.6deg), rgba(255,255,255,0.08) 0);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 500px) {
+            .compat-score-circle {
+                width: 120px;
+                height: 120px;
+            }
+        }
+        .compat-score-circle::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 50%;
+        }
+        .compat-score-value {
+            position: relative;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        @media (max-width: 500px) {
+            .compat-score-value {
+                font-size: 2.5rem;
+            }
+        }
+        .compat-score-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        .compat-partner-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        @media (max-width: 500px) {
+            .compat-partner-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .compat-partner-info span:not(.compat-status-badge) {
+                display: none;
+            }
+            .compat-partner-info span:first-child,
+            .compat-partner-info .compat-status-badge {
+                display: inline;
+            }
+        }
+        .compat-status-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .compat-status-pending { background: rgba(234, 179, 8, 0.15); color: var(--accent-gold); border: 1px solid rgba(234, 179, 8, 0.3); }
+        .compat-status-completed { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .compat-result-body { padding: 1.5rem; }
+        @media (max-width: 500px) {
+            .compat-result-body { padding: 1.25rem; }
+        }
+
+        /* Pending Message */
+        .compat-pending-msg {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.08), rgba(234, 179, 8, 0.04));
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .compat-pending-msg p {
+            margin: 0 0 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .compat-pending-msg strong {
+            color: var(--accent-gold);
+        }
+        .compat-refresh-btn {
+            padding: 0.625rem 1.25rem;
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .compat-refresh-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+        }
+
+        /* Scores Grid */
+        .compat-scores-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.875rem;
+        }
+        @media (max-width: 500px) {
+            .compat-scores-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .compat-score-item {
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+        .compat-score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .compat-score-name {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .compat-score-val {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .compat-progress {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .compat-progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease-out;
+        }
+
+        /* Sections */
+        .compat-section {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: var(--bg-tertiary);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
+        .compat-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+        .compat-list-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.625rem;
+            line-height: 1.5;
+        }
+        .compat-list-item:last-child { margin-bottom: 0; }
+        .compat-list-item svg { flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.2rem; }
+        .compat-strengths .compat-list-item {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+        }
+        .compat-strengths .compat-list-item svg { color: var(--accent-green); }
+        .compat-challenges .compat-list-item {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+        .compat-challenges .compat-list-item svg { color: var(--accent-red); }
+        .compat-recommendations .compat-list-item {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.15);
+        }
+        .compat-recommendations .compat-list-item svg { color: var(--accent-gold); }
+
+        .compat-new-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 0.875rem 1.25rem;
+            background: transparent;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .compat-new-btn:hover {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+            background: rgba(236, 72, 153, 0.05);
+        }
+        .compat-new-btn i { font-size: 0.8rem; }
+
+        /* City Search */
+        .city-search-container { position: relative; }
+        .city-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            margin-top: 0.25rem;
+        }
+        .city-result-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .city-result-item:last-child { border-bottom: none; }
+        .city-result-item:hover { background: var(--bg-secondary); }
+        .city-result-country { color: var(--text-muted); font-size: 0.75rem; }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .overview-grid {
@@ -584,7 +1055,7 @@
         }
     </style>
 </head>
-<body x-data="{ activeTab: 'overview' }">
+<body x-data="{ activeTab: new URLSearchParams(window.location.search).get('tab') || localStorage.getItem('activeTab') || 'overview' }" x-init="localStorage.removeItem('activeTab')">
     @php
     // ==================== DATA PREPARATION ====================
     $signToFile = ['Овен' => 'aries', 'Телец' => 'taurus', 'Близнецы' => 'gemini', 'Рак' => 'cancer', 'Лев' => 'leo', 'Дева' => 'virgo', 'Весы' => 'libra', 'Скорпион' => 'scorpio', 'Стрелец' => 'sagittarius', 'Козерог' => 'capricorn', 'Водолей' => 'aquarius', 'Рыбы' => 'pisces'];
@@ -729,6 +1200,10 @@
             <button class="tab-btn" :class="{ 'active': activeTab === 'chat' }" @click="activeTab = 'chat'">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                 <span class="tab-btn-text">Чат с ИИ</span>
+            </button>
+            <button class="tab-btn" :class="{ 'active': activeTab === 'compatibility' }" @click="activeTab = 'compatibility'">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                <span class="tab-btn-text">Совместимость</span>
             </button>
         </nav>
 
@@ -1093,6 +1568,211 @@
                 </form>
             </div>
         </div>
+
+        <!-- ==================== TAB 4: COMPATIBILITY ==================== -->
+        <div class="tab-content" :class="{ 'active': activeTab === 'compatibility' }" x-data="compatibilityTab()" x-init="loadCompatibility()">
+            <div class="compat-container">
+                <!-- Loading State -->
+                <div x-show="loading" style="text-align: center; padding: 3rem;">
+                    <p style="color: var(--text-muted);">Загрузка...</p>
+                </div>
+
+                <!-- No Existing Compatibility - Show Form -->
+                <div x-show="!loading && !hasResult" x-cloak>
+                    <div class="compat-form">
+                        <div class="compat-form-title">
+                            <i class="fas fa-heart"></i>
+                            Проверить совместимость
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                            Введите данные партнёра для анализа совместимости.
+                        </p>
+                        <form @submit.prevent="submitForm()">
+                            <div class="form-row two-col">
+                                <div class="form-group">
+                                    <label>Имя партнёра *</label>
+                                    <input type="text" x-model="form.partner_name" placeholder="Например: Анна" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email партнёра *</label>
+                                    <input type="email" x-model="form.partner_email" placeholder="partner@email.com" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Пол партнёра *</label>
+                                    <div class="gender-buttons">
+                                        <label class="gender-btn">
+                                            <input type="radio" x-model="form.partner_gender" value="male" required>
+                                            <div class="gender-btn-inner">
+                                                <i class="fas fa-mars"></i>
+                                                <span>Мужской</span>
+                                            </div>
+                                        </label>
+                                        <label class="gender-btn">
+                                            <input type="radio" x-model="form.partner_gender" value="female" required>
+                                            <div class="gender-btn-inner">
+                                                <i class="fas fa-venus"></i>
+                                                <span>Женский</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row two-col">
+                                <div class="form-group">
+                                    <label>Дата рождения *</label>
+                                    <input type="date" x-model="form.partner_birth_date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Время рождения</label>
+                                    <input type="time" x-model="form.partner_birth_time" placeholder="Если известно">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Город рождения *</label>
+                                    <div class="city-search-container">
+                                        <input type="text"
+                                               x-model="cityQuery"
+                                               @input.debounce.300ms="searchCities()"
+                                               @focus="showCityResults = cityResults.length > 0"
+                                               placeholder="Начните вводить город..."
+                                               required>
+                                        <div class="city-results" x-show="showCityResults && cityResults.length > 0" @click.outside="showCityResults = false">
+                                            <template x-for="city in cityResults" :key="city.id">
+                                                <div class="city-result-item" @click="selectCity(city)">
+                                                    <span x-text="city.name_ru || city.name"></span>
+                                                    <span class="city-result-country" x-text="city.country"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms Checkbox -->
+                            <div class="form-row">
+                                <label class="compat-checkbox">
+                                    <input type="checkbox" x-model="form.terms_accepted" required>
+                                    <span>Я подтверждаю согласие партнёра на обработку данных и принимаю <a href="/terms" target="_blank">условия</a> и <a href="/privacy" target="_blank">политику конфиденциальности</a></span>
+                                </label>
+                            </div>
+
+                            <!-- Captcha -->
+                            <div class="form-row" style="display: flex; justify-content: center;">
+                                <div id="compat-captcha" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
+                            </div>
+
+                            <p x-show="error" x-text="error" style="color: var(--accent-red); font-size: 0.85rem; margin-bottom: 1rem;"></p>
+                            <button type="submit" class="compat-submit" :disabled="submitting || !form.terms_accepted">
+                                <span x-text="submitting ? 'Отправка...' : 'Отправить приглашение'"></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Has Existing Compatibility - Show Result -->
+                <div x-show="!loading && hasResult" x-cloak>
+                    <div class="compat-result">
+                        <div class="compat-result-header" :style="`--score: ${result.overall_score || 50}; --score-color: ${result.score_color || '#EAB308'}`">
+                            <div class="compat-score-circle">
+                                <span class="compat-score-value" :style="`color: ${result.score_color}`" x-text="result.overall_score || '—'"></span>
+                            </div>
+                            <p class="compat-score-label" x-text="result.score_description || 'Совместимость'"></p>
+                            <div class="compat-partner-info">
+                                <span>Партнёр: <strong x-text="result.partner_name"></strong></span>
+                                <span>&bull;</span>
+                                <span x-text="result.partner_birth_date"></span>
+                                <span>&bull;</span>
+                                <span class="compat-status-badge" :class="result.status === 'completed' ? 'compat-status-completed' : 'compat-status-pending'" x-text="result.status === 'completed' ? 'Подтверждено' : 'Ожидание партнёра'"></span>
+                            </div>
+                        </div>
+
+                        <div class="compat-result-body">
+                            <!-- Pending Message -->
+                            <div x-show="result.status === 'pending'" style="text-align: center; padding: 1.5rem; background: rgba(234, 179, 8, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
+                                <p style="margin: 0 0 1rem; color: var(--accent-gold);">
+                                    Приглашение отправлено на <strong x-text="result.partner_email"></strong>.<br>
+                                    Полный результат будет доступен после подтверждения партнёром.
+                                </p>
+                                <button @click="loaded = false; loadCompatibility()" style="padding: 0.5rem 1rem; background: var(--accent-gold); color: #000; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                    <i class="fas fa-sync-alt" style="margin-right: 0.5rem;"></i>Обновить статус
+                                </button>
+                            </div>
+
+                            <!-- Scores Grid (show if completed) -->
+                            <div x-show="result.status === 'completed' && result.scores">
+                                <div class="compat-scores-grid">
+                                    <template x-for="(score, key) in result.scores" :key="key">
+                                        <div class="compat-score-item">
+                                            <div class="compat-score-header">
+                                                <span class="compat-score-name" x-text="score.label"></span>
+                                                <span class="compat-score-val" x-text="score.value + '%'"></span>
+                                            </div>
+                                            <div class="compat-progress">
+                                                <div class="compat-progress-fill" :style="`width: ${score.value}%; background: ${score.value >= 70 ? 'var(--accent-green)' : (score.value >= 50 ? 'var(--accent-gold)' : 'var(--accent-red)')}`"></div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- AI Report Sections -->
+                                <template x-if="result.ai_report">
+                                    <div>
+                                        <!-- Strengths -->
+                                        <div class="compat-section compat-strengths" x-show="result.ai_report.strengths && result.ai_report.strengths.length > 0">
+                                            <div class="compat-section-title" style="color: var(--accent-green);">
+                                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                                Сильные стороны
+                                            </div>
+                                            <template x-for="s in result.ai_report.strengths" :key="s">
+                                                <div class="compat-list-item">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                    <span x-text="s"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+
+                                        <!-- Challenges -->
+                                        <div class="compat-section compat-challenges" x-show="result.ai_report.challenges && result.ai_report.challenges.length > 0">
+                                            <div class="compat-section-title" style="color: var(--accent-red);">
+                                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                                Потенциальные вызовы
+                                            </div>
+                                            <template x-for="c in result.ai_report.challenges" :key="c">
+                                                <div class="compat-list-item">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/></svg>
+                                                    <span x-text="c"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+
+                                        <!-- Recommendations -->
+                                        <div class="compat-section" x-show="result.ai_report.recommendations && result.ai_report.recommendations.length > 0">
+                                            <div class="compat-section-title" style="color: var(--accent-gold);">
+                                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                                                Рекомендации
+                                            </div>
+                                            <template x-for="r in result.ai_report.recommendations" :key="r">
+                                                <div class="compat-list-item" style="background: rgba(234, 179, 8, 0.1);">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent-gold);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                    <span x-text="r"></span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <button class="compat-new-btn" @click="startNew()">
+                                Рассчитать с другим партнёром
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1217,6 +1897,152 @@
 
         // Scroll to bottom on load
         chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Compatibility Tab Alpine Component
+        function compatibilityTab() {
+            return {
+                loading: true,
+                hasResult: false,
+                result: {},
+                form: {
+                    partner_name: '',
+                    partner_email: '',
+                    partner_gender: '',
+                    partner_birth_date: '',
+                    partner_birth_time: '',
+                    partner_city_id: null,
+                    terms_accepted: false
+                },
+                cityQuery: '',
+                cityResults: [],
+                showCityResults: false,
+                submitting: false,
+                error: '',
+                loaded: false,
+
+                async loadCompatibility() {
+                    if (this.loaded) return;
+                    this.loading = true;
+
+                    try {
+                        const response = await fetch(`/charts/{{ $chart->id }}/compatibility`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.hasResult = data.exists;
+                            if (data.exists) {
+                                this.result = data.compatibility;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Failed to load compatibility:', e);
+                    }
+
+                    this.loading = false;
+                    this.loaded = true;
+                },
+
+                async searchCities() {
+                    if (this.cityQuery.length < 2) {
+                        this.cityResults = [];
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`/cities/search/${encodeURIComponent(this.cityQuery)}`);
+                        if (response.ok) {
+                            this.cityResults = await response.json();
+                            this.showCityResults = true;
+                        }
+                    } catch (e) {
+                        console.error('City search failed:', e);
+                    }
+                },
+
+                selectCity(city) {
+                    this.form.partner_city_id = city.id;
+                    this.cityQuery = city.name_ru || city.name;
+                    this.showCityResults = false;
+                    this.cityResults = [];
+                },
+
+                async submitForm() {
+                    this.error = '';
+
+                    // Validate
+                    if (!this.form.partner_name || !this.form.partner_email || !this.form.partner_gender ||
+                        !this.form.partner_birth_date || !this.form.partner_city_id) {
+                        this.error = 'Пожалуйста, заполните все обязательные поля';
+                        return;
+                    }
+
+                    if (!this.form.terms_accepted) {
+                        this.error = 'Пожалуйста, подтвердите согласие с условиями';
+                        return;
+                    }
+
+                    // Get captcha token
+                    const captchaInput = document.querySelector('#compat-captcha input[name="smart-token"]');
+                    const captchaToken = captchaInput ? captchaInput.value : '';
+                    if (!captchaToken) {
+                        this.error = 'Пожалуйста, пройдите проверку капчи';
+                        return;
+                    }
+
+                    this.submitting = true;
+
+                    try {
+                        const response = await fetch(`/charts/{{ $chart->id }}/compatibility`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({...this.form, captcha_token: captchaToken})
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            // Reload to show result
+                            this.loaded = false;
+                            await this.loadCompatibility();
+                        } else {
+                            this.error = data.error || 'Произошла ошибка. Попробуйте ещё раз.';
+                            if (window.smartCaptcha) window.smartCaptcha.reset();
+                        }
+                    } catch (e) {
+                        this.error = 'Ошибка соединения. Попробуйте ещё раз.';
+                        if (window.smartCaptcha) window.smartCaptcha.reset();
+                    }
+
+                    this.submitting = false;
+                },
+
+                startNew() {
+                    this.hasResult = false;
+                    this.result = {};
+                    this.form = {
+                        partner_name: '',
+                        partner_email: '',
+                        partner_gender: '',
+                        partner_birth_date: '',
+                        partner_birth_time: '',
+                        partner_city_id: null,
+                        terms_accepted: false
+                    };
+                    this.cityQuery = '';
+                    this.error = '';
+                    if (window.smartCaptcha) window.smartCaptcha.reset();
+                }
+            };
+        }
     </script>
 </body>
 </html>

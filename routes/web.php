@@ -58,18 +58,13 @@ Route::get('/cities/search/{query}', function (string $query) {
     return response()->json($cities);
 });
 
-Route::get('/compatibility', function () {
-    return view('compatibility.index');
-})->name('compatibility');
+// Partner compatibility verification (public - no auth required)
+Route::get('/compatibility/verify/{token}', [App\Http\Controllers\PartnerCompatibilityController::class, 'verify'])
+    ->name('compatibility.verify');
+Route::post('/compatibility/verify/{token}', [App\Http\Controllers\PartnerCompatibilityController::class, 'confirm'])
+    ->name('compatibility.confirm');
 
-// Compatibility calculation
-Route::post('/compatibility/calculate', [App\Http\Controllers\CompatibilityController::class, 'calculate'])->name('compatibility.calculate');
-
-// Compatibility result page (via token)
-Route::get('/compatibility/result/{token}', [App\Http\Controllers\CompatibilityController::class, 'result'])
-    ->name('compatibility.result');
-
-// Public sharing of compatibility
+// Public sharing of compatibility (keep for backwards compatibility)
 Route::get('/compatibility/shared/{token}', [App\Http\Controllers\CompatibilityController::class, 'shared'])
     ->name('compatibility.shared');
 
@@ -124,6 +119,15 @@ Route::post('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatCont
 Route::delete('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatController::class, 'clear'])
     ->middleware('auth')
     ->name('charts.chat.clear');
+
+// Partner compatibility routes (auth required)
+Route::get('/charts/{natalChart}/compatibility', [App\Http\Controllers\PartnerCompatibilityController::class, 'show'])
+    ->middleware('auth')
+    ->name('charts.compatibility.show');
+
+Route::post('/charts/{natalChart}/compatibility', [App\Http\Controllers\PartnerCompatibilityController::class, 'store'])
+    ->middleware('auth')
+    ->name('charts.compatibility.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
