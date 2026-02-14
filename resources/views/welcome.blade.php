@@ -211,6 +211,34 @@
             filter: invert(1);
             cursor: pointer;
         }
+
+        /* Custom select dropdown styling */
+        select.input-professional {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236366f1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        select.input-professional:focus {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23fbbf24' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        }
+
+        /* Make select options readable on mobile */
+        select.input-professional option {
+            background-color: #1e293b;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        /* Ensure touch-friendly sizing on mobile */
+        @media (max-width: 640px) {
+            select.input-professional {
+                font-size: 16px; /* Prevent zoom on iOS */
+                min-height: 48px; /* Touch-friendly size */
+            }
+        }
     </style>
 
 </head>
@@ -368,21 +396,61 @@
 
                                 <input type="hidden" name="purpose" value="general">
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                            <i class="far fa-calendar-alt mr-1"></i>Дата рождения
-                                        </label>
-                                        <input type="date" name="birth_date" id="birth_date" required
-                                            class="w-full input-professional rounded-lg px-4 py-3">
+                                <!-- Дата рождения - Dropdowns -->
+                                <div>
+                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                        <i class="far fa-calendar-alt mr-1"></i>Дата рождения
+                                    </label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <select id="birth_day" required
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            <option value="">День</option>
+                                        </select>
+                                        <select id="birth_month" required
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            <option value="">Месяц</option>
+                                            <option value="01">Январь</option>
+                                            <option value="02">Февраль</option>
+                                            <option value="03">Март</option>
+                                            <option value="04">Апрель</option>
+                                            <option value="05">Май</option>
+                                            <option value="06">Июнь</option>
+                                            <option value="07">Июль</option>
+                                            <option value="08">Август</option>
+                                            <option value="09">Сентябрь</option>
+                                            <option value="10">Октябрь</option>
+                                            <option value="11">Ноябрь</option>
+                                            <option value="12">Декабрь</option>
+                                        </select>
+                                        <select id="birth_year" required
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            <option value="">Год</option>
+                                        </select>
                                     </div>
-                                    <div>
-                                        <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                            <i class="far fa-clock mr-1"></i>Время
-                                        </label>
-                                        <input type="time" name="birth_time" id="birth_time" required
-                                            class="w-full input-professional rounded-lg px-4 py-3">
+                                    <input type="hidden" name="birth_date" id="birth_date">
+                                </div>
+
+                                <!-- Время рождения - Dropdowns -->
+                                <div>
+                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
+                                        <i class="far fa-clock mr-1"></i>Время рождения
+                                    </label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <select id="birth_hour" required
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            <option value="">Час</option>
+                                        </select>
+                                        <select id="birth_minute" required
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            <option value="">Минута</option>
+                                        </select>
                                     </div>
+                                    <input type="hidden" name="birth_time" id="birth_time">
+                                    <label class="flex items-center gap-2 mt-2 cursor-pointer group">
+                                        <input type="checkbox" id="time_unknown"
+                                            class="w-4 h-4 text-indigo-600 bg-indigo-950/30 border-indigo-800 rounded focus:ring-indigo-500 focus:ring-2">
+                                        <span class="text-xs text-indigo-400 group-hover:text-indigo-300 transition-colors">Не знаю точное время (будет использовано 12:00)</span>
+                                    </label>
                                 </div>
 
                                 <div>
@@ -437,12 +505,19 @@
                                     <div id="captcha-container" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
                                 </div>
 
+                                <div id="form-errors" class="hidden mt-4 p-3 bg-red-900/20 border border-red-800/30 rounded-lg">
+                                    <p class="text-xs text-red-400 flex items-start gap-2">
+                                        <i class="fas fa-exclamation-circle mt-0.5"></i>
+                                        <span id="form-errors-text">Заполните все обязательные поля</span>
+                                    </p>
+                                </div>
+
                                 <button type="submit" id="submit-btn" disabled
-                                    class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-4 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                                    class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-5 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-lg min-h-[56px]">
                                     Рассчитать сейчас
                                 </button>
 
-                                <p class="text-xs text-center text-indigo-400/50 mt-4">
+                                <p class="text-xs text-center text-indigo-400/50 mt-4 pb-4">
                                     * Нажимая кнопку, вы даете согласие на обработку персональных данных
                                 </p>
                             </form>
@@ -952,16 +1027,125 @@
 
             const isValid = name && email && gender && purpose && birthDate && birthTime && cityId;
             submitBtn.disabled = !isValid;
+
+            // Show/hide error message with missing fields
+            const formErrors = document.getElementById('form-errors');
+            const formErrorsText = document.getElementById('form-errors-text');
+
+            if (formErrors && formErrorsText) {
+                const missing = [];
+                if (!name) missing.push('имя');
+                if (!email) missing.push('email');
+                if (!gender) missing.push('пол');
+                if (!birthDate) missing.push('дату рождения');
+                if (!birthTime) missing.push('время');
+                if (!cityId) missing.push('город');
+
+                if (missing.length > 0 && (name || email || birthDate || birthTime || cityId)) {
+                    // Only show if user has started filling the form
+                    formErrorsText.textContent = 'Укажите: ' + missing.join(', ');
+                    formErrors.classList.remove('hidden');
+                } else {
+                    formErrors.classList.add('hidden');
+                }
+            }
         }
 
-        // Add event listeners for all form fields
+        // Date/Time dropdown elements
+        const birthDaySelect = document.getElementById('birth_day');
+        const birthMonthSelect = document.getElementById('birth_month');
+        const birthYearSelect = document.getElementById('birth_year');
+        const birthHourSelect = document.getElementById('birth_hour');
+        const birthMinuteSelect = document.getElementById('birth_minute');
+        const timeUnknownCheckbox = document.getElementById('time_unknown');
+
+        // Populate day dropdown (1-31)
+        for (let d = 1; d <= 31; d++) {
+            const option = document.createElement('option');
+            option.value = String(d).padStart(2, '0');
+            option.textContent = d;
+            birthDaySelect.appendChild(option);
+        }
+
+        // Populate year dropdown (current year down to 1920)
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear; y >= 1920; y--) {
+            const option = document.createElement('option');
+            option.value = y;
+            option.textContent = y;
+            birthYearSelect.appendChild(option);
+        }
+
+        // Populate hour dropdown (00-23)
+        for (let h = 0; h <= 23; h++) {
+            const option = document.createElement('option');
+            option.value = String(h).padStart(2, '0');
+            option.textContent = String(h).padStart(2, '0');
+            birthHourSelect.appendChild(option);
+        }
+
+        // Populate minute dropdown (00-59, step 5 for convenience)
+        for (let m = 0; m <= 59; m += 5) {
+            const option = document.createElement('option');
+            option.value = String(m).padStart(2, '0');
+            option.textContent = String(m).padStart(2, '0');
+            birthMinuteSelect.appendChild(option);
+        }
+
+        // Sync date dropdowns to hidden input
+        function syncBirthDate() {
+            const day = birthDaySelect.value;
+            const month = birthMonthSelect.value;
+            const year = birthYearSelect.value;
+
+            if (day && month && year) {
+                birthDateInput.value = `${year}-${month}-${day}`;
+            } else {
+                birthDateInput.value = '';
+            }
+            validateForm();
+        }
+
+        // Sync time dropdowns to hidden input
+        function syncBirthTime() {
+            if (timeUnknownCheckbox.checked) {
+                birthTimeInput.value = '12:00';
+                birthHourSelect.disabled = true;
+                birthMinuteSelect.disabled = true;
+                birthHourSelect.classList.add('opacity-50');
+                birthMinuteSelect.classList.add('opacity-50');
+            } else {
+                birthHourSelect.disabled = false;
+                birthMinuteSelect.disabled = false;
+                birthHourSelect.classList.remove('opacity-50');
+                birthMinuteSelect.classList.remove('opacity-50');
+
+                const hour = birthHourSelect.value;
+                const minute = birthMinuteSelect.value;
+
+                if (hour && minute) {
+                    birthTimeInput.value = `${hour}:${minute}`;
+                } else {
+                    birthTimeInput.value = '';
+                }
+            }
+            validateForm();
+        }
+
+        // Add event listeners for date/time dropdowns
+        birthDaySelect.addEventListener('change', syncBirthDate);
+        birthMonthSelect.addEventListener('change', syncBirthDate);
+        birthYearSelect.addEventListener('change', syncBirthDate);
+        birthHourSelect.addEventListener('change', syncBirthTime);
+        birthMinuteSelect.addEventListener('change', syncBirthTime);
+        timeUnknownCheckbox.addEventListener('change', syncBirthTime);
+
+        // Add event listeners for other form fields
         nameInput.addEventListener('input', validateForm);
         emailInput.addEventListener('input', validateForm);
         genderInputs.forEach(input => input.addEventListener('change', validateForm));
-        birthDateInput.addEventListener('change', validateForm);
-        birthTimeInput.addEventListener('change', validateForm);
 
-        // Initial validation on page load (for Moscow default)
+        // Initial validation on page load
         validateForm();
 
         // Yandex SmartCaptcha site key
@@ -1088,6 +1272,20 @@
             if (calcForm) calcForm.reset();
             document.getElementById('city_id').value = '';
             document.getElementById('city-details').classList.add('hidden');
+            document.getElementById('birth_date').value = '';
+            document.getElementById('birth_time').value = '';
+            document.getElementById('birth_day').value = '';
+            document.getElementById('birth_month').value = '';
+            document.getElementById('birth_year').value = '';
+            document.getElementById('birth_hour').value = '';
+            document.getElementById('birth_minute').value = '';
+            document.getElementById('time_unknown').checked = false;
+            document.getElementById('birth_hour').disabled = false;
+            document.getElementById('birth_minute').disabled = false;
+            document.getElementById('birth_hour').classList.remove('opacity-50');
+            document.getElementById('birth_minute').classList.remove('opacity-50');
+            document.getElementById('form-errors').classList.add('hidden');
+            if (cityWarning) cityWarning.classList.add('hidden');
             validateForm();
         }
 
