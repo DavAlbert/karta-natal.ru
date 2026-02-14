@@ -288,7 +288,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="calcForm" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-cover bg-center"
+    <section id="heroSection" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-cover bg-center"
         style="background-image: url('/images/hero-bg.webp');">
 
         <!-- Overlay for readability -->
