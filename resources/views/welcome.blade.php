@@ -407,6 +407,9 @@
                                         </div>
                                     </div>
                                     <p class="text-xs text-indigo-400/60 mt-1">Можно вводить на русском или латиницей</p>
+                                    <p id="city-warning" class="hidden text-xs text-amber-400 mt-1">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>Выберите город из списка
+                                    </p>
                                 </div>
                                 <input type="hidden" id="city_id" name="city_id" required>
 
@@ -1113,8 +1116,10 @@
         const displayLongitude = document.getElementById('display-longitude');
         const searchSpinner = document.getElementById('search-spinner');
         const searchIcon = document.getElementById('search-icon');
+        const cityWarning = document.getElementById('city-warning');
         let searchTimeout = null;
         let currentQuery = '';
+        let lastSearchResults = [];
 
         // Country code to Russian name mapping
         const countryNames = {
@@ -1222,6 +1227,7 @@
 
                 // Only render if this is still the current query
                 if (query === currentQuery) {
+                    lastSearchResults = cities;
                     renderCities(cities, query);
                     hideSpinner();
                 }
@@ -1252,6 +1258,11 @@
 
             dropdown.classList.add('hidden');
 
+            // Hide warning when city is selected
+            if (cityWarning) {
+                cityWarning.classList.add('hidden');
+            }
+
             // Validate form
             if (typeof validateForm === 'function') {
                 validateForm();
@@ -1277,6 +1288,10 @@
 
             // Show dropdown on focus if there's text
             searchInput.addEventListener('focus', function () {
+                // Hide warning when user focuses on input to try again
+                if (cityWarning) {
+                    cityWarning.classList.add('hidden');
+                }
                 if (this.value.trim().length >= 2) {
                     searchCities(this.value);
                 }
@@ -1317,6 +1332,45 @@
                 } else if (e.key === 'Escape') {
                     dropdown.classList.add('hidden');
                 }
+            });
+
+            // Handle blur - auto-select if only one result, show warning if text entered but no city selected
+            searchInput.addEventListener('blur', function() {
+                // Small delay to allow click on dropdown option to register
+                setTimeout(() => {
+                    const inputValue = searchInput.value.trim();
+
+                    // If no city selected but text was entered
+                    if (!cityIdInput.value && inputValue.length > 0) {
+                        const options = dropdown.querySelectorAll('.city-option');
+
+                        // Auto-select if there's exactly one result
+                        if (options.length === 1) {
+                            selectCity(options[0]);
+                        } else if (lastSearchResults.length === 1) {
+                            // If dropdown is already hidden but we have one result
+                            const city = lastSearchResults[0];
+                            const fakeElement = {
+                                dataset: {
+                                    cityId: city.id,
+                                    cityName: city.name_ru || city.name,
+                                    cityCountry: city.country,
+                                    cityLat: city.latitude,
+                                    cityLon: city.longitude,
+                                    cityTz: city.timezone_gmt
+                                }
+                            };
+                            selectCity(fakeElement);
+                        } else {
+                            // Show warning - user needs to select from list
+                            if (cityWarning) {
+                                cityWarning.classList.remove('hidden');
+                            }
+                        }
+                    }
+
+                    dropdown.classList.add('hidden');
+                }, 200);
             });
         }
     </script>
