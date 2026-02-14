@@ -16,13 +16,13 @@ class ProcessNatalChartJob implements ShouldQueue
 
     public int $tries = 3;
     public int $timeout = 300;
-    public string $queue = 'ai-reports';
 
     public function __construct(
         public NatalChart $chart,
         public bool $sendEmail = false,
         public bool $generateAiReport = true
     ) {
+        $this->onQueue('ai-reports');
     }
 
     public function handle(AiAstrologyService $aiService): void

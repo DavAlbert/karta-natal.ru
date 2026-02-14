@@ -14,13 +14,13 @@ class GenerateCompatibilityAiReport implements ShouldQueue
 
     public int $tries = 3;
     public int $timeout = 300;
-    public string $queue = 'ai-reports';
 
     public function __construct(
         public PartnerCompatibility $compatibility,
         public array $userChartData,
         public array $partnerChartData
     ) {
+        $this->onQueue('ai-reports');
     }
 
     public function handle(AiAstrologyService $aiService): void
