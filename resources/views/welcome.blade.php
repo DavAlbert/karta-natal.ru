@@ -296,7 +296,7 @@
 
         <!-- Minimal Ambient Light (Reduced Glow) -->
         <div
-            class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-900/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2">
+            class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-900/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2">
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -401,13 +401,13 @@
                                     <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
                                         <i class="far fa-calendar-alt mr-1"></i>Дата рождения
                                     </label>
-                                    <div class="grid grid-cols-3 gap-2">
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                         <select id="birth_day" required
-                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer order-2 sm:order-1">
                                             <option value="">День</option>
                                         </select>
                                         <select id="birth_month" required
-                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer col-span-2 sm:col-span-1 order-1 sm:order-2">
                                             <option value="">Месяц</option>
                                             <option value="01">Январь</option>
                                             <option value="02">Февраль</option>
@@ -423,7 +423,7 @@
                                             <option value="12">Декабрь</option>
                                         </select>
                                         <select id="birth_year" required
-                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer">
+                                            class="w-full input-professional rounded-lg px-3 py-3 text-center appearance-none cursor-pointer order-3">
                                             <option value="">Год</option>
                                         </select>
                                     </div>
