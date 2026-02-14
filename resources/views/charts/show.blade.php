@@ -788,6 +788,65 @@
         .gender-btn-inner i { font-size: 1.125rem; color: var(--text-muted); transition: color 0.2s; }
         .gender-btn-inner span { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
 
+        /* Date/Time Dropdowns */
+        .date-dropdowns, .time-dropdowns {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .date-dropdowns { grid-template-columns: 1fr 1.5fr 1fr; }
+        .time-dropdowns { grid-template-columns: 1fr 1fr; }
+        .date-dropdowns select, .time-dropdowns select {
+            padding: 0.75rem 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.625rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23818CF8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25em 1.25em;
+            padding-right: 2rem;
+        }
+        .date-dropdowns select:focus, .time-dropdowns select:focus {
+            outline: none;
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .date-dropdowns select option, .time-dropdowns select option {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .time-unknown-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .time-unknown-checkbox:hover { color: var(--text-secondary); }
+        .time-unknown-checkbox input {
+            width: auto;
+            margin: 0;
+            cursor: pointer;
+        }
+        @media (max-width: 400px) {
+            .date-dropdowns { grid-template-columns: 1fr 1fr 1fr; }
+            .date-dropdowns select, .time-dropdowns select {
+                font-size: 16px; /* Prevent zoom on iOS */
+                min-height: 48px;
+                padding: 0.5rem 0.25rem;
+                padding-right: 1.5rem;
+                background-size: 1em 1em;
+            }
+        }
+
         .compat-submit {
             width: 100%;
             padding: 1rem 1.5rem;
@@ -1719,14 +1778,63 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-row two-col">
+                            <!-- Дата рождения - Dropdowns -->
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label>Дата рождения *</label>
-                                    <input type="date" x-model="form.partner_birth_date" required>
+                                    <div class="date-dropdowns">
+                                        <select x-model="form.birth_day" @change="syncBirthDate()" required>
+                                            <option value="">День</option>
+                                            <template x-for="day in getDaysInMonth()" :key="day">
+                                                <option :value="day" x-text="parseInt(day)"></option>
+                                            </template>
+                                        </select>
+                                        <select x-model="form.birth_month" @change="syncBirthDate()" required>
+                                            <option value="">Месяц</option>
+                                            <option value="01">Январь</option>
+                                            <option value="02">Февраль</option>
+                                            <option value="03">Март</option>
+                                            <option value="04">Апрель</option>
+                                            <option value="05">Май</option>
+                                            <option value="06">Июнь</option>
+                                            <option value="07">Июль</option>
+                                            <option value="08">Август</option>
+                                            <option value="09">Сентябрь</option>
+                                            <option value="10">Октябрь</option>
+                                            <option value="11">Ноябрь</option>
+                                            <option value="12">Декабрь</option>
+                                        </select>
+                                        <select x-model="form.birth_year" @change="syncBirthDate()" required>
+                                            <option value="">Год</option>
+                                            <template x-for="year in getYears()" :key="year">
+                                                <option :value="year" x-text="year"></option>
+                                            </template>
+                                        </select>
+                                    </div>
                                 </div>
+                            </div>
+                            <!-- Время рождения - Dropdowns -->
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label>Время рождения</label>
-                                    <input type="time" x-model="form.partner_birth_time" placeholder="Если известно">
+                                    <div class="time-dropdowns">
+                                        <select x-model="form.birth_hour" @change="syncBirthTime()" :disabled="form.time_unknown" :class="{ 'opacity-50': form.time_unknown }">
+                                            <option value="">Час</option>
+                                            <template x-for="hour in getHours()" :key="hour">
+                                                <option :value="hour" x-text="hour"></option>
+                                            </template>
+                                        </select>
+                                        <select x-model="form.birth_minute" @change="syncBirthTime()" :disabled="form.time_unknown" :class="{ 'opacity-50': form.time_unknown }">
+                                            <option value="">Минута</option>
+                                            <template x-for="minute in getMinutes()" :key="minute">
+                                                <option :value="minute" x-text="minute"></option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                    <label class="time-unknown-checkbox">
+                                        <input type="checkbox" x-model="form.time_unknown" @change="syncBirthTime()">
+                                        <span>Не знаю точное время (будет использовано 12:00)</span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -2093,7 +2201,14 @@
                     partner_birth_date: '',
                     partner_birth_time: '',
                     partner_city_id: null,
-                    terms_accepted: false
+                    terms_accepted: false,
+                    // Dropdown values
+                    birth_day: '',
+                    birth_month: '',
+                    birth_year: '',
+                    birth_hour: '',
+                    birth_minute: '',
+                    time_unknown: false
                 },
                 cityQuery: '',
                 cityResults: [],
@@ -2232,6 +2347,57 @@
                     this.cityResults = [];
                 },
 
+                syncBirthDate() {
+                    if (this.form.birth_day && this.form.birth_month && this.form.birth_year) {
+                        this.form.partner_birth_date = `${this.form.birth_year}-${this.form.birth_month}-${this.form.birth_day}`;
+                    } else {
+                        this.form.partner_birth_date = '';
+                    }
+                },
+
+                syncBirthTime() {
+                    if (this.form.time_unknown) {
+                        this.form.partner_birth_time = '12:00';
+                    } else if (this.form.birth_hour && this.form.birth_minute) {
+                        this.form.partner_birth_time = `${this.form.birth_hour}:${this.form.birth_minute}`;
+                    } else {
+                        this.form.partner_birth_time = '';
+                    }
+                },
+
+                getDaysInMonth() {
+                    const days = [];
+                    for (let d = 1; d <= 31; d++) {
+                        days.push(String(d).padStart(2, '0'));
+                    }
+                    return days;
+                },
+
+                getYears() {
+                    const years = [];
+                    const currentYear = new Date().getFullYear();
+                    for (let y = currentYear; y >= 1920; y--) {
+                        years.push(y);
+                    }
+                    return years;
+                },
+
+                getHours() {
+                    const hours = [];
+                    for (let h = 0; h <= 23; h++) {
+                        hours.push(String(h).padStart(2, '0'));
+                    }
+                    return hours;
+                },
+
+                getMinutes() {
+                    const minutes = [];
+                    for (let m = 0; m <= 59; m += 5) {
+                        minutes.push(String(m).padStart(2, '0'));
+                    }
+                    return minutes;
+                },
+
                 async submitForm() {
                     this.error = '';
 
@@ -2301,7 +2467,13 @@
                         partner_birth_date: '',
                         partner_birth_time: '',
                         partner_city_id: null,
-                        terms_accepted: false
+                        terms_accepted: false,
+                        birth_day: '',
+                        birth_month: '',
+                        birth_year: '',
+                        birth_hour: '',
+                        birth_minute: '',
+                        time_unknown: false
                     };
                     this.cityQuery = '';
                     this.error = '';
