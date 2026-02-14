@@ -2018,7 +2018,7 @@
 
         // Poll for chat response
         async function pollChatResponse(messageId) {
-            const maxAttempts = 60; // 60 seconds max
+            const maxAttempts = 120; // 120 seconds (2 minutes) max
             let attempts = 0;
 
             while (attempts < maxAttempts) {
