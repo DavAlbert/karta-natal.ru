@@ -15,13 +15,13 @@ class ProcessChatMessage implements ShouldQueue
 
     public int $tries = 2;
     public int $timeout = 120;
-    public string $queue = 'chat';
 
     public function __construct(
         public ChatMessage $chatMessage,
         public NatalChart $chart,
         public string $userMessage
     ) {
+        $this->onQueue('chat');
     }
 
     public function handle(AiAstrologyService $aiService): void
