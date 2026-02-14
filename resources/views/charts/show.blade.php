@@ -836,8 +836,14 @@
             margin: 0;
             cursor: pointer;
         }
-        @media (max-width: 400px) {
-            .date-dropdowns { grid-template-columns: 1fr 1fr 1fr; }
+        @media (max-width: 480px) {
+            .date-dropdowns {
+                grid-template-columns: 1fr 1fr;
+            }
+            .date-dropdowns select:nth-child(2) { /* Month */
+                grid-column: 1 / -1;
+                order: -1;
+            }
             .date-dropdowns select, .time-dropdowns select {
                 font-size: 16px; /* Prevent zoom on iOS */
                 min-height: 48px;
@@ -1138,6 +1144,33 @@
         .city-result-item:last-child { border-bottom: none; }
         .city-result-item:hover { background: var(--bg-secondary); }
         .city-result-country { color: var(--text-muted); font-size: 0.75rem; }
+        .city-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.375rem;
+        }
+        .city-warning {
+            font-size: 0.75rem;
+            color: var(--accent-orange);
+            margin-top: 0.375rem;
+        }
+        .city-warning i { margin-right: 0.25rem; }
+        .city-details {
+            margin-top: 0.5rem;
+            padding: 0.625rem 0.75rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .city-details span:first-child { color: var(--text-primary); font-weight: 500; }
+        .city-details-sep { color: var(--accent-indigo); opacity: 0.5; }
+        .city-details-coords { font-family: monospace; color: var(--text-muted); }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -1856,6 +1889,18 @@
                                             </template>
                                         </div>
                                     </div>
+                                    <p class="city-hint">Можно вводить на русском или латиницей</p>
+                                    <p class="city-warning" x-show="cityQuery && !form.partner_city_id">
+                                        <i class="fas fa-exclamation-triangle"></i> Выберите город из списка
+                                    </p>
+                                    <!-- City Details -->
+                                    <div class="city-details" x-show="selectedCity" x-cloak>
+                                        <span x-text="selectedCity?.name_ru || selectedCity?.name"></span>
+                                        <span class="city-details-sep">•</span>
+                                        <span x-text="selectedCity?.country"></span>
+                                        <span class="city-details-sep">•</span>
+                                        <span class="city-details-coords" x-text="selectedCity ? selectedCity.latitude.toFixed(2) + ', ' + selectedCity.longitude.toFixed(2) : ''"></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2213,6 +2258,7 @@
                 cityQuery: '',
                 cityResults: [],
                 showCityResults: false,
+                selectedCity: null,
                 submitting: false,
                 error: '',
                 loaded: false,
@@ -2343,6 +2389,7 @@
                 selectCity(city) {
                     this.form.partner_city_id = city.id;
                     this.cityQuery = city.name_ru || city.name;
+                    this.selectedCity = city;
                     this.showCityResults = false;
                     this.cityResults = [];
                 },
@@ -2476,6 +2523,7 @@
                         time_unknown: false
                     };
                     this.cityQuery = '';
+                    this.selectedCity = null;
                     this.error = '';
                     if (window.smartCaptcha) window.smartCaptcha.reset();
                 },
