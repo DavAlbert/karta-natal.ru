@@ -116,6 +116,10 @@ Route::post('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatCont
     ->middleware('auth')
     ->name('charts.chat.send');
 
+Route::get('/charts/{natalChart}/chat/{chatMessage}/status', [App\Http\Controllers\AstrologyChatController::class, 'status'])
+    ->middleware('auth')
+    ->name('charts.chat.status');
+
 Route::delete('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatController::class, 'clear'])
     ->middleware('auth')
     ->name('charts.chat.clear');
@@ -128,6 +132,10 @@ Route::get('/charts/{natalChart}/compatibility', [App\Http\Controllers\PartnerCo
 Route::post('/charts/{natalChart}/compatibility', [App\Http\Controllers\PartnerCompatibilityController::class, 'store'])
     ->middleware('auth')
     ->name('charts.compatibility.store');
+
+Route::get('/compatibility/{compatibility}/ai-status', [App\Http\Controllers\PartnerCompatibilityController::class, 'checkAiReportStatus'])
+    ->middleware('auth')
+    ->name('compatibility.ai-status');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

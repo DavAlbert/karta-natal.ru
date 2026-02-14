@@ -11,6 +11,7 @@ class ChatMessage extends Model
         'natal_chart_id',
         'role',
         'content',
+        'status',
     ];
 
     public function natalChart(): BelongsTo

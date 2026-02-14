@@ -242,7 +242,7 @@ class AiAstrologyService
      * Generate comprehensive compatibility report with structured outputs.
      * Includes scores (1-10), detailed analysis, and specific recommendations.
      */
-    public function generateCompatibilityReport(array $chart1, array $chart2, array $synastry): array
+    public function generateCompatibilityReport(array $chart1, array $chart2, array $synastry, string $name1 = 'Партнёр 1', string $name2 = 'Партнёр 2'): array
     {
         $toolSchema = [
             'type' => 'function',
@@ -252,6 +252,10 @@ class AiAstrologyService
                 'parameters' => [
                     'type' => 'object',
                     'properties' => [
+                        'full_description' => [
+                            'type' => 'string',
+                            'description' => 'Comprehensive 800-1200 word PERSONAL analysis in Russian. USE BOTH PARTNER NAMES! ALWAYS reference specific planets, signs and aspects from their natal charts as proof. Structure: 1) Greet couple by names, describe their core energies (Sun signs, Moon signs, Ascendants - name them!), 2) Explain WHY they attract each other - cite specific aspects (e.g. "Venus in Aries trine Mars in Leo creates..."), 3) Daily life - morning routines, evenings, weekends based on their Moon signs, 4) Communication style based on Mercury placements, 5) Challenges - name the difficult aspects and give CONCRETE solutions (e.g. "When Saturn square Venus triggers jealousy, try..."), 6) Long-term advice for marriage/family. Use simple but professional language. Every claim must reference a planet or aspect.'
+                        ],
                         'overall_score' => [
                             'type' => 'integer',
                             'description' => 'Overall compatibility score from 1 to 10 based on synastry analysis.'
@@ -317,6 +321,7 @@ class AiAstrologyService
                         ]
                     ],
                     'required' => [
+                        'full_description',
                         'overall_score', 'overall_analysis',
                         'emotional_score', 'emotional_analysis',
                         'communication_score', 'communication_analysis',
@@ -346,8 +351,11 @@ class AiAstrologyService
                 $synastryContext .= "- {$aspect['planet1']} → {$aspect['planet2']}: {$aspect['type']} ({$nature})\n";
             }
 
-            $fullContext = "ПЕРВАЯ НАТАЛЬНАЯ КАРТА:\n{$context1}\n\n";
-            $fullContext .= "ВТОРАЯ НАТАЛЬНАЯ КАРТА:\n{$context2}\n\n";
+            $fullContext = "ИМЕНА ПАРТНЁРОВ:\n";
+            $fullContext .= "- Первый партнёр: {$name1}\n";
+            $fullContext .= "- Второй партнёр: {$name2}\n\n";
+            $fullContext .= "НАТАЛЬНАЯ КАРТА {$name1}:\n{$context1}\n\n";
+            $fullContext .= "НАТАЛЬНАЯ КАРТА {$name2}:\n{$context2}\n\n";
             $fullContext .= $synastryContext;
 
             $response = Http::withToken($this->apiKey)
@@ -358,11 +366,11 @@ class AiAstrologyService
                     'messages' => [
                         [
                             'role' => 'system',
-                            'content' => 'Ты — эксперт в астрологии совместимости (синастрии). Твоя задача — давать глубокий, профессиональный анализ совместимости двух людей на основе их натальных карт. Говори на русском языке. Всегда ссылайся на конкретные планеты, знаки и аспекты. Давай честную, но тактичную оценку с практическими рекомендациями.'
+                            'content' => 'Ты — профессиональный астролог-консультант. ПРАВИЛА:\n1. ВСЕГДА называй конкретные планеты и знаки из карт (например: "Солнце Давида в Козероге даёт ему...")\n2. ВСЕГДА объясняй ПОЧЕМУ что-то происходит на основе аспектов (например: "Трин между вашими Лунами означает, что вы интуитивно понимаете эмоции друг друга")\n3. При проблемах — давай КОНКРЕТНЫЕ решения (например: "Когда квадрат Марс-Сатурн вызывает раздражение, попробуйте...")\n4. Пиши простым языком, но профессионально\n5. Обращайся к партнёрам по именам\n6. Описывай реальные жизненные ситуации на основе их карт'
                         ],
                         [
                             'role' => 'user',
-                            'content' => $fullContext . "\n\nСгенерируй подробный отчёт о совместимости в следующем формате:\n\n1. Общий балл совместимости (1-10)\n2. Эмоциональная совместимость (Луна-Луна)\n3. Коммуникация (Меркурий-Мерурий)\n4. Романтика и страсть (Венера/Марс)\n5. Ценности и цели (Юпитер/Сатурн)\n6. Потенциал роста (Узлы/Хирон)\n7. Сильные стороны\n8. Вызовы\n9. Рекомендации\n\nИспользуй строго структурированный вывод (structured output).'"
+                            'content' => $fullContext . "\n\nНапиши ПЕРСОНАЛЬНЫЙ астрологический анализ совместимости {$name1} и {$name2}.\n\nПОЛНОЕ ОПИСАНИЕ (full_description) — 800-1200 слов:\n\n1. ВСТУПЛЕНИЕ: Поприветствуй {$name1} и {$name2}. Кратко опиши их солнечные знаки и общую энергетику пары.\n\n2. ПОЧЕМУ ВЫ ВМЕСТЕ: Объясни притяжение через конкретные аспекты. Например: \"{$name1}, твоя Венера в [знак] образует трин с Марсом {$name2} — это создаёт сильное притяжение и страсть.\"\n\n3. ЭМОЦИОНАЛЬНАЯ СВЯЗЬ: Опиши взаимодействие Лун. Как вы понимаете эмоции друг друга? Приведи примеры из жизни.\n\n4. ОБЩЕНИЕ: Проанализируй Меркурии. Как вы общаетесь? Что помогает, что мешает?\n\n5. СОВМЕСТНЫЙ БЫТ: На основе Лун и 4-х домов опиши, как будет выглядеть ваш дом, утро, вечера.\n\n6. СЛОЖНОСТИ И РЕШЕНИЯ: Назови 2-3 напряжённых аспекта. Для КАЖДОГО дай конкретный совет. Например: \"Квадрат Сатурн-Венера может вызывать холодность. Решение: {$name1}, старайся чаще выражать чувства словами, {$name2} это нужно.\"\n\n7. БУДУЩЕЕ: Долгосрочный прогноз — брак, дети, как вы будете расти вместе.\n\nСИЛЬНЫЕ СТОРОНЫ (strengths): 3-5 пунктов с указанием аспектов\nВЫЗОВЫ (challenges): 3-5 пунктов с указанием аспектов\nРЕКОМЕНДАЦИИ (recommendations): 3-5 конкретных советов для {$name1} и {$name2}'"
                         ]
                     ],
                     'tools' => [$toolSchema],

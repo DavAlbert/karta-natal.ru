@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Mail\ChartReady;
+use App\Jobs\ProcessNatalChartJob;
 
 class NatalChartController extends Controller
 {
@@ -41,7 +42,7 @@ class NatalChartController extends Controller
         // Get city from database
         $city = \App\Models\City::findOrFail($validated['city_id']);
 
-        // Calculate Data with city coordinates and timezone
+        // Calculate chart data synchronously (fast operation)
         $service = new AstrologyCalculationService();
         $chartData = $service->calculate(
             $validated['birth_date'],
@@ -69,18 +70,22 @@ class NatalChartController extends Controller
                 'longitude' => $city->longitude,
                 'timezone' => 'GMT+' . $city->timezone_gmt,
                 'chart_data' => $chartData,
+                'chart_status' => 'completed',
+                'report_status' => 'new',
                 'type' => 'natal',
-                'access_token' => null, // No token needed - user is logged in
+                'access_token' => null,
             ]);
 
-            // Redirect to welcome with success message
+            // Dispatch AI report generation job asynchronously
+            ProcessNatalChartJob::dispatch($chart, false, true);
+
             return response()->json([
                 'success' => true,
                 'redirect' => route('welcome') . '?chart_created=1',
             ]);
         }
 
-        // User is NOT logged in - find or create user and send magic link
+        // User is NOT logged in - find or create user
         $user = User::firstOrCreate(
             ['email' => $validated['email']],
             [
@@ -113,16 +118,14 @@ class NatalChartController extends Controller
             'longitude' => $city->longitude,
             'timezone' => 'GMT+' . $city->timezone_gmt,
             'chart_data' => $chartData,
+            'chart_status' => 'completed',
+            'report_status' => 'new',
             'type' => 'natal',
             'access_token' => Str::random(64),
         ]);
 
-        // Send Email
-        try {
-            Mail::to($user->email)->send(new ChartReady($chart));
-        } catch (\Exception $e) {
-            \Log::error('Email send failed: ' . $e->getMessage());
-        }
+        // Dispatch AI report generation job + send email after completion
+        ProcessNatalChartJob::dispatch($chart, true, true);
 
         return response()->json(['success' => true]);
     }

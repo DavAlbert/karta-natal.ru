@@ -29,6 +29,7 @@ class PartnerCompatibility extends Model
         'synastry_data',
         'scores',
         'ai_report',
+        'ai_report_status',
         'status',
     ];
 
@@ -160,6 +161,14 @@ class PartnerCompatibility extends Model
      */
     public function hasAiReport(): bool
     {
-        return !empty($this->ai_report);
+        return !empty($this->ai_report) && $this->ai_report_status === 'completed';
+    }
+
+    /**
+     * Check if AI report is being generated
+     */
+    public function isAiReportProcessing(): bool
+    {
+        return $this->ai_report_status === 'processing' || $this->ai_report_status === 'pending';
     }
 }

@@ -26,6 +26,7 @@ class NatalChart extends Model
         'timezone',
         'chart_data',
         'type',
+        'chart_status',
         'report_status',
         'report_content',
         'access_token',
@@ -94,7 +95,17 @@ class NatalChart extends Model
         return $this->report_status === 'completed' && !empty($this->report_content);
     }
 
-    public function getAiSection(string $section): ?array
+    public function isProcessing(): bool
+    {
+        return $this->chart_status === 'processing' || $this->chart_status === 'pending';
+    }
+
+    public function isReady(): bool
+    {
+        return $this->chart_status === 'completed';
+    }
+
+    public function getAiSection(string $section): mixed
     {
         if (!$this->hasAiReport()) {
             return null;
@@ -102,27 +113,27 @@ class NatalChart extends Model
         return $this->report_content[$section] ?? null;
     }
 
-    public function getAiCharacterAnalysis(): ?string
+    public function getAiCharacterAnalysis(): mixed
     {
         return $this->getAiSection('character') ?? $this->getAiSection('identity');
     }
 
-    public function getAiCareerAnalysis(): ?string
+    public function getAiCareerAnalysis(): mixed
     {
         return $this->getAiSection('career');
     }
 
-    public function getAiLoveAnalysis(): ?string
+    public function getAiLoveAnalysis(): mixed
     {
         return $this->getAiSection('love');
     }
 
-    public function getAiKarmaAnalysis(): ?string
+    public function getAiKarmaAnalysis(): mixed
     {
         return $this->getAiSection('karma');
     }
 
-    public function getAiForecast(): ?string
+    public function getAiForecast(): mixed
     {
         return $this->getAiSection('forecast');
     }
@@ -135,7 +146,7 @@ class NatalChart extends Model
 
         // AI-generated if available
         if ($aiText = $this->getAiCharacterAnalysis()) {
-            $parts[] = $aiText;
+            $parts[] = is_array($aiText) ? json_encode($aiText, JSON_UNESCAPED_UNICODE) : $aiText;
         }
 
         // Add static sign meaning

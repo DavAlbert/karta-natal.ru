@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessChatMessage;
 use App\Models\ChatMessage;
 use App\Models\NatalChart;
 use App\Services\AiAstrologyService;
@@ -55,30 +56,47 @@ class AstrologyChatController extends Controller
             'natal_chart_id' => $natalChart->id,
             'role' => 'user',
             'content' => $message,
+            'status' => 'completed',
         ]);
 
-        $chartData = $natalChart->chart_data;
+        // Create pending assistant message
+        $assistantMessage = ChatMessage::create([
+            'natal_chart_id' => $natalChart->id,
+            'role' => 'assistant',
+            'content' => '',
+            'status' => 'pending',
+        ]);
 
-        try {
-            Log::info('Chat message', ['chart_id' => $natalChart->id, 'template' => $template]);
+        // Dispatch job to process the message
+        ProcessChatMessage::dispatch($assistantMessage, $natalChart, $message);
 
-            $response = $this->aiService->chat($message, $chartData);
+        Log::info('Chat message queued', ['chart_id' => $natalChart->id, 'message_id' => $assistantMessage->id]);
 
-            // Save assistant response
-            ChatMessage::create([
-                'natal_chart_id' => $natalChart->id,
-                'role' => 'assistant',
-                'content' => $response,
-            ]);
+        return response()->json([
+            'message_id' => $assistantMessage->id,
+            'status' => 'pending',
+        ]);
+    }
 
-            return response()->json([
-                'message' => $response,
-                'timestamp' => now()->toISOString(),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Chat error: ' . $e->getMessage());
-            return response()->json(['error' => 'Ошибка при получении ответа'], 500);
+    /**
+     * Check status of a chat message
+     */
+    public function status(NatalChart $natalChart, ChatMessage $chatMessage)
+    {
+        if ($natalChart->user_id !== Auth::id()) {
+            abort(403);
         }
+
+        if ($chatMessage->natal_chart_id !== $natalChart->id) {
+            abort(403);
+        }
+
+        return response()->json([
+            'status' => $chatMessage->status,
+            'content' => $chatMessage->status === 'completed' || $chatMessage->status === 'failed'
+                ? $chatMessage->content
+                : null,
+        ]);
     }
 
     public function clear(NatalChart $natalChart)

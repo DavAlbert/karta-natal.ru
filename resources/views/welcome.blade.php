@@ -34,7 +34,7 @@
     <meta property="og:url" content="https://karta-natal.ru/">
     <meta property="og:title" content="Натальная карта онлайн бесплатно с расшифровкой">
     <meta property="og:description" content="Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт планет, домов и аспектов с персональной расшифровкой.">
-    <meta property="og:image" content="{{ asset('images/demo.png') }}">
+    <meta property="og:image" content="{{ asset('images/demo.webp') }}">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:site_name" content="Karta-Natal.ru">
 
@@ -43,7 +43,7 @@
     <meta name="twitter:url" content="https://karta-natal.ru/">
     <meta name="twitter:title" content="Натальная карта онлайн бесплатно с расшифровкой">
     <meta name="twitter:description" content="Рассчитайте натальную карту по дате рождения за 2 минуты. Точный расчёт планет, домов и аспектов.">
-    <meta name="twitter:image" content="{{ asset('images/demo.png') }}">
+    <meta name="twitter:image" content="{{ asset('images/demo.webp') }}">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -112,7 +112,7 @@
         "@@type": "Organization",
         "name": "Karta-Natal.ru",
         "url": "https://karta-natal.ru",
-        "logo": "https://karta-natal.ru/images/logo.png",
+        "logo": "https://karta-natal.ru/images/logo.webp",
         "legalName": "SMART CREATOR AI LLC",
         "sameAs": []
     }
@@ -268,7 +268,7 @@
 
     <!-- Hero Section -->
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-cover bg-center"
-        style="background-image: url('/images/hero-bg.png');">
+        style="background-image: url('/images/hero-bg.webp');">
 
         <!-- Overlay for readability -->
         <div class="absolute inset-0 bg-[#0B1120]/50"></div>
@@ -317,209 +317,21 @@
                         @auth
                             @php $chart = Auth::user()->natalCharts()->first(); @endphp
                             @if($chart)
-                                <div class="relative">
-                                    <!-- Blurred Form -->
-                                    <div class="filter blur-[2px] opacity-50 pointer-events-none">
-                                        <form id="calcForm" action="{{ route('calculate') }}" method="POST">
-                                            @csrf
-                                            <div>
-                                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                    <i class="fas fa-user mr-1"></i>Ваше имя
-                                                </label>
-                                                <input type="text" name="name" id="name" required
-                                                    class="w-full input-professional rounded-lg px-4 py-3" placeholder="Как вас зовут?">
-                                            </div>
-
-                                            <div>
-                                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                    <i class="fas fa-envelope mr-1"></i>Email
-                                                </label>
-                                                <input type="email" name="email" id="email" required autocomplete="email"
-                                                    class="w-full input-professional rounded-lg px-4 py-3" placeholder="ваш@email.com">
-                                            </div>
-
-                                            <div>
-                                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                    <i class="fas fa-venus-mars mr-1"></i>Пол
-                                                </label>
-                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                    <label class="gender-btn cursor-pointer">
-                                                        <input type="radio" name="gender" value="male" required class="hidden" checked>
-                                                        <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30">
-                                                            <i class="fas fa-mars text-indigo-400"></i>
-                                                            <span class="text-white text-sm font-medium">Мужской</span>
-                                                        </div>
-                                                    </label>
-                                                    <label class="gender-btn cursor-pointer">
-                                                        <input type="radio" name="gender" value="female" required class="hidden">
-                                                        <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30">
-                                                            <i class="fas fa-venus text-indigo-400"></i>
-                                                            <span class="text-white text-sm font-medium">Женский</span>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <input type="hidden" name="purpose" value="general">
-
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                        <i class="far fa-calendar-alt mr-1"></i>Дата рождения
-                                                    </label>
-                                                    <input type="date" name="birth_date" id="birth_date" required
-                                                        class="w-full input-professional rounded-lg px-4 py-3">
-                                                </div>
-                                                <div>
-                                                    <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                        <i class="far fa-clock mr-1"></i>Время
-                                                    </label>
-                                                    <input type="time" name="birth_time" id="birth_time" required
-                                                        class="w-full input-professional rounded-lg px-4 py-3">
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i>Место рождения
-                                                </label>
-                                                <input type="text" id="birth_place_search" autocomplete="off"
-                                                    class="w-full input-professional rounded-lg px-4 py-3" placeholder="Начните вводить город...">
-                                                <input type="hidden" name="city_id" id="city_id" required>
-                                                <div id="city-details" class="hidden mt-2 p-3 bg-indigo-900/20 rounded-lg border border-indigo-800">
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="text-indigo-300" id="display-country"></span>
-                                                        <span class="text-white" id="display-city"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div id="cities-dropdown" class="hidden absolute z-50 mt-1 w-full bg-[#1e293b] border border-indigo-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                                            </div>
-
-                                            <div class="mt-4 flex justify-center">
-                                                <div id="captcha-container" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
-                                            </div>
-
-                                            <button type="submit" id="submit-btn" disabled
-                                                class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold py-4 rounded-lg border border-indigo-500/50 opacity-50">
-                                                Рассчитать сейчас
-                                            </button>
-
-                                            <p class="text-xs text-center text-indigo-400/50 mt-4">
-                                                * Нажимая кнопку, вы даете согласие на обработку персональных данных
-                                            </p>
-                                        </form>
+                                <!-- User already has a chart -->
+                                <div class="flex flex-col items-center justify-center py-8">
+                                    <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fas fa-check text-2xl text-emerald-400"></i>
                                     </div>
-
-                                    <!-- Overlay Message -->
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                        <div class="bg-[#111827]/95 backdrop-blur-sm rounded-xl border border-indigo-500/30 p-6 text-center shadow-xl">
-                                            <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                <i class="fas fa-check text-2xl text-emerald-400"></i>
-                                            </div>
-                                            <h3 class="text-xl font-serif font-bold text-white mb-2">Ваша карта уже рассчитана!</h3>
-                                            <p class="text-indigo-300 text-sm mb-4">Вы можете просмотреть результаты</p>
-                                            <a href="{{ route('charts.show', $chart) }}" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg transition-all">
-                                                <i class="fas fa-star"></i>
-                                                Открыть карту
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <h3 class="text-xl font-serif font-bold text-white mb-2">Ваша карта уже рассчитана!</h3>
+                                    <p class="text-indigo-300 text-sm mb-4">Вы можете просмотреть результаты</p>
+                                    <a href="{{ route('charts.show', $chart) }}" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg transition-all">
+                                        <i class="fas fa-star"></i>
+                                        Открыть карту
+                                    </a>
                                 </div>
-                            @else
-                                <form id="calcForm" action="{{ route('calculate') }}" method="POST">
-                                    @csrf
-                                    <div>
-                                        <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                            <i class="fas fa-user mr-1"></i>Ваше имя
-                                        </label>
-                                        <input type="text" name="name" id="name" required
-                                            class="w-full input-professional rounded-lg px-4 py-3" placeholder="Как вас зовут?">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                            <i class="fas fa-envelope mr-1"></i>Email
-                                        </label>
-                                        <input type="email" name="email" id="email" required autocomplete="email"
-                                            class="w-full input-professional rounded-lg px-4 py-3" placeholder="ваш@email.com">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                            <i class="fas fa-venus-mars mr-1"></i>Пол
-                                        </label>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            <label class="gender-btn cursor-pointer">
-                                                <input type="radio" name="gender" value="male" required class="hidden" checked>
-                                                <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30 hover:border-indigo-600 hover:bg-indigo-900/30 transition-all">
-                                                    <i class="fas fa-mars text-indigo-400"></i>
-                                                    <span class="text-white text-sm font-medium">Мужской</span>
-                                                </div>
-                                            </label>
-                                            <label class="gender-btn cursor-pointer">
-                                                <input type="radio" name="gender" value="female" required class="hidden">
-                                                <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg border-2 border-indigo-800 bg-indigo-950/30 hover:border-indigo-600 hover:bg-indigo-900/30 transition-all">
-                                                    <i class="fas fa-venus text-indigo-400"></i>
-                                                    <span class="text-white text-sm font-medium">Женский</span>
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <input type="hidden" name="purpose" value="general">
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                <i class="far fa-calendar-alt mr-1"></i>Дата рождения
-                                            </label>
-                                            <input type="date" name="birth_date" id="birth_date" required
-                                                class="w-full input-professional rounded-lg px-4 py-3">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                                <i class="far fa-clock mr-1"></i>Время
-                                            </label>
-                                            <input type="time" name="birth_time" id="birth_time" required
-                                                class="w-full input-professional rounded-lg px-4 py-3">
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-xs font-bold text-indigo-300 uppercase mb-1">
-                                            <i class="fas fa-map-marker-alt mr-1"></i>Место рождения
-                                        </label>
-                                        <input type="text" id="birth_place_search" autocomplete="off"
-                                            class="w-full input-professional rounded-lg px-4 py-3" placeholder="Начните вводить город...">
-                                        <input type="hidden" name="city_id" id="city_id" required>
-                                        <div id="city-details" class="hidden mt-2 p-3 bg-indigo-900/20 rounded-lg border border-indigo-800">
-                                            <div class="flex items-center gap-2">
-                                                <span class="text-indigo-300" id="display-country"></span>
-                                                <span class="text-white" id="display-city"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div id="cities-dropdown" class="hidden absolute z-50 mt-1 w-full bg-[#1e293b] border border-indigo-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                                    </div>
-
-                                    <div class="mt-4 flex justify-center">
-                                        <div id="captcha-container" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
-                                    </div>
-
-                                    <button type="submit" id="submit-btn" disabled
-                                        class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-4 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                                        Рассчитать сейчас
-                                    </button>
-
-                                    <p class="text-xs text-center text-indigo-400/50 mt-4">
-                                        * Нажимая кнопку, вы даете согласие на обработку персональных данных
-                                    </p>
-                                </form>
                             @endif
-                        @else
+                        @endauth
+                        @if(!Auth::check() || (Auth::check() && !Auth::user()->natalCharts()->first()))
                             <form id="calcForm" action="{{ route('calculate') }}" method="POST" class="space-y-4">
                                 @csrf
 
@@ -638,7 +450,7 @@
                                     * Нажимая кнопку, вы даете согласие на обработку персональных данных
                                 </p>
                             </form>
-                        @endauth
+                        @endif
                     </div>
                 </div>
             </div>
@@ -653,7 +465,7 @@
                 <p class="text-indigo-300/80">Вот пример того, что вы получите после расчёта</p>
             </div>
             <div class="relative rounded-2xl overflow-hidden border border-indigo-900/50 shadow-2xl">
-                <img src="{{ asset('images/demo.png') }}" alt="Пример натальной карты" class="w-full h-auto">
+                <img src="{{ asset('images/demo.webp') }}" alt="Пример натальной карты" class="w-full h-auto">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent"></div>
             </div>
             <div class="mt-8 grid md:grid-cols-3 gap-4 text-center">
@@ -707,7 +519,7 @@
                 <div class="group relative p-5 rounded-2xl bg-gradient-to-b {{ $style['bg'] }} to-[#111827] border border-indigo-900/30 {{ $style['border'] }} transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/20">
                     <div class="flex items-start gap-4">
                         <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16">
-                            <img src="/images/zodiac/{{ $sign['file'] }}.png" alt="Знак зодиака {{ $sign['name'] }} — {{ $sign['date'] }}" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300">
+                            <img src="/images/zodiac/{{ $sign['file'] }}.webp" alt="Знак зодиака {{ $sign['name'] }} — {{ $sign['date'] }}" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300">
                         </div>
                         <div class="flex-1 min-w-0">
                             <h3 class="text-white font-bold text-lg mb-0.5">{{ $sign['name'] }}</h3>
@@ -732,7 +544,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="p-6 rounded-2xl bg-[#111827] border border-indigo-900/30 hover:border-indigo-500/30 transition-all">
                     <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-4">
-                        <img src="/images/planets/sun.png" alt="" class="w-8 h-8">
+                        <img src="/images/planets/sun.webp" alt="" class="w-8 h-8">
                     </div>
                     <h3 class="text-lg font-bold text-white mb-2">Позиции планет</h3>
                     <p class="text-indigo-300/70 text-sm leading-relaxed">10 планет в знаках зодиака с точными градусами и расшифровкой значений</p>
@@ -791,9 +603,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Энергия, страсть и стремление к действию. Огненные знаки — прирождённые лидеры.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/aries.png" alt="Овен — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/leo.png" alt="Лев — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/sagittarius.png" alt="Стрелец — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/aries.webp" alt="Овен — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/leo.webp" alt="Лев — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/sagittarius.webp" alt="Стрелец — огненный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
 
@@ -807,9 +619,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Стабильность, практичность и надёжность. Земные знаки строят прочный фундамент.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/taurus.png" alt="Телец — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/virgo.png" alt="Дева — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/capricorn.png" alt="Козерог — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/taurus.webp" alt="Телец — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/virgo.webp" alt="Дева — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/capricorn.webp" alt="Козерог — земной знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
 
@@ -823,9 +635,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Интеллект, общение и новые идеи. Воздушные знаки соединяют людей и концепции.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/gemini.png" alt="Близнецы — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/libra.png" alt="Весы — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/aquarius.png" alt="Водолей — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/gemini.webp" alt="Близнецы — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/libra.webp" alt="Весы — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/aquarius.webp" alt="Водолей — воздушный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
 
@@ -839,9 +651,9 @@
                     </div>
                     <p class="text-indigo-300/70 text-sm mb-4 leading-relaxed">Эмоции, интуиция и глубина чувств. Водные знаки понимают то, что скрыто.</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-indigo-900/30">
-                        <img src="/images/zodiac/cancer.png" alt="Рак — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/scorpio.png" alt="Скорпион — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <img src="/images/zodiac/pisces.png" alt="Рыбы — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/cancer.webp" alt="Рак — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/scorpio.webp" alt="Скорпион — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
+                        <img src="/images/zodiac/pisces.webp" alt="Рыбы — водный знак зодиака" class="w-7 h-7 opacity-80 hover:opacity-100 transition-opacity">
                     </div>
                 </div>
             </div>

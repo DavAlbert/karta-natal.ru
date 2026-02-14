@@ -29,6 +29,8 @@
             --accent-orange: #F97316;
             --accent-teal: #14B8A6;
         }
+        @keyframes compat-spin { to { transform: rotate(360deg); } }
+        @keyframes compat-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
         * { box-sizing: border-box; }
         body {
             background: var(--bg-primary);
@@ -526,8 +528,81 @@
 
         /* Compatibility Tab Styles */
         .compat-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+        }
+
+        /* Actions Bar */
+        .compat-actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            padding: 1rem 1.25rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .compat-partner-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .compat-partner-selector label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .compat-partner-selector select {
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            min-width: 180px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239CA3AF' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+        }
+        .compat-partner-selector select:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+        }
+        .compat-new-partner-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: linear-gradient(135deg, #EC4899, #8B5CF6);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .compat-new-partner-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+        }
+        @media (max-width: 500px) {
+            .compat-actions-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .compat-partner-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .compat-partner-selector select {
+                width: 100%;
+            }
         }
 
         /* Hero Section for Form */
@@ -1164,25 +1239,25 @@
         <!-- ==================== KEY STATS ==================== -->
         <div class="key-stats">
             <div class="key-badge">
-                <img src="/images/planets/sun.png" alt="">
+                <img src="/images/planets/sun.webp" alt="">
                 <span class="key-badge-label">Солнце</span>
-                <img src="/images/zodiac/{{ $signToFile[$sunSign] ?? 'aries' }}.png" alt="">
+                <img src="/images/zodiac/{{ $signToFile[$sunSign] ?? 'aries' }}.webp" alt="">
                 <span class="key-badge-value">{{ $sunSign }}</span>
             </div>
             <div class="key-badge">
-                <img src="/images/planets/moon.png" alt="">
+                <img src="/images/planets/moon.webp" alt="">
                 <span class="key-badge-label">Луна</span>
-                <img src="/images/zodiac/{{ $signToFile[$moonSign] ?? 'cancer' }}.png" alt="">
+                <img src="/images/zodiac/{{ $signToFile[$moonSign] ?? 'cancer' }}.webp" alt="">
                 <span class="key-badge-value">{{ $moonSign }}</span>
             </div>
             <div class="key-badge">
                 <span class="key-badge-label">ASC</span>
-                <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.png" alt="">
+                <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.webp" alt="">
                 <span class="key-badge-value">{{ $ascSign }}</span>
             </div>
             <div class="key-badge">
                 <span class="key-badge-label">MC</span>
-                <img src="/images/zodiac/{{ $signToFile[$mcSign] ?? 'capricorn' }}.png" alt="">
+                <img src="/images/zodiac/{{ $signToFile[$mcSign] ?? 'capricorn' }}.webp" alt="">
                 <span class="key-badge-value">{{ $mcSign }}</span>
             </div>
         </div>
@@ -1223,7 +1298,7 @@
                             <path d="M400,400 L{{ 400+345*cos(deg2rad($i*30-90)) }},{{ 400+345*sin(deg2rad($i*30-90)) }} A345,345 0 0,1 {{ 400+345*cos(deg2rad(($i+1)*30-90)) }},{{ 400+345*sin(deg2rad(($i+1)*30-90)) }} Z" fill="{{ $c }}"/>@endfor
                             @foreach($zodiac as $z)
                             <line x1="{{ $z['ls']['x'] }}" y1="{{ $z['ls']['y'] }}" x2="{{ $z['le']['x'] }}" y2="{{ $z['le']['y'] }}" stroke="#475569" opacity="0.5"/>
-                            <image href="/images/zodiac/{{ $z['file'] }}.png" x="{{ $z['pos']['x'] - 33 }}" y="{{ $z['pos']['y'] - 33 }}" width="66" height="66" opacity="0.8"/>
+                            <image href="/images/zodiac/{{ $z['file'] }}.webp" x="{{ $z['pos']['x'] - 33 }}" y="{{ $z['pos']['y'] - 33 }}" width="66" height="66" opacity="0.8"/>
                             @endforeach
                             @foreach($hLines as $l)<line x1="{{ $l['in']['x'] }}" y1="{{ $l['in']['y'] }}" x2="{{ $l['out']['x'] }}" y2="{{ $l['out']['y'] }}" stroke="{{ $l['col'] }}" stroke-width="{{ $l['w'] }}" opacity="0.5"/>@endforeach
                             @foreach($hNums as $n=>$p)<text x="{{ $p['x'] }}" y="{{ $p['y'] }}" text-anchor="middle" dominant-baseline="middle" fill="#818CF8" font-size="10" font-weight="600">{{ $n }}</text>@endforeach
@@ -1234,7 +1309,7 @@
                             @foreach($aLines as $a)<line x1="{{ $a['f']['x'] }}" y1="{{ $a['f']['y'] }}" x2="{{ $a['t']['x'] }}" y2="{{ $a['t']['y'] }}" stroke="{{ $a['c'] }}" stroke-width="1.5" class="aspect-line"/>@endforeach
                             @foreach($planets as $k=>$p) @php if(!is_array($p) || !isset($pCoords[$k])) continue; $c=$pCoords[$k]['pos']; $d=$pCoords[$k]['deg']; @endphp
                             <g class="planet" data-name="{{ $planetNames[$k] ?? ucfirst($k) }}" data-sign="{{ $p['sign'] ?? '' }} {{ floor($p['degree'] ?? 0) }}°" data-house="{{ $p['house'] ?? '-' }}">
-                                @if(isset($planetFiles[$k]))<image href="/images/planets/{{ $planetFiles[$k] }}.png" x="{{ $c['x']-13 }}" y="{{ $c['y']-13 }}" width="26" height="26"/>@endif
+                                @if(isset($planetFiles[$k]))<image href="/images/planets/{{ $planetFiles[$k] }}.webp" x="{{ $c['x']-13 }}" y="{{ $c['y']-13 }}" width="26" height="26"/>@endif
                                 <text x="{{ $d['x'] }}" y="{{ $d['y'] }}" text-anchor="middle" dominant-baseline="middle" fill="#94A3B8" font-size="8">{{ floor($p['degree'] ?? 0) }}°</text>
                             </g>@endforeach
                             <text x="400" y="397" text-anchor="middle" fill="#647887" font-size="7">PLACIDUS</text>
@@ -1287,7 +1362,7 @@
                                 @foreach($planets as $k => $p)
                                 @if(!is_array($p)) @continue @endif
                                 <div class="planet-row">
-                                    @if(isset($planetFiles[$k]))<img src="/images/planets/{{ $planetFiles[$k] }}.png" alt="">@endif
+                                    @if(isset($planetFiles[$k]))<img src="/images/planets/{{ $planetFiles[$k] }}.webp" alt="">@endif
                                     <div class="planet-row-name">
                                         {{ $planetNames[$k] ?? ucfirst($k) }}
                                         @if($p['retrograde'] ?? false)<span class="planet-row-retro">R</span>@endif
@@ -1310,7 +1385,7 @@
                                 @for($i = 1; $i <= 12; $i++)
                                 @php $h = $houses[$i] ?? ['sign' => 'Овен', 'degree' => 0]; $file = $signToFile[$h['sign']] ?? 'aries'; @endphp
                                 <div class="house-item {{ in_array($i, [1,4,7,10]) ? 'angular' : '' }}">
-                                    <img src="/images/zodiac/{{ $file }}.png" alt="">
+                                    <img src="/images/zodiac/{{ $file }}.webp" alt="">
                                     <div class="house-num">{{ $i }}</div>
                                     <div class="house-deg">{{ floor($h['degree']) }}°</div>
                                 </div>
@@ -1405,7 +1480,7 @@
                 @php $sunMeaning = $chart->getPlanetMeaning('sun'); $sunSignMeaning = $chart->getSignMeaning($sunSign); @endphp
                 <div class="analysis-card">
                     <div class="analysis-card-header">
-                        <img src="/images/planets/sun.png" alt="">
+                        <img src="/images/planets/sun.webp" alt="">
                         <span class="analysis-card-title">Солнце в {{ $sunSign }}</span>
                     </div>
                     <div class="analysis-card-body">
@@ -1418,7 +1493,7 @@
                 @php $moonMeaning = $chart->getPlanetMeaning('moon'); $moonSignMeaning = $chart->getSignMeaning($moonSign); @endphp
                 <div class="analysis-card">
                     <div class="analysis-card-header">
-                        <img src="/images/planets/moon.png" alt="">
+                        <img src="/images/planets/moon.webp" alt="">
                         <span class="analysis-card-title">Луна в {{ $moonSign }}</span>
                     </div>
                     <div class="analysis-card-body">
@@ -1431,7 +1506,7 @@
                 @php $ascMeaning = $chart->getSignMeaning($ascSign); @endphp
                 <div class="analysis-card">
                     <div class="analysis-card-header">
-                        <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.png" alt="">
+                        <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.webp" alt="">
                         <span class="analysis-card-title">Асцендент в {{ $ascSign }}</span>
                     </div>
                     <div class="analysis-card-body">
@@ -1512,7 +1587,7 @@
                         @endphp
                         <div style="padding: 0.75rem; background: var(--bg-tertiary); border-radius: 0.5rem; border: 1px solid var(--border);">
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
-                                <img src="/images/planets/{{ $planetFiles[$planet] }}.png" alt="" style="width: 1.25rem; height: 1.25rem;">
+                                <img src="/images/planets/{{ $planetFiles[$planet] }}.webp" alt="" style="width: 1.25rem; height: 1.25rem;">
                                 <strong style="color: var(--text-primary); font-size: 0.85rem;">{{ $planetNames[$planet] }} в {{ $houseNum }} доме</strong>
                             </div>
                             <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
@@ -1577,12 +1652,25 @@
                     <p style="color: var(--text-muted);">Загрузка...</p>
                 </div>
 
-                <!-- No Existing Compatibility - Show Form -->
-                <div x-show="!loading && !hasResult" x-cloak>
+                <!-- No Partners Yet OR Show Form Mode - Show Form -->
+                <div x-show="!loading && (partners.length === 0 || showForm)" x-cloak>
+                    <!-- Partner selector when in form mode with existing partners -->
+                    <div x-show="partners.length > 0" class="compat-actions-bar" style="margin-bottom: 1rem;">
+                        <div class="compat-partner-selector">
+                            <label>Или выбрать:</label>
+                            <select @change="if($event.target.value) { selectPartnerById($event.target.value); showForm = false; } $event.target.value = '';">
+                                <option value="">— Выбрать партнёра —</option>
+                                <template x-for="partner in partners" :key="partner.id">
+                                    <option :value="partner.id" x-text="partner.partner_name + ' (' + (partner.overall_score ? partner.overall_score + '%' : 'ожидание') + ')'"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="compat-form">
                         <div class="compat-form-title">
                             <i class="fas fa-heart"></i>
-                            Проверить совместимость
+                            Новый партнёр
                         </div>
                         <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem;">
                             Введите данные партнёра для анализа совместимости.
@@ -1669,105 +1757,153 @@
                                 <span x-text="submitting ? 'Отправка...' : 'Отправить приглашение'"></span>
                             </button>
                         </form>
+
                     </div>
                 </div>
 
-                <!-- Has Existing Compatibility - Show Result -->
-                <div x-show="!loading && hasResult" x-cloak>
+                <!-- Has Partners - Show Result -->
+                <div x-show="!loading && partners.length > 0 && !showForm && selectedPartner" x-cloak>
+                    <!-- Partner Selector + Actions -->
+                    <div class="compat-actions-bar">
+                        <div class="compat-partner-selector">
+                            <label>Партнёр:</label>
+                            <select x-model="selectedPartnerId" @change="selectPartnerById($event.target.value)">
+                                <template x-for="partner in partners" :key="partner.id">
+                                    <option :value="partner.id" x-text="partner.partner_name + ' (' + (partner.overall_score ? partner.overall_score + '%' : 'ожидание') + ')'"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <button @click="showForm = true; resetForm()" class="compat-new-partner-btn">
+                            <i class="fas fa-plus"></i>
+                            Новый партнёр
+                        </button>
+                    </div>
+
                     <div class="compat-result">
-                        <div class="compat-result-header" :style="`--score: ${result.overall_score || 50}; --score-color: ${result.score_color || '#EAB308'}`">
-                            <div class="compat-score-circle">
-                                <span class="compat-score-value" :style="`color: ${result.score_color}`" x-text="result.overall_score || '—'"></span>
-                            </div>
-                            <p class="compat-score-label" x-text="result.score_description || 'Совместимость'"></p>
-                            <div class="compat-partner-info">
-                                <span>Партнёр: <strong x-text="result.partner_name"></strong></span>
-                                <span>&bull;</span>
-                                <span x-text="result.partner_birth_date"></span>
-                                <span>&bull;</span>
-                                <span class="compat-status-badge" :class="result.status === 'completed' ? 'compat-status-completed' : 'compat-status-pending'" x-text="result.status === 'completed' ? 'Подтверждено' : 'Ожидание партнёра'"></span>
-                            </div>
+                    <div class="compat-result-header" :style="`--score: ${selectedPartner?.overall_score || 50}; --score-color: ${selectedPartner?.score_color || '#EAB308'}`">
+                        <div class="compat-score-circle">
+                            <span class="compat-score-value" :style="`color: ${selectedPartner?.score_color}`" x-text="selectedPartner?.overall_score || '—'"></span>
+                        </div>
+                        <p class="compat-score-label" x-text="selectedPartner?.score_description || 'Совместимость'"></p>
+                        <div class="compat-partner-info">
+                            <span>Партнёр: <strong x-text="selectedPartner?.partner_name"></strong></span>
+                            <span>&bull;</span>
+                            <span x-text="selectedPartner?.partner_birth_date"></span>
+                            <span>&bull;</span>
+                            <span class="compat-status-badge" :class="selectedPartner?.status === 'completed' ? 'compat-status-completed' : 'compat-status-pending'" x-text="selectedPartner?.status === 'completed' ? 'Подтверждено' : 'Ожидание партнёра'"></span>
+                        </div>
+                    </div>
+
+                    <div class="compat-result-body">
+                        <!-- Pending Message -->
+                        <div x-show="selectedPartner?.status === 'pending'" style="text-align: center; padding: 1.5rem; background: rgba(234, 179, 8, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <p style="margin: 0 0 1rem; color: var(--accent-gold);">
+                                Приглашение отправлено на <strong x-text="selectedPartner?.partner_email"></strong>.<br>
+                                Полный результат будет доступен после подтверждения партнёром.
+                            </p>
+                            <button @click="loaded = false; loadCompatibility()" style="padding: 0.5rem 1rem; background: var(--accent-gold); color: #000; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fas fa-sync-alt" style="margin-right: 0.5rem;"></i>Обновить статус
+                            </button>
                         </div>
 
-                        <div class="compat-result-body">
-                            <!-- Pending Message -->
-                            <div x-show="result.status === 'pending'" style="text-align: center; padding: 1.5rem; background: rgba(234, 179, 8, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
-                                <p style="margin: 0 0 1rem; color: var(--accent-gold);">
-                                    Приглашение отправлено на <strong x-text="result.partner_email"></strong>.<br>
-                                    Полный результат будет доступен после подтверждения партнёром.
-                                </p>
-                                <button @click="loaded = false; loadCompatibility()" style="padding: 0.5rem 1rem; background: var(--accent-gold); color: #000; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
-                                    <i class="fas fa-sync-alt" style="margin-right: 0.5rem;"></i>Обновить статус
-                                </button>
-                            </div>
-
-                            <!-- Scores Grid (show if completed) -->
-                            <div x-show="result.status === 'completed' && result.scores">
-                                <div class="compat-scores-grid">
-                                    <template x-for="(score, key) in result.scores" :key="key">
-                                        <div class="compat-score-item">
-                                            <div class="compat-score-header">
-                                                <span class="compat-score-name" x-text="score.label"></span>
-                                                <span class="compat-score-val" x-text="score.value + '%'"></span>
-                                            </div>
-                                            <div class="compat-progress">
-                                                <div class="compat-progress-fill" :style="`width: ${score.value}%; background: ${score.value >= 70 ? 'var(--accent-green)' : (score.value >= 50 ? 'var(--accent-gold)' : 'var(--accent-red)')}`"></div>
-                                            </div>
+                        <!-- Scores Grid (show if completed) -->
+                        <div x-show="selectedPartner?.status === 'completed' && selectedPartner?.scores">
+                            <div class="compat-scores-grid">
+                                <template x-for="(score, key) in selectedPartner?.scores" :key="key">
+                                    <div class="compat-score-item">
+                                        <div class="compat-score-header">
+                                            <span class="compat-score-name" x-text="score.label"></span>
+                                            <span class="compat-score-val" x-text="score.value + '%'"></span>
                                         </div>
-                                    </template>
-                                </div>
-
-                                <!-- AI Report Sections -->
-                                <template x-if="result.ai_report">
-                                    <div>
-                                        <!-- Strengths -->
-                                        <div class="compat-section compat-strengths" x-show="result.ai_report.strengths && result.ai_report.strengths.length > 0">
-                                            <div class="compat-section-title" style="color: var(--accent-green);">
-                                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                                                Сильные стороны
-                                            </div>
-                                            <template x-for="s in result.ai_report.strengths" :key="s">
-                                                <div class="compat-list-item">
-                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                                    <span x-text="s"></span>
-                                                </div>
-                                            </template>
-                                        </div>
-
-                                        <!-- Challenges -->
-                                        <div class="compat-section compat-challenges" x-show="result.ai_report.challenges && result.ai_report.challenges.length > 0">
-                                            <div class="compat-section-title" style="color: var(--accent-red);">
-                                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                                Потенциальные вызовы
-                                            </div>
-                                            <template x-for="c in result.ai_report.challenges" :key="c">
-                                                <div class="compat-list-item">
-                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/></svg>
-                                                    <span x-text="c"></span>
-                                                </div>
-                                            </template>
-                                        </div>
-
-                                        <!-- Recommendations -->
-                                        <div class="compat-section" x-show="result.ai_report.recommendations && result.ai_report.recommendations.length > 0">
-                                            <div class="compat-section-title" style="color: var(--accent-gold);">
-                                                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                                                Рекомендации
-                                            </div>
-                                            <template x-for="r in result.ai_report.recommendations" :key="r">
-                                                <div class="compat-list-item" style="background: rgba(234, 179, 8, 0.1);">
-                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent-gold);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                                    <span x-text="r"></span>
-                                                </div>
-                                            </template>
+                                        <div class="compat-progress">
+                                            <div class="compat-progress-fill" :style="`width: ${score.value}%; background: ${score.value >= 70 ? 'var(--accent-green)' : (score.value >= 50 ? 'var(--accent-gold)' : 'var(--accent-red)')}`"></div>
                                         </div>
                                     </div>
                                 </template>
                             </div>
 
-                            <button class="compat-new-btn" @click="startNew()">
-                                Рассчитать с другим партнёром
-                            </button>
+                            <!-- AI Report Loading State -->
+                            <div x-show="selectedPartner?.ai_report_status === 'pending' || selectedPartner?.ai_report_status === 'processing'" class="compat-ai-loading" style="text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05)); border-radius: 0.75rem; margin: 1.5rem 0;">
+                                <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                                    <div style="position: relative; width: 48px; height: 48px;">
+                                        <div style="position: absolute; inset: 0; border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 50%;"></div>
+                                        <div style="position: absolute; inset: 0; border: 2px solid transparent; border-top-color: var(--accent-indigo); border-radius: 50%; animation: compat-spin 1s linear infinite;"></div>
+                                        <div style="position: absolute; inset: 8px; background: rgba(99, 102, 241, 0.1); border-radius: 50%; animation: compat-pulse 2s ease-in-out infinite;"></div>
+                                    </div>
+                                </div>
+                                <p style="color: var(--text-secondary); margin: 0 0 0.5rem; font-size: 0.95rem;">
+                                    ИИ-астролог анализирует вашу совместимость...
+                                </p>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.8rem;">
+                                    Это может занять несколько секунд
+                                </p>
+                            </div>
+
+                            <!-- AI Report Failed State -->
+                            <div x-show="selectedPartner?.ai_report_status === 'failed'" style="text-align: center; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border-radius: 0.75rem; margin: 1.5rem 0; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                <p style="color: var(--accent-red); margin: 0 0 0.5rem;">
+                                    Не удалось сгенерировать ИИ-анализ
+                                </p>
+                                <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">
+                                    Пожалуйста, попробуйте позже
+                                </p>
+                            </div>
+
+                            <!-- Full Description (under scores) -->
+                            <div x-show="selectedPartner?.ai_report?.full_description && selectedPartner?.ai_report_status === 'completed'" class="compat-full-description" style="margin: 1.5rem 0;">
+                                <div class="compat-section-title" style="color: var(--accent-indigo); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                    Анализ совместимости от ИИ-астролога
+                                </div>
+                                <div class="compat-description-text" x-html="formatDescription(selectedPartner?.ai_report?.full_description)" style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; background: var(--bg-tertiary); padding: 1.5rem; border-radius: 0.75rem;"></div>
+                            </div>
+
+                            <!-- AI Report Sections -->
+                            <template x-if="selectedPartner?.ai_report && selectedPartner?.ai_report_status === 'completed'">
+                                <div>
+                                    <!-- Strengths -->
+                                    <div class="compat-section compat-strengths" x-show="selectedPartner?.ai_report?.strengths && selectedPartner?.ai_report?.strengths.length > 0">
+                                        <div class="compat-section-title" style="color: var(--accent-green);">
+                                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                            Сильные стороны
+                                        </div>
+                                        <template x-for="s in selectedPartner?.ai_report?.strengths" :key="s">
+                                            <div class="compat-list-item">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                <span x-text="s"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- Challenges -->
+                                    <div class="compat-section compat-challenges" x-show="selectedPartner?.ai_report?.challenges && selectedPartner?.ai_report?.challenges.length > 0">
+                                        <div class="compat-section-title" style="color: var(--accent-red);">
+                                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                            Потенциальные вызовы
+                                        </div>
+                                        <template x-for="c in selectedPartner?.ai_report?.challenges" :key="c">
+                                            <div class="compat-list-item">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/></svg>
+                                                <span x-text="c"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- Recommendations -->
+                                    <div class="compat-section" x-show="selectedPartner?.ai_report?.recommendations && selectedPartner?.ai_report?.recommendations.length > 0">
+                                        <div class="compat-section-title" style="color: var(--accent-gold);">
+                                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                                            Рекомендации
+                                        </div>
+                                        <template x-for="r in selectedPartner?.ai_report?.recommendations" :key="r">
+                                            <div class="compat-list-item" style="background: rgba(234, 179, 8, 0.1);">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent-gold);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                <span x-text="r"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -1846,7 +1982,7 @@
             if (typing) typing.remove();
         }
 
-        // Send message
+        // Send message with queue polling
         async function sendChatMessage(message) {
             addChatMessage(message, 'user');
             chatInput.value = '';
@@ -1864,12 +2000,12 @@
                     body: JSON.stringify({ message })
                 });
 
-                hideTyping();
-
                 if (response.ok) {
                     const data = await response.json();
-                    addChatMessage(data.message, 'assistant');
+                    // Poll for response
+                    await pollChatResponse(data.message_id);
                 } else {
+                    hideTyping();
                     addChatMessage('Ошибка. Попробуйте позже.', 'assistant');
                 }
             } catch (error) {
@@ -1878,6 +2014,38 @@
             }
 
             chatSend.disabled = false;
+        }
+
+        // Poll for chat response
+        async function pollChatResponse(messageId) {
+            const maxAttempts = 60; // 60 seconds max
+            let attempts = 0;
+
+            while (attempts < maxAttempts) {
+                try {
+                    const response = await fetch(`/charts/{{ $chart->id }}/chat/${messageId}/status`, {
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        if (data.status === 'completed' || data.status === 'failed') {
+                            hideTyping();
+                            addChatMessage(data.content || 'Ошибка при получении ответа.', 'assistant');
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Poll error:', e);
+                }
+
+                attempts++;
+                await new Promise(r => setTimeout(r, 1000)); // Wait 1 second
+            }
+
+            hideTyping();
+            addChatMessage('Время ожидания истекло. Попробуйте позже.', 'assistant');
         }
 
         chatForm.addEventListener('submit', async (e) => {
@@ -1902,8 +2070,10 @@
         function compatibilityTab() {
             return {
                 loading: true,
-                hasResult: false,
-                result: {},
+                partners: [],
+                selectedPartner: null,
+                selectedPartnerId: null,
+                showForm: false,
                 form: {
                     partner_name: '',
                     partner_email: '',
@@ -1919,6 +2089,7 @@
                 submitting: false,
                 error: '',
                 loaded: false,
+                aiPollInterval: null,
 
                 async loadCompatibility() {
                     if (this.loaded) return;
@@ -1934,10 +2105,14 @@
 
                         if (response.ok) {
                             const data = await response.json();
-                            this.hasResult = data.exists;
-                            if (data.exists) {
-                                this.result = data.compatibility;
+                            this.partners = data.partners || [];
+                            // Auto-select first partner if exists
+                            if (this.partners.length > 0 && !this.selectedPartner) {
+                                this.selectedPartner = this.partners[0];
+                                this.selectedPartnerId = this.partners[0].id;
                             }
+                            // Start polling for AI report if needed
+                            this.startAiReportPolling();
                         }
                     } catch (e) {
                         console.error('Failed to load compatibility:', e);
@@ -1945,6 +2120,80 @@
 
                     this.loading = false;
                     this.loaded = true;
+                },
+
+                startAiReportPolling() {
+                    // Clear any existing interval
+                    if (this.aiPollInterval) {
+                        clearInterval(this.aiPollInterval);
+                    }
+
+                    // Check if any partner needs AI report polling
+                    const needsPolling = this.partners.some(p =>
+                        p.ai_report_status === 'pending' || p.ai_report_status === 'processing'
+                    );
+
+                    if (!needsPolling) return;
+
+                    // Poll every 3 seconds
+                    this.aiPollInterval = setInterval(async () => {
+                        await this.pollAiReportStatus();
+                    }, 3000);
+                },
+
+                async pollAiReportStatus() {
+                    const partnersNeedingUpdate = this.partners.filter(p =>
+                        p.ai_report_status === 'pending' || p.ai_report_status === 'processing'
+                    );
+
+                    if (partnersNeedingUpdate.length === 0) {
+                        if (this.aiPollInterval) {
+                            clearInterval(this.aiPollInterval);
+                            this.aiPollInterval = null;
+                        }
+                        return;
+                    }
+
+                    for (const partner of partnersNeedingUpdate) {
+                        try {
+                            const response = await fetch(`/compatibility/${partner.id}/ai-status`, {
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                }
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                // Update the partner in our list
+                                const idx = this.partners.findIndex(p => p.id === partner.id);
+                                if (idx !== -1) {
+                                    this.partners[idx].ai_report_status = data.ai_report_status;
+                                    if (data.ai_report) {
+                                        this.partners[idx].ai_report = data.ai_report;
+                                    }
+                                    // Update selectedPartner if it's the same
+                                    if (this.selectedPartner?.id === partner.id) {
+                                        this.selectedPartner = {...this.selectedPartner, ...this.partners[idx]};
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Failed to poll AI status:', e);
+                        }
+                    }
+                },
+
+                selectPartner(partner) {
+                    this.selectedPartner = partner;
+                    this.selectedPartnerId = partner.id;
+                },
+
+                selectPartnerById(id) {
+                    const partner = this.partners.find(p => p.id == id);
+                    if (partner) {
+                        this.selectedPartner = partner;
+                    }
                 },
 
                 async searchCities() {
@@ -2010,9 +2259,16 @@
                         const data = await response.json();
 
                         if (data.success) {
-                            // Reload to show result
+                            // Reload partners list and select new partner
                             this.loaded = false;
+                            this.resetForm();
                             await this.loadCompatibility();
+                            // Select the newly added partner (first in list) and show results
+                            if (this.partners.length > 0) {
+                                this.selectedPartner = this.partners[0];
+                                this.selectedPartnerId = this.partners[0].id;
+                            }
+                            this.showForm = false;
                         } else {
                             this.error = data.error || 'Произошла ошибка. Попробуйте ещё раз.';
                             if (window.smartCaptcha) window.smartCaptcha.reset();
@@ -2025,9 +2281,7 @@
                     this.submitting = false;
                 },
 
-                startNew() {
-                    this.hasResult = false;
-                    this.result = {};
+                resetForm() {
                     this.form = {
                         partner_name: '',
                         partner_email: '',
@@ -2040,6 +2294,23 @@
                     this.cityQuery = '';
                     this.error = '';
                     if (window.smartCaptcha) window.smartCaptcha.reset();
+                },
+
+                startNew() {
+                    this.selectedPartner = null;
+                    this.resetForm();
+                },
+
+                formatDescription(text) {
+                    if (!text) return '';
+                    // Handle both escaped \n and real newlines
+                    return text
+                        .replace(/\\n\\n/g, '</p><p style="margin: 0 0 1rem 0;">')
+                        .replace(/\\n/g, '<br>')
+                        .replace(/\n\n/g, '</p><p style="margin: 0 0 1rem 0;">')
+                        .replace(/\n/g, '<br>')
+                        .replace(/^/, '<p style="margin: 0 0 1rem 0;">')
+                        .replace(/$/, '</p>');
                 }
             };
         }

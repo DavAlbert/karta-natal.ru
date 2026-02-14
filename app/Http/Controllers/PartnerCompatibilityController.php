@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GenerateCompatibilityAiReport;
 use App\Mail\PartnerInvitation;
 use App\Models\City;
 use App\Models\NatalChart;
@@ -69,13 +70,10 @@ class PartnerCompatibilityController extends Controller
         // Calculate 16 category scores
         $scores = $this->calculateCategoryScores($userChartData, $partnerChartData, $synastry);
 
-        // Generate AI report
-        $aiReport = $this->generateAiReport($userChartData, $partnerChartData, $synastry, $scores);
-
         // Create verification token
         $verificationToken = Str::random(64);
 
-        // Create the compatibility record
+        // Create the compatibility record (AI report will be generated async)
         $compatibility = PartnerCompatibility::create([
             'user_id' => Auth::id(),
             'user_chart_id' => $natalChart->id,
@@ -88,9 +86,13 @@ class PartnerCompatibilityController extends Controller
             'verification_token' => $verificationToken,
             'synastry_data' => $synastry,
             'scores' => $scores,
-            'ai_report' => $aiReport,
+            'ai_report' => null,
+            'ai_report_status' => 'pending',
             'status' => 'pending',
         ]);
+
+        // Dispatch AI report generation job
+        GenerateCompatibilityAiReport::dispatch($compatibility, $userChartData, $partnerChartData);
 
         // Send invitation email to partner
         try {
@@ -228,32 +230,32 @@ class PartnerCompatibilityController extends Controller
 
         $userId = Auth::id();
 
-        // Get existing compatibility - either as initiator or as partner
-        $compatibility = PartnerCompatibility::where('user_chart_id', $natalChart->id)
+        // Get ALL compatibilities - either as initiator or as partner
+        $compatibilities = PartnerCompatibility::where('user_chart_id', $natalChart->id)
             ->orWhere(function($q) use ($natalChart) {
                 $q->where('partner_chart_id', $natalChart->id);
             })
             ->with(['partnerCity', 'partnerUser', 'user', 'userChart'])
             ->latest()
-            ->first();
+            ->get();
 
-        if (!$compatibility) {
+        if ($compatibilities->isEmpty()) {
             return response()->json([
                 'exists' => false,
+                'partners' => [],
             ]);
         }
 
-        // Determine if current user is the initiator or the partner
-        $isInitiator = $compatibility->user_id === $userId;
-        $partnerName = $isInitiator ? $compatibility->partner_name : ($compatibility->user->name ?? 'Партнёр');
-        $partnerEmail = $isInitiator ? $compatibility->partner_email : $compatibility->user->email;
-        $partnerBirthDate = $isInitiator
-            ? $compatibility->partner_birth_date->format('d.m.Y')
-            : ($compatibility->userChart?->birth_date?->format('d.m.Y') ?? '');
+        // Build list of all partners
+        $partners = $compatibilities->map(function($compatibility) use ($userId) {
+            $isInitiator = $compatibility->user_id === $userId;
+            $partnerName = $isInitiator ? $compatibility->partner_name : ($compatibility->user->name ?? 'Партнёр');
+            $partnerEmail = $isInitiator ? $compatibility->partner_email : $compatibility->user->email;
+            $partnerBirthDate = $isInitiator
+                ? $compatibility->partner_birth_date->format('d.m.Y')
+                : ($compatibility->userChart?->birth_date?->format('d.m.Y') ?? '');
 
-        return response()->json([
-            'exists' => true,
-            'compatibility' => [
+            return [
                 'id' => $compatibility->id,
                 'partner_name' => $partnerName,
                 'partner_email' => $partnerEmail,
@@ -266,8 +268,32 @@ class PartnerCompatibilityController extends Controller
                 'scores' => $compatibility->category_scores,
                 'synastry' => $compatibility->synastry_data,
                 'ai_report' => $compatibility->ai_report,
+                'ai_report_status' => $compatibility->ai_report_status ?? 'pending',
                 'is_initiator' => $isInitiator,
-            ],
+            ];
+        });
+
+        return response()->json([
+            'exists' => true,
+            'partners' => $partners,
+            // Keep backward compatibility - return first as 'compatibility'
+            'compatibility' => $partners->first(),
+        ]);
+    }
+
+    /**
+     * Check AI report status for a compatibility
+     */
+    public function checkAiReportStatus(PartnerCompatibility $compatibility): JsonResponse
+    {
+        // Verify user has access to this compatibility
+        if ($compatibility->user_id !== Auth::id() && $compatibility->partner_user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        return response()->json([
+            'ai_report_status' => $compatibility->ai_report_status ?? 'pending',
+            'ai_report' => $compatibility->ai_report_status === 'completed' ? $compatibility->ai_report : null,
         ]);
     }
 
