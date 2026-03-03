@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NatalChart;
-use App\Rules\ValidYandexCaptcha;
+use App\Rules\ValidRecaptcha;
 use App\Services\AstrologyCalculationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +25,7 @@ class NatalChartController extends Controller
     public function processAsync(Request $Request)
     {
         $validated = $Request->validate([
-            'captcha_token' => ['required', new ValidYandexCaptcha()],
+            'recaptcha_token' => ['required', new ValidRecaptcha()],
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'gender' => 'required|in:male,female',
@@ -34,7 +34,10 @@ class NatalChartController extends Controller
             'birth_time' => 'nullable|date_format:H:i',
             'city_id' => 'required|exists:cities,id',
             'marketing_consent' => 'nullable|boolean',
+            'locale' => 'nullable|string|in:' . implode(',', config('app.available_locales', ['en'])),
         ]);
+
+        $locale = $validated['locale'] ?? app()->getLocale();
 
         $isAuthenticated = Auth::check();
         $authenticatedUser = $isAuthenticated ? Auth::user() : null;
@@ -74,6 +77,7 @@ class NatalChartController extends Controller
                 'report_status' => 'new',
                 'type' => 'natal',
                 'access_token' => null,
+                'locale' => $locale,
             ]);
 
             // Dispatch AI report generation job asynchronously
@@ -122,6 +126,7 @@ class NatalChartController extends Controller
             'report_status' => 'new',
             'type' => 'natal',
             'access_token' => Str::random(64),
+            'locale' => $locale,
         ]);
 
         // Dispatch AI report generation job + send email after completion
@@ -228,34 +233,34 @@ class NatalChartController extends Controller
     {
         return [
             'character' => [
-                'title' => 'Общая характеристика',
+                'title' => __('astrology.chat_category_general'),
                 'icon' => '👤',
-                'prompt' => 'Расскажи подробно о моей личности на основе моей натальной карты.',
+                'prompt' => __('astrology.chat_template_general'),
             ],
             'love' => [
-                'title' => 'Любовь',
+                'title' => __('astrology.chat_category_love'),
                 'icon' => '💕',
-                'prompt' => 'Проанализируй мою карту в вопросах любви и отношений.',
+                'prompt' => __('astrology.chat_template_love'),
             ],
             'career' => [
-                'title' => 'Карьера',
+                'title' => __('astrology.chat_category_career'),
                 'icon' => '💼',
-                'prompt' => 'Расскажи о моём карьерном потенциале и призвании.',
+                'prompt' => __('astrology.chat_template_career'),
             ],
             'finance' => [
-                'title' => 'Финансы',
+                'title' => __('astrology.chat_category_finance'),
                 'icon' => '💰',
-                'prompt' => 'Проанализируй мою карту в вопросах финансов.',
+                'prompt' => __('astrology.chat_template_finance'),
             ],
             'health' => [
-                'title' => 'Здоровье',
+                'title' => __('astrology.chat_category_health'),
                 'icon' => '🏥',
-                'prompt' => 'Расскажи о моём здоровье на основе карты.',
+                'prompt' => __('astrology.chat_template_health'),
             ],
             'karmic' => [
-                'title' => 'Карма',
+                'title' => __('astrology.chat_category_karma'),
                 'icon' => '✨',
-                'prompt' => 'Расскажи о моём кармическом пути.',
+                'prompt' => __('astrology.chat_template_karma'),
             ],
         ];
     }

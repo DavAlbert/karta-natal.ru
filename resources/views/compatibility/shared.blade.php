@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Совместимость — Karta-Natal.ru</title>
+    <title>Совместимость — NatalScope</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -262,7 +262,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="{{ route('welcome') }}" class="logo">КАРТА<span>НАТАЛ</span></a>
+            <a href="{{ route('welcome') }}" class="logo">NATAL<span>SCOPE</span></a>
             <div class="nav-links">
                 <a href="{{ route('welcome') }}" class="nav-link">
                     <i class="fas fa-star"></i>
@@ -392,7 +392,7 @@
 
             <!-- Footer -->
             <footer class="footer">
-                <p>&copy; {{ date('Y') }} Karta-Natal.ru — Натальная карта онлайн бесплатно</p>
+                <p>&copy; {{ date('Y') }} NatalScope — Натальная карта онлайн бесплатно</p>
             </footer>
         </div>
     </main>

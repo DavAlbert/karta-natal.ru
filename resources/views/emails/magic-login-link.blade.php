@@ -1,9 +1,10 @@
+@php app()->setLocale($locale ?? 'en') @endphp
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ $locale ?? 'en' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход в аккаунт</title>
+    <title>{{ __('emails.magic_login_subject') }}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased;">
     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5;">
@@ -13,28 +14,28 @@
                     <!-- Header -->
                     <tr>
                         <td style="background-color: #1a1a2e; padding: 30px 40px; text-align: center;">
-                            <h1 style="color: #d4af37; margin: 0; font-size: 22px; font-weight: normal; letter-spacing: 1px;">Natalnaya-Karta</h1>
+                            <h1 style="color: #d4af37; margin: 0; font-size: 22px; font-weight: normal; letter-spacing: 1px;">{{ __('emails.magic_login_heading') }}</h1>
                         </td>
                     </tr>
 
                     <!-- Content -->
                     <tr>
                         <td style="padding: 40px 40px 30px 40px; color: #333333;">
-                            <p style="margin: 0 0 8px 0; font-size: 16px; line-height: 1.5; color: #1a1a2e; font-weight: bold;">Здравствуйте, {{ $user->name ?? 'Пользователь' }}!</p>
-                            <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #555555;">Мы получили запрос на вход в ваш аккаунт. Нажмите кнопку ниже для авторизации:</p>
+                            <p style="margin: 0 0 8px 0; font-size: 16px; line-height: 1.5; color: #1a1a2e; font-weight: bold;">{{ __('emails.magic_login_greeting', ['name' => $user->name ?? '']) }}</p>
+                            <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #555555;">{{ __('emails.magic_login_text') }}</p>
 
                             <!-- Button -->
                             <table role="presentation" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="border-radius: 4px; background-color: #d4af37;">
-                                        <a href="{{ route('magic.login.token', $token) }}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: bold; border-radius: 4px;">Войти в аккаунт</a>
+                                        <a href="{{ route('magic.login.token', $token) }}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: bold; border-radius: 4px;">{{ __('emails.magic_login_button') }}</a>
                                     </td>
                                 </tr>
                             </table>
 
                             <p style="margin: 28px 0 0 0; font-size: 13px; line-height: 1.6; color: #888888;">
-                                Ссылка действительна 15 минут.<br>
-                                Если вы не запрашивали вход, проигнорируйте это письмо.
+                                {{ __('emails.magic_login_expires') }}<br>
+                                {{ __('emails.magic_login_ignore') }}
                             </p>
                         </td>
                     </tr>
@@ -43,8 +44,8 @@
                     <tr>
                         <td style="background-color: #fafafa; padding: 20px 40px; text-align: center; border-top: 1px solid #eeeeee;">
                             <p style="margin: 0; font-size: 12px; color: #999999; line-height: 1.5;">
-                                Natalnaya-Karta — Ваша натальная карта онлайн<br>
-                                <span style="color: #888888;">&copy; {{ date('Y') }} Все права защищены.</span>
+                                {{ __('emails.magic_login_footer') }}<br>
+                                <span style="color: #888888;">&copy; {{ date('Y') }} {{ __('emails.copyright') }}</span>
                             </p>
                         </td>
                     </tr>

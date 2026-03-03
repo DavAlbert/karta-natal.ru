@@ -11,6 +11,15 @@ class AiAstrologyService
     protected $baseUrl;
     protected $model;
 
+    protected const LANGUAGE_MAP = [
+        'en' => 'English',
+        'fr' => 'French',
+        'es' => 'Spanish',
+        'pt' => 'Portuguese',
+        'hi' => 'Hindi',
+        'ru' => 'Russian',
+    ];
+
     public function __construct()
     {
         $this->apiKey = config('services.openai.api_key');
@@ -18,119 +27,154 @@ class AiAstrologyService
         $this->model = config('services.openai.model', 'gpt-4o');
     }
 
-    /**
-     * Build comprehensive context from chart data for AI
-     */
-    protected function buildChartContext(array $chartData): string
+    protected function getLanguageName(string $locale): string
+    {
+        return self::LANGUAGE_MAP[$locale] ?? 'English';
+    }
+
+    protected function getLanguageInstruction(string $locale): string
+    {
+        return trans('astrology.respond_in_language', ['language' => $this->getLanguageName($locale)], $locale);
+    }
+
+    protected function buildChartContext(array $chartData, string $locale = 'en'): string
     {
         $planets = $chartData['planets'] ?? [];
         $houses = $chartData['houses'] ?? [];
-        $aspects = $chartData['aspects'] ?? [];
 
-        $context = "НАТАЛЬНАЯ КАРТА КЛИЕНТА:\n\n";
-
-        // Planets
-        $context .= "ПЛАНЕТЫ:\n";
         $planetNames = [
-            'sun' => 'Солнце', 'moon' => 'Луна', 'mercury' => 'Меркурий',
-            'venus' => 'Венера', 'mars' => 'Марс', 'jupiter' => 'Юпитер',
-            'saturn' => 'Сатурн', 'uranus' => 'Уран', 'neptune' => 'Нептун',
-            'pluto' => 'Плутон', 'north_node' => 'Северный узел', 'south_node' => 'Южный узел',
-            'chiron' => 'Хирон', 'part_fortune' => 'Часть фортуны'
+            'sun' => trans('astrology.planet_sun', [], $locale),
+            'moon' => trans('astrology.planet_moon', [], $locale),
+            'mercury' => trans('astrology.planet_mercury', [], $locale),
+            'venus' => trans('astrology.planet_venus', [], $locale),
+            'mars' => trans('astrology.planet_mars', [], $locale),
+            'jupiter' => trans('astrology.planet_jupiter', [], $locale),
+            'saturn' => trans('astrology.planet_saturn', [], $locale),
+            'uranus' => trans('astrology.planet_uranus', [], $locale),
+            'neptune' => trans('astrology.planet_neptune', [], $locale),
+            'pluto' => trans('astrology.planet_pluto', [], $locale),
+            'north_node' => trans('astrology.planet_north_node', [], $locale),
+            'south_node' => trans('astrology.planet_south_node', [], $locale),
+            'chiron' => trans('astrology.planet_chiron', [], $locale),
+            'part_fortune' => trans('astrology.planet_part_fortune', [], $locale),
         ];
+
+        $signMap = $this->getSignTranslationMap($locale);
+        $houseLabel = trans('astrology.ctx_house', [], $locale);
+        $retroLabel = trans('astrology.ctx_retrograde', [], $locale);
+        $unknownLabel = trans('astrology.ctx_unknown', [], $locale);
+
+        $context = trans('astrology.ctx_natal_chart', [], $locale) . "\n\n";
+        $context .= trans('astrology.ctx_planets', [], $locale) . "\n";
 
         foreach ($planets as $key => $planet) {
             if (!is_array($planet)) continue;
             $name = $planetNames[$key] ?? ucfirst($key);
-            $sign = $planet['sign'] ?? 'неизвестно';
+            $sign = $signMap[$planet['sign'] ?? ''] ?? ($planet['sign'] ?? $unknownLabel);
             $degree = floor($planet['degree'] ?? 0);
             $house = $planet['house'] ?? '-';
-            $retro = isset($planet['retrograde']) && $planet['retrograde'] ? ' (ретроградный)' : '';
-            $context .= "- {$name}: {$sign} {$degree}°, {$house} дом{$retro}\n";
+            $retro = isset($planet['retrograde']) && $planet['retrograde'] ? ' ' . $retroLabel : '';
+            $context .= "- {$name}: {$sign} {$degree}°, {$house} {$houseLabel}{$retro}\n";
         }
 
-        // Houses - cusps
-        $context .= "\nДОМА (куспиды):\n";
+        $context .= "\n" . trans('astrology.ctx_houses', [], $locale) . "\n";
         for ($i = 1; $i <= 12; $i++) {
             if (isset($houses[$i])) {
                 $h = $houses[$i];
-                $sign = $h['sign'] ?? 'неизвестно';
+                $sign = $signMap[$h['sign'] ?? ''] ?? ($h['sign'] ?? $unknownLabel);
                 $degree = floor($h['degree'] ?? 0);
-                $context .= "- {$i} дом: {$sign} {$degree}°\n";
+                $context .= "- {$i} {$houseLabel}: {$sign} {$degree}°\n";
             }
         }
 
-        // Key points
-        $context .= "\nКЛЮЧЕВЫЕ ТОЧКИ:\n";
+        $context .= "\n" . trans('astrology.ctx_key_points', [], $locale) . "\n";
         if (isset($chartData['ascendant'])) {
             $asc = $chartData['ascendant'];
-            $context .= "- ASC: {$asc['sign']} {$asc['degree']}°\n";
+            $sign = $signMap[$asc['sign'] ?? ''] ?? ($asc['sign'] ?? '');
+            $context .= "- ASC: {$sign} {$asc['degree']}°\n";
         }
         if (isset($chartData['mc'])) {
             $mc = $chartData['mc'];
-            $context .= "- MC: {$mc['sign']} {$mc['degree']}°\n";
+            $sign = $signMap[$mc['sign'] ?? ''] ?? ($mc['sign'] ?? '');
+            $context .= "- MC: {$sign} {$mc['degree']}°\n";
         }
 
-        // Elements
-        $context .= "\nСТИХИИ:\n";
+        $elemNames = [
+            'fire' => trans('astrology.element_fire', [], $locale),
+            'earth' => trans('astrology.element_earth', [], $locale),
+            'air' => trans('astrology.element_air', [], $locale),
+            'water' => trans('astrology.element_water', [], $locale),
+        ];
+
         $elemCount = ['fire' => 0, 'earth' => 0, 'air' => 0, 'water' => 0];
-        $elemMap = ['Овен' => 'fire', 'Телец' => 'earth', 'Близнецы' => 'air', 'Рак' => 'water',
-                    'Лев' => 'fire', 'Дева' => 'earth', 'Весы' => 'air', 'Скорпион' => 'water',
-                    'Стрелец' => 'fire', 'Козерог' => 'earth', 'Водолей' => 'air', 'Рыбы' => 'water'];
+        $signToElem = $this->getSignElementMap();
+
         foreach ($planets as $p) {
             if (is_array($p) && isset($p['sign'])) {
-                $e = $elemMap[$p['sign']] ?? null;
+                $e = $signToElem[$p['sign']] ?? null;
                 if ($e) $elemCount[$e]++;
             }
         }
+
+        $context .= "\n" . trans('astrology.ctx_elements', [], $locale) . "\n";
         foreach ($elemCount as $elem => $count) {
             if ($count > 0) {
-                $names = ['fire' => 'Огонь', 'earth' => 'Земля', 'air' => 'Воздух', 'water' => 'Вода'];
-                $context .= "- {$names[$elem]}: {$count}\n";
+                $context .= "- {$elemNames[$elem]}: {$count}\n";
             }
         }
 
-        // Dominant element
         $dominant = array_keys($elemCount, max($elemCount))[0] ?? 'fire';
-        $elemNames = ['fire' => 'Огонь', 'earth' => 'Земля', 'air' => 'Воздух', 'water' => 'Вода'];
-        $context .= "\nДоминирующая стихия: {$elemNames[$dominant]}\n";
+        $context .= "\n" . trans('astrology.ctx_dominant_element', [], $locale) . " {$elemNames[$dominant]}\n";
 
         return $context;
     }
 
     /**
-     * Generate a comprehensive natal chart interpretation in Russian using Strict Structured Outputs.
+     * Map from Russian sign names (stored in chart_data) to localized sign names.
      */
-    public function generateReport(array $chartData): array
+    protected function getSignTranslationMap(string $locale): array
     {
+        $russianToKey = [
+            'Овен' => 'aries', 'Телец' => 'taurus', 'Близнецы' => 'gemini',
+            'Рак' => 'cancer', 'Лев' => 'leo', 'Дева' => 'virgo',
+            'Весы' => 'libra', 'Скорпион' => 'scorpio', 'Стрелец' => 'sagittarius',
+            'Козерог' => 'capricorn', 'Водолей' => 'aquarius', 'Рыбы' => 'pisces',
+        ];
+
+        $map = [];
+        foreach ($russianToKey as $russian => $key) {
+            $map[$russian] = trans('astrology.sign_' . $key, [], $locale);
+        }
+        return $map;
+    }
+
+    protected function getSignElementMap(): array
+    {
+        return [
+            'Овен' => 'fire', 'Телец' => 'earth', 'Близнецы' => 'air', 'Рак' => 'water',
+            'Лев' => 'fire', 'Дева' => 'earth', 'Весы' => 'air', 'Скорпион' => 'water',
+            'Стрелец' => 'fire', 'Козерог' => 'earth', 'Водолей' => 'air', 'Рыбы' => 'water',
+        ];
+    }
+
+    public function generateReport(array $chartData, string $locale = 'en'): array
+    {
+        $langInstruction = $this->getLanguageInstruction($locale);
+        $langName = $this->getLanguageName($locale);
+
         $toolSchema = [
             'type' => 'function',
             'function' => [
                 'name' => 'generate_astrology_report',
-                'description' => 'Generate a deep psychological and karmic astrology report in Russian based on natal chart data.',
+                'description' => trans('astrology.tool_report_desc', [], $locale),
                 'parameters' => [
                     'type' => 'object',
                     'properties' => [
-                        'identity' => [
-                            'type' => 'string',
-                            'description' => 'Deep analysis of personality, ego, and emotional nature (Sun/Moon/Ascendant) in Russian.'
-                        ],
-                        'love' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of relationships, love language, and needs (Venus/Mars/7th House) in Russian.'
-                        ],
-                        'career' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of professional path, ambition, and success (10th House/Saturn/MC) in Russian.'
-                        ],
-                        'karma' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of karmic destiny, lessons, and growth (Nodes/Saturn/Retrogrades) in Russian.'
-                        ],
-                        'forecast' => [
-                            'type' => 'string',
-                            'description' => 'A brief forecast for the upcoming major transits or phases impacting the user in Russian.'
-                        ]
+                        'identity' => ['type' => 'string', 'description' => trans('astrology.tool_identity_desc', [], $locale) . " In {$langName}."],
+                        'love' => ['type' => 'string', 'description' => trans('astrology.tool_love_desc', [], $locale) . " In {$langName}."],
+                        'career' => ['type' => 'string', 'description' => trans('astrology.tool_career_desc', [], $locale) . " In {$langName}."],
+                        'karma' => ['type' => 'string', 'description' => trans('astrology.tool_karma_desc', [], $locale) . " In {$langName}."],
+                        'forecast' => ['type' => 'string', 'description' => trans('astrology.tool_forecast_desc', [], $locale) . " In {$langName}."],
                     ],
                     'required' => ['identity', 'love', 'career', 'karma', 'forecast']
                 ]
@@ -138,9 +182,11 @@ class AiAstrologyService
         ];
 
         try {
-            Log::info('Starting AI Report Generation', ['chart_data' => array_keys($chartData)]);
+            Log::info('Starting AI Report Generation', ['locale' => $locale]);
 
-            $context = $this->buildChartContext($chartData);
+            $context = $this->buildChartContext($chartData, $locale);
+            $systemPrompt = trans('astrology.report_system_prompt', [], $locale) . "\n\n" . $langInstruction;
+            $userPrompt = $context . "\n\n" . trans('astrology.report_user_prompt', [], $locale);
 
             $response = Http::withToken($this->apiKey)
                 ->timeout(120)
@@ -148,31 +194,20 @@ class AiAstrologyService
                 ->post($this->baseUrl . '/chat/completions', [
                     'model' => $this->model,
                     'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => 'Ты — эксперт Ведической и Западной астрологии. Твоя задача — давать глубокие, мистические, но практичные ответы на основе натальной карты клиента. Говори на русском языке. Всегда ссылайся на конкретные планеты, знаки и дома из карты клиента.'
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => $context . "\n\nСгенерируй подробный астрологический отчёт на русском языке, включая:\n1. Анализ личности (Солнце, Луна, Асцендент)\n2. Анализ любви и отношений (Венера, Марс, 7 дом)\n3. Анализ карьеры (10 дом, Сатурн, МС)\n4. Кармический анализ (Узлы, Сатурн, ретроградные планеты)\n5. Прогноз на ближайший период"
-                        ]
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user', 'content' => $userPrompt],
                     ],
                     'tools' => [$toolSchema],
-                    'tool_choice' => [
-                        'type' => 'function',
-                        'function' => ['name' => 'generate_astrology_report']
-                    ],
+                    'tool_choice' => ['type' => 'function', 'function' => ['name' => 'generate_astrology_report']],
                     'temperature' => 0.7,
                 ]);
 
             if ($response->successful()) {
                 $content = $response->json();
-
                 $toolCalls = $content['choices'][0]['message']['tool_calls'] ?? [];
                 if (!empty($toolCalls)) {
                     $jsonStr = $toolCalls[0]['function']['arguments'];
                     $structuredData = json_decode($jsonStr, true);
-
                     if (json_last_error() === JSON_ERROR_NONE) {
                         return $structuredData;
                     }
@@ -188,25 +223,20 @@ class AiAstrologyService
         return [];
     }
 
-    /**
-     * Chat with the Astrologer using chart context.
-     */
-    public function chat(string $question, array $chartData, array $history = []): string
+    public function chat(string $question, array $chartData, array $history = [], string $locale = 'en'): string
     {
-        $context = $this->buildChartContext($chartData);
+        $context = $this->buildChartContext($chartData, $locale);
+        $langInstruction = $this->getLanguageInstruction($locale);
 
-        $messages = [
-            [
-                'role' => 'system',
-                'content' => "Ты — мудрый и профессиональный астролог, эксперт в Ведической и Западной астрологии. Твой клиент предоставил свою натальную карту:\n\n{$context}\n\nТвои правила:\n1. Всегда ссылайся на конкретные планеты, знаки и дома из карты клиента\n2. Давай практичные советы на основе астрологии\n3. Говори на русском языке\n4. Если нужно уточнение — спрашивай\n5. Не выдумывай данные, которых нет в карте"
-            ]
-        ];
+        $systemContent = str_replace(':context', $context, trans('astrology.chat_system_prompt', [], $locale));
+        $systemContent .= "\n\n" . $langInstruction;
+
+        $messages = [['role' => 'system', 'content' => $systemContent]];
 
         foreach ($history as $msg) {
             $messages[] = ['role' => $msg['role'], 'content' => $msg['content']];
         }
 
-        // Add template context if question is from template
         $messages[] = ['role' => 'user', 'content' => $question];
 
         try {
@@ -219,144 +249,87 @@ class AiAstrologyService
                 ]);
 
             if ($response->successful()) {
-                return $response->json('choices.0.message.content') ?? 'Извините, сейчас не могу ответить. Попробуйте позже.';
+                return $response->json('choices.0.message.content') ?? trans('astrology.chat_error', [], $locale);
             }
         } catch (\Exception $e) {
             Log::error('AI Chat Error: ' . $e->getMessage());
         }
 
-        return "Извините, сейчас звезды молчат. Попробуйте позже.";
+        return trans('astrology.chat_error_stars', [], $locale);
     }
 
-    /**
-     * Get chat response with streaming (for real-time feel)
-     */
-    public function chatStream(string $question, array $chartData, array $history = []): string
+    public function chatStream(string $question, array $chartData, array $history = [], string $locale = 'en'): string
     {
-        // For streaming, we use the same method but client handles the stream
-        // This is a placeholder - actual streaming requires SSE or similar
-        return $this->chat($question, $chartData, $history);
+        return $this->chat($question, $chartData, $history, $locale);
     }
 
-    /**
-     * Generate comprehensive compatibility report with structured outputs.
-     * Includes scores (1-10), detailed analysis, and specific recommendations.
-     */
-    public function generateCompatibilityReport(array $chart1, array $chart2, array $synastry, string $name1 = 'Партнёр 1', string $name2 = 'Партнёр 2'): array
+    public function generateCompatibilityReport(array $chart1, array $chart2, array $synastry, string $name1 = '', string $name2 = '', string $locale = 'en'): array
     {
+        $name1 = $name1 ?: trans('astrology.partner_1', [], $locale);
+        $name2 = $name2 ?: trans('astrology.partner_2', [], $locale);
+        $langInstruction = $this->getLanguageInstruction($locale);
+        $langName = $this->getLanguageName($locale);
+
         $toolSchema = [
             'type' => 'function',
             'function' => [
                 'name' => 'generate_compatibility_report',
-                'description' => 'Generate detailed compatibility analysis between two natal charts in Russian.',
+                'description' => "Generate detailed compatibility analysis between two natal charts in {$langName}.",
                 'parameters' => [
                     'type' => 'object',
                     'properties' => [
-                        'full_description' => [
-                            'type' => 'string',
-                            'description' => 'Comprehensive 800-1200 word PERSONAL analysis in Russian. USE BOTH PARTNER NAMES! ALWAYS reference specific planets, signs and aspects from their natal charts as proof. Structure: 1) Greet couple by names, describe their core energies (Sun signs, Moon signs, Ascendants - name them!), 2) Explain WHY they attract each other - cite specific aspects (e.g. "Venus in Aries trine Mars in Leo creates..."), 3) Daily life - morning routines, evenings, weekends based on their Moon signs, 4) Communication style based on Mercury placements, 5) Challenges - name the difficult aspects and give CONCRETE solutions (e.g. "When Saturn square Venus triggers jealousy, try..."), 6) Long-term advice for marriage/family. Use simple but professional language. Every claim must reference a planet or aspect.'
-                        ],
-                        'overall_score' => [
-                            'type' => 'integer',
-                            'description' => 'Overall compatibility score from 1 to 10 based on synastry analysis.'
-                        ],
-                        'overall_analysis' => [
-                            'type' => 'string',
-                            'description' => 'Detailed overall compatibility analysis in Russian.'
-                        ],
-                        'emotional_score' => [
-                            'type' => 'integer',
-                            'description' => 'Emotional compatibility score from 1 to 10 (Moon/Moon aspects).'
-                        ],
-                        'emotional_analysis' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of emotional compatibility and needs.'
-                        ],
-                        'communication_score' => [
-                            'type' => 'integer',
-                            'description' => 'Communication compatibility score from 1 to 10 (Mercury/Mercury aspects).'
-                        ],
-                        'communication_analysis' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of how well partners communicate.'
-                        ],
-                        'romantic_score' => [
-                            'type' => 'integer',
-                            'description' => 'Romantic compatibility score from 1 to 10 (Venus/Mars/Venus aspects).'
-                        ],
-                        'romantic_analysis' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of romantic and sexual chemistry.'
-                        ],
-                        'values_score' => [
-                            'type' => 'integer',
-                            'description' => 'Value alignment score from 1 to 10 (Jupiter/Saturn aspects).'
-                        ],
-                        'values_analysis' => [
-                            'type' => 'string',
-                            'description' => 'Analysis of shared values and life goals.'
-                        ],
-                        'growth_score' => [
-                            'type' => 'integer',
-                            'description' => 'Mutual growth potential score from 1 to 10 (Nodes/Chiron aspects).'
-                        ],
-                        'growth_analysis' => [
-                            'type' => 'string',
-                            'description' => 'How partners can help each other grow.'
-                        ],
-                        'strengths' => [
-                            'type' => 'array',
-                            'items' => ['type' => 'string'],
-                            'description' => 'List of key strengths of this compatibility (3-5 items).'
-                        ],
-                        'challenges' => [
-                            'type' => 'array',
-                            'items' => ['type' => 'string'],
-                            'description' => 'List of main challenges to work through (3-5 items).'
-                        ],
-                        'recommendations' => [
-                            'type' => 'array',
-                            'items' => ['type' => 'string'],
-                            'description' => 'Practical recommendations for the relationship (3-5 items).'
-                        ]
+                        'full_description' => ['type' => 'string', 'description' => "Comprehensive 800-1200 word PERSONAL analysis in {$langName}. USE BOTH PARTNER NAMES! Reference specific planets, signs and aspects."],
+                        'overall_score' => ['type' => 'integer', 'description' => 'Overall compatibility score from 1 to 10.'],
+                        'overall_analysis' => ['type' => 'string', 'description' => "Detailed overall compatibility analysis in {$langName}."],
+                        'emotional_score' => ['type' => 'integer', 'description' => 'Emotional compatibility score 1-10.'],
+                        'emotional_analysis' => ['type' => 'string', 'description' => "Emotional compatibility analysis in {$langName}."],
+                        'communication_score' => ['type' => 'integer', 'description' => 'Communication compatibility score 1-10.'],
+                        'communication_analysis' => ['type' => 'string', 'description' => "Communication analysis in {$langName}."],
+                        'romantic_score' => ['type' => 'integer', 'description' => 'Romantic compatibility score 1-10.'],
+                        'romantic_analysis' => ['type' => 'string', 'description' => "Romantic chemistry analysis in {$langName}."],
+                        'values_score' => ['type' => 'integer', 'description' => 'Value alignment score 1-10.'],
+                        'values_analysis' => ['type' => 'string', 'description' => "Values analysis in {$langName}."],
+                        'growth_score' => ['type' => 'integer', 'description' => 'Mutual growth score 1-10.'],
+                        'growth_analysis' => ['type' => 'string', 'description' => "Growth potential analysis in {$langName}."],
+                        'strengths' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "3-5 key strengths in {$langName}."],
+                        'challenges' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "3-5 challenges in {$langName}."],
+                        'recommendations' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "3-5 recommendations in {$langName}."],
                     ],
                     'required' => [
-                        'full_description',
-                        'overall_score', 'overall_analysis',
-                        'emotional_score', 'emotional_analysis',
-                        'communication_score', 'communication_analysis',
-                        'romantic_score', 'romantic_analysis',
-                        'values_score', 'values_analysis',
-                        'growth_score', 'growth_analysis',
-                        'strengths', 'challenges', 'recommendations'
+                        'full_description', 'overall_score', 'overall_analysis',
+                        'emotional_score', 'emotional_analysis', 'communication_score', 'communication_analysis',
+                        'romantic_score', 'romantic_analysis', 'values_score', 'values_analysis',
+                        'growth_score', 'growth_analysis', 'strengths', 'challenges', 'recommendations'
                     ]
                 ]
             ]
         ];
 
         try {
-            Log::info('Starting AI Compatibility Report Generation');
+            Log::info('Starting AI Compatibility Report Generation', ['locale' => $locale]);
 
-            $context1 = $this->buildChartContext($chart1);
-            $context2 = $this->buildChartContext($chart2);
+            $context1 = $this->buildChartContext($chart1, $locale);
+            $context2 = $this->buildChartContext($chart2, $locale);
 
-            // Build synastry context
-            $synastryContext = "СИНАСТРИЯ (аспекты между картами):\n";
-            $synastryContext .= "Общий балл совместимости: {$synastry['score']}/100\n";
-            $synastryContext .= "Гармоничные аспекты: {$synastry['harmony']}\n";
-            $synastryContext .= "Напряжённые аспекты: {$synastry['tension']}\n\n";
+            $harmonyLabel = trans('astrology.synastry_harmony_nature', [], $locale);
+            $tensionLabel = trans('astrology.synastry_tension_nature', [], $locale);
+
+            $synastryContext = trans('astrology.synastry_label', [], $locale) . "\n";
+            $synastryContext .= trans('astrology.synastry_score', [], $locale) . " {$synastry['score']}/100\n";
+            $synastryContext .= trans('astrology.synastry_harmony', [], $locale) . " {$synastry['harmony']}\n";
+            $synastryContext .= trans('astrology.synastry_tension', [], $locale) . " {$synastry['tension']}\n\n";
 
             foreach (($synastry['aspects'] ?? []) as $aspect) {
-                $nature = $aspect['nature'] === 'harmony' ? '⚡ Гармония' : '⚠ Напряжение';
+                $nature = $aspect['nature'] === 'harmony' ? $harmonyLabel : $tensionLabel;
                 $synastryContext .= "- {$aspect['planet1']} → {$aspect['planet2']}: {$aspect['type']} ({$nature})\n";
             }
 
-            $fullContext = "ИМЕНА ПАРТНЁРОВ:\n";
-            $fullContext .= "- Первый партнёр: {$name1}\n";
-            $fullContext .= "- Второй партнёр: {$name2}\n\n";
-            $fullContext .= "НАТАЛЬНАЯ КАРТА {$name1}:\n{$context1}\n\n";
-            $fullContext .= "НАТАЛЬНАЯ КАРТА {$name2}:\n{$context2}\n\n";
+            $fullContext = "PARTNER NAMES:\n- {$name1}\n- {$name2}\n\n";
+            $fullContext .= "{$name1}'s NATAL CHART:\n{$context1}\n\n";
+            $fullContext .= "{$name2}'s NATAL CHART:\n{$context2}\n\n";
             $fullContext .= $synastryContext;
+
+            $systemPrompt = trans('astrology.compatibility_system_prompt', [], $locale) . "\n\n" . $langInstruction;
 
             $response = Http::withToken($this->apiKey)
                 ->timeout(180)
@@ -364,33 +337,21 @@ class AiAstrologyService
                 ->post($this->baseUrl . '/chat/completions', [
                     'model' => $this->model,
                     'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => 'Ты — профессиональный астролог-консультант. ПРАВИЛА:\n1. ВСЕГДА называй конкретные планеты и знаки из карт (например: "Солнце Давида в Козероге даёт ему...")\n2. ВСЕГДА объясняй ПОЧЕМУ что-то происходит на основе аспектов (например: "Трин между вашими Лунами означает, что вы интуитивно понимаете эмоции друг друга")\n3. При проблемах — давай КОНКРЕТНЫЕ решения (например: "Когда квадрат Марс-Сатурн вызывает раздражение, попробуйте...")\n4. Пиши простым языком, но профессионально\n5. Обращайся к партнёрам по именам\n6. Описывай реальные жизненные ситуации на основе их карт'
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => $fullContext . "\n\nНапиши ПЕРСОНАЛЬНЫЙ астрологический анализ совместимости {$name1} и {$name2}.\n\nПОЛНОЕ ОПИСАНИЕ (full_description) — 800-1200 слов:\n\n1. ВСТУПЛЕНИЕ: Поприветствуй {$name1} и {$name2}. Кратко опиши их солнечные знаки и общую энергетику пары.\n\n2. ПОЧЕМУ ВЫ ВМЕСТЕ: Объясни притяжение через конкретные аспекты. Например: \"{$name1}, твоя Венера в [знак] образует трин с Марсом {$name2} — это создаёт сильное притяжение и страсть.\"\n\n3. ЭМОЦИОНАЛЬНАЯ СВЯЗЬ: Опиши взаимодействие Лун. Как вы понимаете эмоции друг друга? Приведи примеры из жизни.\n\n4. ОБЩЕНИЕ: Проанализируй Меркурии. Как вы общаетесь? Что помогает, что мешает?\n\n5. СОВМЕСТНЫЙ БЫТ: На основе Лун и 4-х домов опиши, как будет выглядеть ваш дом, утро, вечера.\n\n6. СЛОЖНОСТИ И РЕШЕНИЯ: Назови 2-3 напряжённых аспекта. Для КАЖДОГО дай конкретный совет. Например: \"Квадрат Сатурн-Венера может вызывать холодность. Решение: {$name1}, старайся чаще выражать чувства словами, {$name2} это нужно.\"\n\n7. БУДУЩЕЕ: Долгосрочный прогноз — брак, дети, как вы будете расти вместе.\n\nСИЛЬНЫЕ СТОРОНЫ (strengths): 3-5 пунктов с указанием аспектов\nВЫЗОВЫ (challenges): 3-5 пунктов с указанием аспектов\nРЕКОМЕНДАЦИИ (recommendations): 3-5 конкретных советов для {$name1} и {$name2}'"
-                        ]
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user', 'content' => $fullContext . "\n\nWrite a PERSONAL astrological compatibility analysis of {$name1} and {$name2} in {$langName}."],
                     ],
                     'tools' => [$toolSchema],
-                    'tool_choice' => [
-                        'type' => 'function',
-                        'function' => ['name' => 'generate_compatibility_report']
-                    ],
+                    'tool_choice' => ['type' => 'function', 'function' => ['name' => 'generate_compatibility_report']],
                     'temperature' => 0.7,
                 ]);
 
             if ($response->successful()) {
                 $content = $response->json();
                 $toolCalls = $content['choices'][0]['message']['tool_calls'] ?? [];
-
                 if (!empty($toolCalls)) {
                     $jsonStr = $toolCalls[0]['function']['arguments'];
                     $data = json_decode($jsonStr, true);
-
                     if (json_last_error() === JSON_ERROR_NONE) {
-                        // Add synastry data to report
                         $data['synastry'] = $synastry;
                         return $data;
                     }

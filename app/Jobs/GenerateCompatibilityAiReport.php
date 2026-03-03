@@ -31,15 +31,17 @@ class GenerateCompatibilityAiReport implements ShouldQueue
             $synastry = $this->compatibility->synastry_data;
 
             // Get names for personalized report
-            $userName = $this->compatibility->user->name ?? 'Партнёр 1';
-            $partnerName = $this->compatibility->partner_name ?? 'Партнёр 2';
+            $locale = $this->compatibility->user?->natalCharts()?->first()?->locale ?? 'en';
+            $userName = $this->compatibility->user->name ?? trans('astrology.partner_1', [], $locale);
+            $partnerName = $this->compatibility->partner_name ?? trans('astrology.partner_2', [], $locale);
 
             $report = $aiService->generateCompatibilityReport(
                 $this->userChartData,
                 $this->partnerChartData,
                 $synastry,
                 $userName,
-                $partnerName
+                $partnerName,
+                $locale
             );
 
             $this->compatibility->update([

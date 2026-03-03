@@ -30,7 +30,7 @@ class ChartReady extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ваша натальная карта готова — Natalnaya-Karta',
+            subject: trans('emails.chart_ready_subject', [], $this->chart->locale ?? 'en'),
         );
     }
 
@@ -41,6 +41,7 @@ class ChartReady extends Mailable
     {
         return new Content(
             view: 'emails.chart_ready',
+            with: ['locale' => $this->chart->locale ?? 'en'],
         );
     }
 

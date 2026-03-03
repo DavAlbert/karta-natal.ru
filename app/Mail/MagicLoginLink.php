@@ -15,14 +15,16 @@ class MagicLoginLink extends Mailable
 
     public $user;
     public $token;
+    public string $locale;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, string $token)
+    public function __construct(User $user, string $token, string $locale = 'en')
     {
         $this->user = $user;
         $this->token = $token;
+        $this->locale = $locale;
     }
 
     /**
@@ -31,7 +33,7 @@ class MagicLoginLink extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Войти в аккаунт — Natalnaya-Karta',
+            subject: trans('emails.magic_login_subject', [], $this->locale),
         );
     }
 
@@ -42,6 +44,7 @@ class MagicLoginLink extends Mailable
     {
         return new Content(
             view: 'emails.magic-login-link',
+            with: ['locale' => $this->locale],
         );
     }
 

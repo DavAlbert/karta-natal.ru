@@ -30,6 +30,7 @@ class NatalChart extends Model
         'report_status',
         'report_content',
         'access_token',
+        'locale',
     ];
 
     protected $casts = [

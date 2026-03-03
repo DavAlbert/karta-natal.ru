@@ -16,18 +16,20 @@ class PartnerInvitation extends Mailable
     public PartnerCompatibility $compatibility;
     public string $verifyUrl;
     public string $initiatorName;
+    public string $locale;
 
-    public function __construct(PartnerCompatibility $compatibility)
+    public function __construct(PartnerCompatibility $compatibility, string $locale = 'en')
     {
         $this->compatibility = $compatibility;
+        $this->locale = $locale;
         $this->verifyUrl = route('compatibility.verify', $compatibility->verification_token);
-        $this->initiatorName = $compatibility->user->name ?? 'Ваш партнёр';
+        $this->initiatorName = $compatibility->user->name ?? trans('emails.partner_invite_default_name', [], $this->locale);
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "{$this->initiatorName} приглашает вас проверить совместимость — Karta-Natal.ru",
+            subject: trans('emails.partner_invite_subject', ['name' => $this->initiatorName], $this->locale),
         );
     }
 
@@ -35,6 +37,7 @@ class PartnerInvitation extends Mailable
     {
         return new Content(
             view: 'emails.partner-invitation',
+            with: ['locale' => $this->locale],
         );
     }
 

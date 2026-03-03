@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Политика конфиденциальности | Karta-Natal.ru</title>
-    <meta name="description" content="Политика конфиденциальности сервиса Karta-Natal.ru. Узнайте, как мы собираем, используем и защищаем ваши персональные данные.">
+    <title>Политика конфиденциальности | NatalScope</title>
+    <meta name="description" content="Политика конфиденциальности сервиса NatalScope. Узнайте, как мы собираем, используем и защищаем ваши персональные данные.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://karta-natal.ru/privacy">
+    <link rel="canonical" href="https://natalscope.com/privacy">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -31,7 +31,7 @@
             <div class="flex justify-between items-center h-20">
                 <a href="/" class="flex items-center gap-3">
                     <span class="text-2xl font-serif font-bold text-white tracking-widest">
-                        КАРТА<span class="text-gold">НАТАЛ</span>
+                        NATAL<span class="text-gold">SCOPE</span>
                     </span>
                 </a>
             </div>
@@ -51,7 +51,7 @@
                 <section>
                     <h2 class="text-xl font-bold text-white mt-8 mb-4">1. Общие положения</h2>
                     <p>
-                        Настоящая Политика конфиденциальности определяет порядок обработки персональных данных пользователей сервиса Karta-Natal.ru (далее — «Сервис»), принадлежащего компании SMART CREATOR AI LLC (далее — «Оператор»).
+                        Настоящая Политика конфиденциальности определяет порядок обработки персональных данных пользователей сервиса NatalScope (далее — «Сервис»), принадлежащего компании SMART CREATOR AI LLC (далее — «Оператор»).
                     </p>
                     <p>
                         Используя Сервис, вы соглашаетесь с условиями настоящей Политики конфиденциальности. Если вы не согласны с этими условиями, пожалуйста, не используйте Сервис.
@@ -140,7 +140,7 @@
                     </p>
                     <p class="mt-4">
                         <strong class="text-white">SMART CREATOR AI LLC</strong><br>
-                        Сайт: <a href="https://karta-natal.ru" class="text-indigo-400 hover:text-white">karta-natal.ru</a>
+                        Сайт: <a href="https://natalscope.com" class="text-indigo-400 hover:text-white">natalscope.com</a>
                     </p>
                 </section>
             </div>
@@ -152,7 +152,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
                 <a href="/" class="text-xl font-serif font-bold text-white tracking-widest opacity-50">
-                    КАРТА<span class="text-gold">НАТАЛ</span>
+                    NATAL<span class="text-gold">SCOPE</span>
                 </a>
                 <nav class="flex flex-wrap justify-center gap-6 text-sm">
                     <a href="/privacy" class="text-white font-medium">Политика конфиденциальности</a>

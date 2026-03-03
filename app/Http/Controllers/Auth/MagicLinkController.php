@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Rules\ValidYandexCaptcha;
+use App\Rules\ValidRecaptcha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -28,7 +28,7 @@ class MagicLinkController extends Controller
     public function sendLoginLink(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'captcha_token' => ['required', new ValidYandexCaptcha()],
+            'recaptcha_token' => ['required', new ValidRecaptcha()],
             'email' => 'required|email|exists:users,email',
         ]);
 

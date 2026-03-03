@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Подтверждение совместимости — Karta-Natal.ru</title>
+    <title>Подтверждение совместимости — NatalScope</title>
     
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">

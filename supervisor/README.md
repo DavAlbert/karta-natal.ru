@@ -18,9 +18,9 @@ sudo apt update
 sudo apt install supervisor
 
 # Copy config
-sudo cp /var/www/natalnaya-karta/supervisor/laravel-worker.conf /etc/supervisor/conf.d/
+sudo cp /var/www/natalscope/supervisor/laravel-worker.conf /etc/supervisor/conf.d/
 
-# Update path if needed (default: /var/www/natalnaya-karta)
+# Update path if needed (default: /var/www/natalscope)
 sudo nano /etc/supervisor/conf.d/laravel-worker.conf
 
 # Reload supervisor
@@ -46,8 +46,8 @@ sudo supervisorctl restart laravel-ai-reports:*
 sudo supervisorctl stop laravel-workers:*
 
 # View logs
-tail -f /var/www/natalnaya-karta/storage/logs/worker-chat.log
-tail -f /var/www/natalnaya-karta/storage/logs/worker-ai-reports.log
+tail -f /var/www/natalscope/storage/logs/worker-chat.log
+tail -f /var/www/natalscope/storage/logs/worker-ai-reports.log
 ```
 
 ### After Deployment

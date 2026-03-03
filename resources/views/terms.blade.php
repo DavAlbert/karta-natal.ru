@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Условия использования | Karta-Natal.ru</title>
-    <meta name="description" content="Условия использования сервиса Karta-Natal.ru для расчёта натальной карты онлайн.">
+    <title>Условия использования | NatalScope</title>
+    <meta name="description" content="Условия использования сервиса NatalScope для расчёта натальной карты онлайн.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://karta-natal.ru/terms">
+    <link rel="canonical" href="https://natalscope.com/terms">
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -31,7 +31,7 @@
             <div class="flex justify-between items-center h-20">
                 <a href="/" class="flex items-center gap-3">
                     <span class="text-2xl font-serif font-bold text-white tracking-widest">
-                        КАРТА<span class="text-gold">НАТАЛ</span>
+                        NATAL<span class="text-gold">SCOPE</span>
                     </span>
                 </a>
             </div>
@@ -51,7 +51,7 @@
                 <section>
                     <h2 class="text-xl font-bold text-white mt-8 mb-4">1. Общие положения</h2>
                     <p>
-                        Настоящие Условия использования (далее — «Условия») регулируют отношения между компанией SMART CREATOR AI LLC (далее — «Администрация») и пользователем сервиса Karta-Natal.ru (далее — «Сервис»).
+                        Настоящие Условия использования (далее — «Условия») регулируют отношения между компанией SMART CREATOR AI LLC (далее — «Администрация») и пользователем сервиса NatalScope (далее — «Сервис»).
                     </p>
                     <p class="mt-4">
                         Используя Сервис, вы подтверждаете, что ознакомились с настоящими Условиями, понимаете их и соглашаетесь их соблюдать. Если вы не согласны с Условиями, пожалуйста, прекратите использование Сервиса.
@@ -61,7 +61,7 @@
                 <section>
                     <h2 class="text-xl font-bold text-white mt-8 mb-4">2. Описание Сервиса</h2>
                     <p>
-                        Сервис Karta-Natal.ru предоставляет возможность:
+                        Сервис NatalScope предоставляет возможность:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mt-4">
                         <li>Рассчитать натальную карту по дате, времени и месту рождения</li>
@@ -171,7 +171,7 @@
                     </p>
                     <p class="mt-4">
                         <strong class="text-white">SMART CREATOR AI LLC</strong><br>
-                        Сайт: <a href="https://karta-natal.ru" class="text-indigo-400 hover:text-white">karta-natal.ru</a>
+                        Сайт: <a href="https://natalscope.com" class="text-indigo-400 hover:text-white">natalscope.com</a>
                     </p>
                 </section>
             </div>
@@ -183,7 +183,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
                 <a href="/" class="text-xl font-serif font-bold text-white tracking-widest opacity-50">
-                    КАРТА<span class="text-gold">НАТАЛ</span>
+                    NATAL<span class="text-gold">SCOPE</span>
                 </a>
                 <nav class="flex flex-wrap justify-center gap-6 text-sm">
                     <a href="/privacy" class="text-indigo-400 hover:text-white transition-colors">Политика конфиденциальности</a>

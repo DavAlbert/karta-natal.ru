@@ -41,9 +41,13 @@ return [
         'model' => env('OPENAI_MODEL', 'gpt-4o'),
     ],
 
-    'yandex_captcha' => [
-        'site_key' => env('YANDEX_CAPTCHA_SITE_KEY'),
-        'secret_key' => env('YANDEX_CAPTCHA_SECRET_KEY'),
+    'recaptcha' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+    ],
+
+    'google_analytics' => [
+        'id' => env('GOOGLE_ANALYTICS_ID'),
     ],
 
 ];

@@ -24,7 +24,7 @@ class GenerateAiReport implements ShouldQueue
         $this->chart->update(['report_status' => 'processing']);
 
         try {
-            $report = $aiService->generateReport($this->chart->chart_data);
+            $report = $aiService->generateReport($this->chart->chart_data, $this->chart->locale ?? 'en');
 
             $this->chart->update([
                 'report_status' => 'completed',

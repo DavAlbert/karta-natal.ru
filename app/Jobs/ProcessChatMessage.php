@@ -29,7 +29,7 @@ class ProcessChatMessage implements ShouldQueue
         try {
             $this->chatMessage->update(['status' => 'processing']);
 
-            $response = $aiService->chat($this->userMessage, $this->chart->chart_data);
+            $response = $aiService->chat($this->userMessage, $this->chart->chart_data, [], $this->chart->locale ?? 'en');
 
             $this->chatMessage->update([
                 'content' => $response,
@@ -39,7 +39,7 @@ class ProcessChatMessage implements ShouldQueue
         } catch (\Exception $e) {
             Log::error('ProcessChatMessage failed: ' . $e->getMessage());
             $this->chatMessage->update([
-                'content' => 'Извините, произошла ошибка. Попробуйте ещё раз.',
+                'content' => trans('astrology.chat_error', [], $this->chart->locale ?? 'en'),
                 'status' => 'failed',
             ]);
         }
