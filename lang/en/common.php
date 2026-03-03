@@ -9,6 +9,7 @@ return [
     'nav_my_chart' => 'My Chart',
     'nav_logout' => 'Log Out',
     'nav_login' => 'Sign In',
+    'nav_get_chart' => 'Get Chart',
 
     // Footer
     'footer_privacy' => 'Privacy Policy',
@@ -34,8 +35,9 @@ return [
     'form_time_unknown' => "I don't know the exact time (12:00 will be used)",
     'form_city' => 'City of Birth',
     'form_city_placeholder' => 'Start typing a city name...',
-    'form_city_hint' => 'You can type in any language',
+    'form_city_hint' => 'English only (e.g. Moscow, not Москва)',
     'form_city_warning' => 'Please select a city from the list',
+    'form_city_english_only' => 'Type city name using English letters only',
     'form_marketing_consent' => 'I want to receive personalized recommendations, updates about new features, and exclusive offers based on my natal chart',
     'form_submit' => 'Calculate Now',
     'form_privacy_note' => '* By clicking, you consent to the processing of personal data',

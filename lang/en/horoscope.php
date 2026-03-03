@@ -1,0 +1,77 @@
+<?php
+
+return [
+    // AI prompts
+    'ai_system_prompt' => 'You are a professional astrologer. Generate a daily horoscope based on REAL planetary transits. Reference specific planets and aspects from the transit data. Keep text concise, positive yet realistic. Write engaging, shareable content.',
+    'ai_user_prompt' => 'Generate today\'s daily horoscope for :sign (date: :date). Use the transit data above. Make it unique for this sign.',
+
+    // Fallbacks when AI fails
+    'fallback_overview' => 'The stars suggest a day of balanced energy. Trust your intuition and take measured steps.',
+    'fallback_love' => 'Venus favors connection. Reach out to someone special.',
+    'fallback_career' => 'Focus on priorities. Progress comes from consistency.',
+    'fallback_health' => 'Stay hydrated and take short breaks.',
+
+    // UI
+    'title' => 'Daily Horoscope',
+    'meta_title' => ':sign Horoscope Today | :date | NatalScope',
+    'meta_title_date' => ':sign Horoscope :date | NatalScope',
+    'meta_description' => 'Free :sign daily horoscope for :date. Love, career, health — based on real planetary transits.',
+    'hub_title' => 'Daily Horoscope Today',
+    'hub_description' => 'Read your free daily horoscope for all 12 zodiac signs. Updated daily with real astronomical transits.',
+    'today' => 'Today',
+    'horoscope' => 'Horoscope',
+    'daily_overview' => 'Daily Overview',
+    'overview' => 'Overview',
+    'love' => 'Love & Relationships',
+    'career' => 'Career & Finance',
+    'health' => 'Health & Wellness',
+    'luck' => 'Luck & Fortune',
+    'luck_description' => 'Your cosmic luck factor for today. Great day for taking calculated risks!',
+    'lucky_number' => 'Lucky Number',
+    'lucky_color' => 'Lucky Color',
+    'mood' => 'Mood',
+    'score' => 'Score',
+    'element' => 'Element',
+    'ruling_planet' => 'Ruling Planet',
+    'ruled_by' => 'Ruled by',
+    'compatible_signs' => 'Compatible Signs',
+    'about_sign' => 'About :sign',
+    'explore_signs' => 'Explore Other Signs',
+    'viewing_date' => 'Viewing horoscope for :date',
+    'view_today' => "View Today's",
+    'cta_title' => 'Want Your Personal Forecast?',
+    'cta_text' => 'Get a daily forecast tailored to your exact birth chart — based on your real planets, not just your Sun sign.',
+    'cta_button' => 'Calculate Your Natal Chart',
+    'cta_button_short' => 'Get Your Natal Chart',
+    'cta_free' => 'Free • Takes 2 minutes',
+
+    // Modal
+    'modal_free_badge' => '100% Free',
+    'modal_title' => 'Your Personal Natal Chart',
+    'modal_text' => 'Get a detailed analysis of your birth chart with AI-powered interpretations. Discover your strengths, challenges, and potential.',
+    'modal_feature_chart' => 'Full chart',
+    'modal_feature_ai' => 'AI insights',
+    'modal_feature_time' => '2 minutes',
+    'modal_cta' => 'Create My Natal Chart',
+    'modal_trust' => 'No credit card required • Instant access',
+    'all_signs' => 'All Signs',
+    'pick_date' => 'Pick a date',
+
+    // Elements
+    'element_fire' => 'Fire',
+    'element_earth' => 'Earth',
+    'element_air' => 'Air',
+    'element_water' => 'Water',
+
+    // Colors
+    'color_red' => 'Red',
+    'color_blue' => 'Blue',
+    'color_green' => 'Green',
+    'color_gold' => 'Gold',
+    'color_purple' => 'Purple',
+    'color_silver' => 'Silver',
+    'color_orange' => 'Orange',
+    'color_pink' => 'Pink',
+    'color_white' => 'White',
+    'color_turquoise' => 'Turquoise',
+];

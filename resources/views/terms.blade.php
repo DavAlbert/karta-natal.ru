@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Условия использования | NatalScope</title>
-    <meta name="description" content="Условия использования сервиса NatalScope для расчёта натальной карты онлайн.">
+    <title>Terms of Service | NatalScope</title>
+    <meta name="description" content="Terms of Service for NatalScope online natal chart calculation service.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://natalscope.com/terms">
-    
+    <link rel="canonical" href="{{ rtrim(config('app.url', request()->getSchemeAndHttpHost()), '/') }}/terms">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -20,7 +20,6 @@
             overflow-x: hidden;
             max-width: 100%;
         }
-        .text-gold { color: #fbbf24; }
     </style>
 </head>
 
@@ -28,10 +27,10 @@
     <!-- Navbar -->
     <nav class="fixed w-full z-50 border-b border-indigo-900/30 bg-[#0B1120]/95 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="/" class="flex items-center gap-3">
-                    <span class="text-2xl font-serif font-bold text-white tracking-widest">
-                        NATAL<span class="text-gold">SCOPE</span>
+            <div class="flex justify-between items-center h-16">
+                <a href="{{ locale_route('welcome') }}" class="flex items-center gap-3">
+                    <span class="text-xl font-bold text-white tracking-tight">
+                        NATAL<span class="text-indigo-400">SCOPE</span>
                     </span>
                 </a>
             </div>
@@ -39,139 +38,139 @@
     </nav>
 
     <!-- Content -->
-    <main class="pt-32 pb-20">
+    <main class="pt-28 pb-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl md:text-4xl font-serif font-bold text-white mb-8">Условия использования</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-8">Terms of Service</h1>
 
             <div class="prose prose-invert prose-indigo max-w-none space-y-8 text-indigo-200">
                 <p class="text-indigo-300">
-                    Дата вступления в силу: {{ date('d.m.Y') }}
+                    Effective Date: {{ date('F j, Y') }}
                 </p>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">1. Общие положения</h2>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">1. Introduction</h2>
                     <p>
-                        Настоящие Условия использования (далее — «Условия») регулируют отношения между компанией SMART CREATOR AI LLC (далее — «Администрация») и пользователем сервиса NatalScope (далее — «Сервис»).
+                        These Terms of Service ("Terms") govern the relationship between SMART CREATOR AI LLC ("Administration") and users of the NatalScope service ("Service").
                     </p>
                     <p class="mt-4">
-                        Используя Сервис, вы подтверждаете, что ознакомились с настоящими Условиями, понимаете их и соглашаетесь их соблюдать. Если вы не согласны с Условиями, пожалуйста, прекратите использование Сервиса.
+                        By using the Service, you confirm that you have read these Terms, understand them, and agree to comply with them. If you do not agree with the Terms, please discontinue use of the Service.
                     </p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">2. Описание Сервиса</h2>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">2. Service Description</h2>
                     <p>
-                        Сервис NatalScope предоставляет возможность:
+                        NatalScope provides the following features:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mt-4">
-                        <li>Рассчитать натальную карту по дате, времени и месту рождения</li>
-                        <li>Получить расшифровку положения планет в знаках зодиака и домах</li>
-                        <li>Просмотреть аспекты между планетами</li>
-                        <li>Получить персонализированные астрологические интерпретации с использованием технологий искусственного интеллекта</li>
-                        <li>Общаться с ИИ-астрологом для получения ответов на вопросы</li>
+                        <li>Calculate natal charts based on date, time, and place of birth</li>
+                        <li>View planetary positions in zodiac signs and houses</li>
+                        <li>View aspects between planets</li>
+                        <li>Receive personalized astrological interpretations using artificial intelligence</li>
+                        <li>Chat with an AI astrologer for answers to questions</li>
                     </ul>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">3. Информационный характер услуг</h2>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">3. Informational Nature of Services</h2>
                     <p>
-                        <strong class="text-white">Важно понимать:</strong> Сервис предоставляет информацию исключительно в развлекательных и познавательных целях. Астрология не является наукой, и результаты расчётов не должны рассматриваться как:
+                        <strong class="text-white">Important:</strong> The Service provides information solely for entertainment and educational purposes. Astrology is not a science, and calculation results should not be considered as:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mt-4">
-                        <li>Медицинские рекомендации или диагнозы</li>
-                        <li>Финансовые или инвестиционные советы</li>
-                        <li>Юридические консультации</li>
-                        <li>Психологическая помощь или терапия</li>
-                        <li>Руководство к принятию важных жизненных решений</li>
-                    </ul>
-                    <p class="mt-4">
-                        Администрация не несёт ответственности за решения, принятые на основе информации, полученной через Сервис.
-                    </p>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">4. Регистрация и аккаунт</h2>
-                    <p>
-                        Для использования некоторых функций Сервиса требуется предоставление адреса электронной почты. Вы обязуетесь:
-                    </p>
-                    <ul class="list-disc pl-6 space-y-2 mt-4">
-                        <li>Предоставлять достоверную информацию</li>
-                        <li>Не передавать доступ к своему аккаунту третьим лицам</li>
-                        <li>Немедленно уведомлять Администрацию о несанкционированном доступе к вашему аккаунту</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">5. Права интеллектуальной собственности</h2>
-                    <p>
-                        Все материалы Сервиса, включая дизайн, тексты, графику, программный код, алгоритмы расчётов и интерпретации, являются интеллектуальной собственностью SMART CREATOR AI LLC или используются на законных основаниях.
-                    </p>
-                    <p class="mt-4">
-                        Запрещается копирование, распространение, модификация или использование материалов Сервиса без письменного разрешения Администрации.
-                    </p>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">6. Использование ИИ-технологий</h2>
-                    <p>
-                        Сервис использует технологии искусственного интеллекта для генерации персонализированных интерпретаций и ответов на вопросы пользователей. Вы понимаете и соглашаетесь с тем, что:
-                    </p>
-                    <ul class="list-disc pl-6 space-y-2 mt-4">
-                        <li>ИИ-генерируемый контент создаётся автоматически и может содержать неточности</li>
-                        <li>Ответы ИИ-астролога не заменяют консультацию квалифицированного специалиста</li>
-                        <li>Администрация не гарантирует точность, полноту или применимость ИИ-генерируемого контента</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">7. Запрещённые действия</h2>
-                    <p>При использовании Сервиса запрещается:</p>
-                    <ul class="list-disc pl-6 space-y-2 mt-4">
-                        <li>Нарушать работу Сервиса или пытаться получить несанкционированный доступ</li>
-                        <li>Использовать автоматизированные средства для массового сбора данных</li>
-                        <li>Распространять вредоносное программное обеспечение</li>
-                        <li>Использовать Сервис в противоправных целях</li>
-                        <li>Выдавать себя за другое лицо</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">8. Ограничение ответственности</h2>
-                    <p>
-                        Сервис предоставляется «как есть» без каких-либо гарантий, явных или подразумеваемых. Администрация не гарантирует:
-                    </p>
-                    <ul class="list-disc pl-6 space-y-2 mt-4">
-                        <li>Бесперебойную работу Сервиса</li>
-                        <li>Отсутствие ошибок или неточностей</li>
-                        <li>Соответствие результатов вашим ожиданиям</li>
+                        <li>Medical recommendations or diagnoses</li>
+                        <li>Financial or investment advice</li>
+                        <li>Legal consultations</li>
+                        <li>Psychological help or therapy</li>
+                        <li>Guidance for making important life decisions</li>
                     </ul>
                     <p class="mt-4">
-                        В максимальной степени, допускаемой применимым законодательством, Администрация не несёт ответственности за любые прямые, косвенные, случайные или последующие убытки, связанные с использованием Сервиса.
+                        The Administration is not responsible for decisions made based on information obtained through the Service.
                     </p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">9. Изменение условий</h2>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">4. Registration and Account</h2>
                     <p>
-                        Администрация оставляет за собой право изменять настоящие Условия в любое время. Актуальная версия Условий всегда доступна на данной странице. Продолжая использовать Сервис после внесения изменений, вы соглашаетесь с обновлёнными Условиями.
+                        Some features of the Service require providing an email address. You agree to:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mt-4">
+                        <li>Provide accurate information</li>
+                        <li>Not share access to your account with third parties</li>
+                        <li>Immediately notify the Administration of any unauthorized access to your account</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">5. Intellectual Property Rights</h2>
+                    <p>
+                        All Service materials, including design, text, graphics, software code, calculation algorithms, and interpretations, are the intellectual property of SMART CREATOR AI LLC or are used under license.
+                    </p>
+                    <p class="mt-4">
+                        Copying, distribution, modification, or use of Service materials without written permission from the Administration is prohibited.
                     </p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">10. Применимое право</h2>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">6. Use of AI Technologies</h2>
                     <p>
-                        Настоящие Условия регулируются и толкуются в соответствии с законодательством. Все споры, возникающие в связи с использованием Сервиса, подлежат разрешению в соответствии с применимым законодательством.
+                        The Service uses artificial intelligence technologies to generate personalized interpretations and responses to user questions. You understand and agree that:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mt-4">
+                        <li>AI-generated content is created automatically and may contain inaccuracies</li>
+                        <li>AI astrologer responses do not replace consultation with qualified professionals</li>
+                        <li>The Administration does not guarantee the accuracy, completeness, or applicability of AI-generated content</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">7. Prohibited Actions</h2>
+                    <p>When using the Service, the following actions are prohibited:</p>
+                    <ul class="list-disc pl-6 space-y-2 mt-4">
+                        <li>Disrupting Service operation or attempting unauthorized access</li>
+                        <li>Using automated tools for mass data collection</li>
+                        <li>Distributing malicious software</li>
+                        <li>Using the Service for illegal purposes</li>
+                        <li>Impersonating another person</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">8. Limitation of Liability</h2>
+                    <p>
+                        The Service is provided "as is" without any warranties, express or implied. The Administration does not guarantee:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mt-4">
+                        <li>Uninterrupted Service operation</li>
+                        <li>Absence of errors or inaccuracies</li>
+                        <li>Results meeting your expectations</li>
+                    </ul>
+                    <p class="mt-4">
+                        To the maximum extent permitted by applicable law, the Administration is not liable for any direct, indirect, incidental, or consequential damages related to the use of the Service.
                     </p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mt-8 mb-4">11. Контактная информация</h2>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">9. Changes to Terms</h2>
                     <p>
-                        По всем вопросам, связанным с использованием Сервиса, вы можете обратиться:
+                        The Administration reserves the right to modify these Terms at any time. The current version of the Terms is always available on this page. By continuing to use the Service after changes are made, you agree to the updated Terms.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">10. Governing Law</h2>
+                    <p>
+                        These Terms are governed by and construed in accordance with applicable law. All disputes arising from the use of the Service shall be resolved in accordance with applicable legislation.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mt-8 mb-4">11. Contact Information</h2>
+                    <p>
+                        For any questions regarding the use of the Service, please contact:
                     </p>
                     <p class="mt-4">
                         <strong class="text-white">SMART CREATOR AI LLC</strong><br>
-                        Сайт: <a href="https://natalscope.com" class="text-indigo-400 hover:text-white">natalscope.com</a>
+                        Website: <a href="{{ config('app.url', 'https://natalscope.com') }}" class="text-indigo-400 hover:text-white">natalscope.com</a>
                     </p>
                 </section>
             </div>
@@ -182,17 +181,17 @@
     <footer class="bg-[#050914] border-t border-indigo-900/20 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-                <a href="/" class="text-xl font-serif font-bold text-white tracking-widest opacity-50">
-                    NATAL<span class="text-gold">SCOPE</span>
+                <a href="{{ locale_route('welcome') }}" class="text-xl font-bold text-white/40 tracking-tight">
+                    NATAL<span class="text-indigo-400/40">SCOPE</span>
                 </a>
                 <nav class="flex flex-wrap justify-center gap-6 text-sm">
-                    <a href="/privacy" class="text-indigo-400 hover:text-white transition-colors">Политика конфиденциальности</a>
-                    <a href="/terms" class="text-white font-medium">Условия использования</a>
+                    <a href="{{ url('/privacy') }}" class="text-indigo-400 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="{{ url('/terms') }}" class="text-white font-medium">Terms of Service</a>
                 </nav>
             </div>
             <div class="border-t border-indigo-900/20 pt-6 text-center">
                 <p class="text-indigo-600 text-xs">
-                    &copy; {{ date('Y') }} SMART CREATOR AI LLC. Все права защищены.
+                    &copy; {{ date('Y') }} SMART CREATOR AI LLC. All rights reserved.
                 </p>
             </div>
         </div>

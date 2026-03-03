@@ -8,6 +8,7 @@ return [
     'nav_my_chart' => 'Mi carta',
     'nav_logout' => 'Cerrar sesión',
     'nav_login' => 'Iniciar sesión',
+    'nav_get_chart' => 'Carta',
 
     'footer_privacy' => 'Política de privacidad',
     'footer_terms' => 'Términos de uso',
@@ -31,8 +32,9 @@ return [
     'form_time_unknown' => 'No sé la hora exacta (se usará 12:00)',
     'form_city' => 'Ciudad de nacimiento',
     'form_city_placeholder' => 'Empieza a escribir el nombre de la ciudad...',
-    'form_city_hint' => 'Puedes escribir en cualquier idioma',
+    'form_city_hint' => 'Solo en inglés (ej: Madrid, no Мадрид)',
     'form_city_warning' => 'Por favor, selecciona una ciudad de la lista',
+    'form_city_english_only' => 'Escribe el nombre de la ciudad en letras inglesas',
     'form_marketing_consent' => 'Quiero recibir recomendaciones personalizadas, información sobre nuevas funciones y ofertas exclusivas basadas en mi carta natal',
     'form_submit' => 'Calcular ahora',
     'form_privacy_note' => '* Al hacer clic, consientes el procesamiento de datos personales',

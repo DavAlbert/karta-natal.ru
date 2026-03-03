@@ -8,6 +8,7 @@ return [
     'nav_my_chart' => 'Mon thème',
     'nav_logout' => 'Déconnexion',
     'nav_login' => 'Connexion',
+    'nav_get_chart' => 'Thème',
 
     'footer_privacy' => 'Politique de confidentialité',
     'footer_terms' => "Conditions d'utilisation",
@@ -31,8 +32,9 @@ return [
     'form_time_unknown' => "Je ne connais pas l'heure exacte (12h00 sera utilisée)",
     'form_city' => 'Ville de naissance',
     'form_city_placeholder' => 'Commencez à taper le nom de la ville...',
-    'form_city_hint' => 'Vous pouvez taper dans n\'importe quelle langue',
+    'form_city_hint' => 'En anglais uniquement (ex: Paris, pas Париж)',
     'form_city_warning' => 'Veuillez sélectionner une ville dans la liste',
+    'form_city_english_only' => 'Tapez le nom de la ville en lettres anglaises',
     'form_marketing_consent' => 'Je souhaite recevoir des recommandations personnalisées, des informations sur les nouvelles fonctionnalités et des offres exclusives basées sur mon thème natal',
     'form_submit' => 'Calculer maintenant',
     'form_privacy_note' => '* En cliquant, vous consentez au traitement de vos données personnelles',

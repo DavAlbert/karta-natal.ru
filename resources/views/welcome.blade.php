@@ -15,7 +15,7 @@
     @php
         $currentLocale = app()->getLocale();
         $locales = config('app.available_locales', ['en']);
-        $baseUrl = 'https://natalscope.com';
+        $baseUrl = rtrim(config('app.url', request()->getSchemeAndHttpHost()), '/');
     @endphp
 
     <link rel="canonical" href="{{ $baseUrl }}{{ $currentLocale === 'en' ? '/' : '/' . $currentLocale . '/' }}">
@@ -231,6 +231,10 @@
                 </a>
 
                 <div class="flex items-center gap-3 sm:gap-5">
+                    <a href="{{ locale_route('horoscope.index') }}" class="hidden sm:flex items-center gap-1.5 text-indigo-300 text-sm hover:text-white transition-colors">
+                        <i class="fas fa-moon text-xs"></i>
+                        {{ __('horoscope.title') }}
+                    </a>
                     @auth
                         @php $chart = Auth::user()->natalCharts()->first(); @endphp
                         @if($chart)
@@ -258,16 +262,20 @@
                     @endauth
 
                     <!-- Language Switcher -->
+                    @php
+                        $langFlags = ['en' => '🇬🇧', 'ru' => '🇷🇺', 'es' => '🇪🇸', 'fr' => '🇫🇷', 'pt' => '🇧🇷', 'hi' => '🇮🇳'];
+                    @endphp
                     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                         <button @click="open = !open" class="flex items-center gap-1.5 text-indigo-300 text-sm hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-white/5">
-                            <i class="fas fa-globe text-xs"></i>
+                            <span class="text-base">{{ $langFlags[$currentLocale] ?? '🌐' }}</span>
                             <span class="uppercase font-medium">{{ $currentLocale }}</span>
                             <svg class="w-3 h-3 transition-transform" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-40 bg-[#1e293b] border border-indigo-900/50 rounded-lg shadow-xl overflow-hidden z-50">
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-44 bg-[#1e293b] border border-indigo-900/50 rounded-lg shadow-xl overflow-hidden z-50">
                             @foreach($locales as $loc)
                             <a href="{{ $baseUrl }}{{ $loc === 'en' ? '/' : '/' . $loc . '/' }}"
-                               class="block px-4 py-2.5 text-sm transition-colors {{ $loc === $currentLocale ? 'text-indigo-400 bg-indigo-900/30' : 'text-indigo-200 hover:bg-indigo-900/20 hover:text-white' }}">
+                               class="flex items-center gap-2 px-4 py-2.5 text-sm transition-colors {{ $loc === $currentLocale ? 'text-indigo-400 bg-indigo-900/30' : 'text-indigo-200 hover:bg-indigo-900/20 hover:text-white' }}">
+                                <span class="text-base">{{ $langFlags[$loc] ?? '🌐' }}</span>
                                 {{ __('common.lang_' . $loc) }}
                             </a>
                             @endforeach
@@ -443,7 +451,10 @@
                                             class="hidden absolute z-50 mt-1 bg-[#1e293b] border border-indigo-500/30 rounded-lg shadow-xl max-h-60 overflow-y-auto w-full left-0">
                                         </div>
                                     </div>
-                                    <p class="text-xs text-indigo-400/50 mt-1">{{ __('common.form_city_hint') }}</p>
+                                    <p class="text-xs text-amber-400/80 mt-1.5 flex items-center gap-1.5">
+                                        <i class="fas fa-language"></i>
+                                        {{ __('common.form_city_hint') }}
+                                    </p>
                                     <p id="city-warning" class="hidden text-xs text-amber-400 mt-1">
                                         <i class="fas fa-exclamation-triangle mr-1"></i>{{ __('common.form_city_warning') }}
                                     </p>
@@ -723,8 +734,8 @@
                     NATAL<span class="text-indigo-400/40">SCOPE</span>
                 </span>
                 <nav class="flex flex-wrap justify-center gap-6 text-sm">
-                    <a href="{{ locale_route('privacy') }}" class="text-indigo-400/70 hover:text-white transition-colors">{{ __('common.footer_privacy') }}</a>
-                    <a href="{{ locale_route('terms') }}" class="text-indigo-400/70 hover:text-white transition-colors">{{ __('common.footer_terms') }}</a>
+                    <a href="{{ url('/privacy') }}" class="text-indigo-400/70 hover:text-white transition-colors">{{ __('common.footer_privacy') }}</a>
+                    <a href="{{ url('/terms') }}" class="text-indigo-400/70 hover:text-white transition-colors">{{ __('common.footer_terms') }}</a>
                 </nav>
             </div>
             <div class="border-t border-white/5 pt-6 text-center">
@@ -829,6 +840,7 @@
             done: @json(__('common.processing_success_title')),
             error: @json(__('common.processing_error_text')),
             cityNotFound: @json(__('common.form_city_warning')),
+            cityEnglishOnly: @json(__('common.form_city_english_only')),
             loginCaptchaError: @json(__('common.login_captcha_error')),
             loginSending: @json(__('common.login_sending')),
             loginSubmit: @json(__('common.login_submit')),
@@ -1041,25 +1053,44 @@
         function showSpinner() { searchSpinner?.classList.remove('hidden'); searchIcon?.classList.add('hidden'); }
         function hideSpinner() { searchSpinner?.classList.add('hidden'); searchIcon?.classList.remove('hidden'); }
 
+        // Convert ISO 2-letter country code to flag emoji
+        function getFlag(code) {
+            if (!code || code.length < 2) return '🌍';
+            // Try to convert 2-letter ISO code to regional indicator symbols (flag emoji)
+            const c = code.toUpperCase().slice(0, 2);
+            if (/^[A-Z]{2}$/.test(c)) {
+                return String.fromCodePoint(...[...c].map(l => 0x1F1E6 + l.charCodeAt(0) - 65));
+            }
+            return '🌍';
+        }
+
         function renderCities(cities) {
             if (!dropdown) return;
             dropdown.innerHTML = '';
             if (cities.length === 0) {
-                dropdown.innerHTML = '<div class="px-4 py-3 text-indigo-400 text-sm"><i class="fas fa-search mr-2"></i>' + TRANSLATIONS.cityNotFound + '</div>';
+                dropdown.innerHTML = '<div class="px-4 py-4 text-center"><div class="text-amber-400 text-sm mb-1"><i class="fas fa-exclamation-circle mr-2"></i>' + TRANSLATIONS.cityNotFound + '</div><div class="text-indigo-400/60 text-xs">' + TRANSLATIONS.cityEnglishOnly + '</div></div>';
                 dropdown.classList.remove('hidden');
                 return;
             }
             cities.forEach(city => {
                 const div = document.createElement('div');
-                div.className = 'city-option px-4 py-3 hover:bg-indigo-800/50 cursor-pointer border-b border-white/5 last:border-0 transition-colors';
+                div.className = 'city-option px-4 py-3 hover:bg-indigo-600/30 cursor-pointer border-b border-white/5 last:border-0 transition-all';
                 div.dataset.cityId = city.id;
                 div.dataset.cityName = city.name;
                 div.dataset.cityCountry = city.country;
                 div.dataset.cityLat = city.latitude;
                 div.dataset.cityLon = city.longitude;
                 div.dataset.cityTz = city.timezone_gmt;
-                const nameRu = city.name_ru && city.name_ru !== city.name ? `<span class="text-indigo-400/60 text-xs ml-2">(${city.name_ru})</span>` : '';
-                div.innerHTML = `<div class="flex justify-between items-center"><div><span class="text-white text-sm font-medium">${city.name}</span>${nameRu}</div><span class="text-indigo-500/60 text-xs">${city.country}</span></div>`;
+                const flag = getFlag(city.country);
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl flex-shrink-0">${flag}</span>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-white font-medium truncate">${city.name}</div>
+                            <div class="text-indigo-400/60 text-xs">${city.country}</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-indigo-500/40 text-xs"></i>
+                    </div>`;
                 div.addEventListener('click', function() { selectCity(this); });
                 dropdown.appendChild(div);
             });

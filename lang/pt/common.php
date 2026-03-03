@@ -9,6 +9,7 @@ return [
     'nav_my_chart' => 'Meu Mapa',
     'nav_logout' => 'Sair',
     'nav_login' => 'Entrar',
+    'nav_get_chart' => 'Mapa',
 
     // Footer
     'footer_privacy' => 'Política de Privacidade',
@@ -34,8 +35,9 @@ return [
     'form_time_unknown' => 'Não sei a hora exata (será usado 12:00)',
     'form_city' => 'Cidade de Nascimento',
     'form_city_placeholder' => 'Comece a digitar o nome da cidade...',
-    'form_city_hint' => 'Você pode digitar em qualquer idioma',
+    'form_city_hint' => 'Apenas em inglês (ex: Lisbon, não Lisboa)',
     'form_city_warning' => 'Por favor, selecione uma cidade da lista',
+    'form_city_english_only' => 'Digite o nome da cidade em letras inglesas',
     'form_marketing_consent' => 'Quero receber recomendações personalizadas, novidades sobre funcionalidades e ofertas exclusivas baseadas no meu mapa astral',
     'form_submit' => 'Calcular Agora',
     'form_privacy_note' => '* Ao clicar, você consente com o processamento de dados pessoais',
