@@ -61,6 +61,8 @@ return [
     'login_success_text' => 'Vérifiez votre e-mail et suivez le lien pour vous connecter.',
     'login_captcha_error' => 'Veuillez compléter la vérification captcha.',
     'login_network_error' => 'Erreur réseau. Veuillez réessayer.',
+    'captcha_error' => 'Erreur de vérification de sécurité. Veuillez réessayer.',
+    'captcha_failed' => 'Échec de la vérification de sécurité. Veuillez réessayer.',
 
     'processing_title' => 'Calcul de votre thème natal',
     'processing_step1' => 'Calcul des positions planétaires...',

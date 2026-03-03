@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Чат с астрологом — {{ $chart->name }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @if(config('services.google_analytics.id'))
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google_analytics.id') }}"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ config('services.google_analytics.id') }}');</script>
+    @endif
+
     <style>
         :root {
             --bg-primary: #0B0E14;

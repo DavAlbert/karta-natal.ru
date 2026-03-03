@@ -107,9 +107,6 @@ Route::group([
 Route::middleware('set-locale')->group(function () {
     Route::get('/horoscope', [App\Http\Controllers\HoroscopeController::class, 'index'])->name('horoscope.index.en');
     Route::get('/horoscope/{sign}', [App\Http\Controllers\HoroscopeController::class, 'show'])->name('horoscope.sign.en');
-    Route::get('/horoscope/{sign}/{date}', [App\Http\Controllers\HoroscopeController::class, 'show'])
-        ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
-        ->name('horoscope.date.en');
 });
 
 // Explicit locale horoscope routes (to work around optional parameter issue)
@@ -117,9 +114,6 @@ foreach (['fr', 'es', 'pt', 'hi', 'ru'] as $loc) {
     Route::middleware('set-locale')->prefix($loc)->group(function () use ($loc) {
         Route::get('/horoscope', [App\Http\Controllers\HoroscopeController::class, 'index'])->name("horoscope.index.{$loc}");
         Route::get('/horoscope/{sign}', [App\Http\Controllers\HoroscopeController::class, 'show'])->name("horoscope.sign.{$loc}");
-        Route::get('/horoscope/{sign}/{date}', [App\Http\Controllers\HoroscopeController::class, 'show'])
-            ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
-            ->name("horoscope.date.{$loc}");
     });
 }
 

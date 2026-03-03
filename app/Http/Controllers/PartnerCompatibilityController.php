@@ -8,7 +8,7 @@ use App\Models\City;
 use App\Models\NatalChart;
 use App\Models\PartnerCompatibility;
 use App\Models\User;
-use App\Rules\ValidYandexCaptcha;
+use App\Rules\ValidTurnstile;
 use App\Services\AiAstrologyService;
 use App\Services\AstrologyCalculationService;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +42,7 @@ class PartnerCompatibilityController extends Controller
         }
 
         $validated = $request->validate([
-            'captcha_token' => ['required', new ValidYandexCaptcha()],
+            'cf_turnstile_response' => ['required', new ValidTurnstile()],
             'partner_name' => 'required|string|max:255',
             'partner_email' => 'required|email|max:255',
             'partner_gender' => 'required|in:male,female',

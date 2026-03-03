@@ -41,6 +41,9 @@ return [
     'cta_button' => 'Calcula tu carta natal',
     'cta_button_short' => 'Obtén tu carta natal',
     'cta_free' => 'Gratis • En 2 minutos',
+    'cta_free_badge' => 'Gratis',
+    'cta_subtitle' => 'Obtén tu carta natal personalizada con análisis de IA en solo 2 minutos',
+    'cta_button_text' => 'Crear mi carta',
 
     // Modal
     'modal_free_badge' => '100% Gratis',

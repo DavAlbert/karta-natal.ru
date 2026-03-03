@@ -66,6 +66,8 @@ return [
     'login_success_text' => 'Check your email and follow the link to sign in.',
     'login_captcha_error' => 'Please complete the captcha verification.',
     'login_network_error' => 'Network error. Please try again.',
+    'captcha_error' => 'Security verification error. Please try again.',
+    'captcha_failed' => 'Security verification failed. Please try again.',
 
     // Processing modal
     'processing_title' => 'Calculating Your Natal Chart',

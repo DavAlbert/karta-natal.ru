@@ -66,6 +66,8 @@ return [
     'login_success_text' => 'Verifique seu e-mail e clique no link para entrar.',
     'login_captcha_error' => 'Por favor, complete a verificação do captcha.',
     'login_network_error' => 'Erro de rede. Por favor, tente novamente.',
+    'captcha_error' => 'Erro de verificação de segurança. Tente novamente.',
+    'captcha_failed' => 'Falha na verificação de segurança. Tente novamente.',
 
     // Processing modal
     'processing_title' => 'Calculando Seu Mapa Astral',

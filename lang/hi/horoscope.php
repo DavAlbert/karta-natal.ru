@@ -41,6 +41,9 @@ return [
     'cta_button' => 'अपनी जन्म कुंडली बनाएं',
     'cta_button_short' => 'कुंडली बनाएं',
     'cta_free' => 'मुफ्त • 2 मिनट में',
+    'cta_free_badge' => 'मुफ्त',
+    'cta_subtitle' => 'AI विश्लेषण के साथ अपनी व्यक्तिगत जन्म कुंडली सिर्फ 2 मिनट में प्राप्त करें',
+    'cta_button_text' => 'कुंडली बनाएं',
 
     // Modal
     'modal_free_badge' => '100% मुफ्त',

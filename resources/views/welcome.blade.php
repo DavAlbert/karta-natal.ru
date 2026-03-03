@@ -48,8 +48,8 @@
     </script>
     @endif
 
-    <!-- Google reCAPTCHA v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}" defer></script>
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     @php
         $ogLocaleMap = ['en' => 'en_US', 'fr' => 'fr_FR', 'es' => 'es_ES', 'pt' => 'pt_BR', 'hi' => 'hi_IN', 'ru' => 'ru_RU'];
@@ -488,6 +488,9 @@
                                     </p>
                                 </div>
 
+                                <!-- Cloudflare Turnstile -->
+                                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark" data-callback="onTurnstileSuccess"></div>
+
                                 <button type="submit" id="submit-btn" disabled
                                     class="w-full mt-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-base sm:text-lg">
                                     {{ __('common.form_submit') }}
@@ -818,6 +821,8 @@
                                 placeholder="{{ __('common.form_email_placeholder') }}" autofocus>
                             <p id="loginError" class="text-red-400 text-sm mt-2 text-center hidden"></p>
                         </div>
+                        <!-- Cloudflare Turnstile -->
+                        <div class="cf-turnstile mb-4 flex justify-center" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark"></div>
                         <button type="submit" id="loginSubmitBtn"
                             class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             {{ __('common.login_submit') }}
@@ -830,7 +835,6 @@
 
     <!-- Scripts -->
     <script>
-        const RECAPTCHA_SITE_KEY = '{{ config("services.recaptcha.site_key") }}';
         const CALC_URL = "{{ locale_route('calculate') }}";
         const TRANSLATIONS = {
             step1: @json(__('common.processing_step1')),
@@ -941,16 +945,14 @@
         genderInputs.forEach(input => input.addEventListener('change', validateForm));
         validateForm();
 
-        // Form submission with reCAPTCHA v3
+        // Form submission with Turnstile
         if (calcForm) {
             calcForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
                 document.getElementById('loadingState')?.classList.remove('hidden');
 
                 try {
-                    const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'calculate' });
                     const formData = new FormData(this);
-                    formData.append('recaptcha_token', token);
 
                     const response = await fetch(CALC_URL, {
                         method: 'POST',
@@ -1181,14 +1183,6 @@
                 const errEl = document.getElementById('loginError');
                 errEl?.classList.add('hidden');
 
-                try {
-                    const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'login' });
-                    formData.append('recaptcha_token', token);
-                } catch(err) {
-                    if (errEl) { errEl.textContent = TRANSLATIONS.loginCaptchaError; errEl.classList.remove('hidden'); }
-                    return;
-                }
-
                 if (btn) { btn.disabled = true; btn.textContent = TRANSLATIONS.loginSending; }
 
                 try {
@@ -1199,7 +1193,7 @@
                     });
                     const data = await resp.json();
                     if (data.errors) {
-                        const first = data.errors.email?.[0] || data.errors.recaptcha_token?.[0] || TRANSLATIONS.loginNetworkError;
+                        const first = data.errors.email?.[0] || data.errors.cf_turnstile_response?.[0] || TRANSLATIONS.loginNetworkError;
                         if (errEl) { errEl.textContent = first; errEl.classList.remove('hidden'); }
                         if (btn) { btn.disabled = false; btn.textContent = TRANSLATIONS.loginSubmit; }
                     } else {

@@ -3,8 +3,9 @@
     $locales = config('app.available_locales', ['en']);
     $baseUrl = config('app.url', 'https://natalscope.com');
     $ogLocaleMap = ['en' => 'en_US', 'fr' => 'fr_FR', 'es' => 'es_ES', 'pt' => 'pt_BR', 'hi' => 'hi_IN', 'ru' => 'ru_RU'];
-    $formattedDate = \Carbon\Carbon::createFromFormat('Y-m-d', $displayDate)->locale($currentLocale)->translatedFormat('F j, Y');
-    $metaTitle = $isToday ? __('horoscope.meta_title', ['sign' => $signName, 'date' => $formattedDate]) : __('horoscope.meta_title_date', ['sign' => $signName, 'date' => $formattedDate]);
+    $displayDate = now()->format('Y-m-d');
+    $formattedDate = now()->locale($currentLocale)->translatedFormat('F j, Y');
+    $metaTitle = __('horoscope.meta_title', ['sign' => $signName, 'date' => $formattedDate]);
 
     $content = $horoscope->content;
     $scores = $content['scores'] ?? ['overall' => 75, 'love' => 70, 'career' => 80, 'health' => 75, 'luck' => 65];
@@ -33,15 +34,14 @@
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ __('horoscope.meta_description', ['sign' => $signName, 'date' => $formattedDate]) }}">
     <meta name="robots" content="index, follow">
-    @php $canonicalDate = $isToday ? null : $displayDate; @endphp
-    <link rel="canonical" href="{{ horoscope_url_for_locale($sign, $canonicalDate, $currentLocale) }}">
+    <link rel="canonical" href="{{ horoscope_url_for_locale($sign, $currentLocale) }}">
     @foreach($locales as $loc)
-    <link rel="alternate" hreflang="{{ $loc }}" href="{{ horoscope_url_for_locale($sign, $canonicalDate, $loc) }}">
+    <link rel="alternate" hreflang="{{ $loc }}" href="{{ horoscope_url_for_locale($sign, $loc) }}">
     @endforeach
-    <link rel="alternate" hreflang="x-default" href="{{ horoscope_url_for_locale($sign, $isToday ? null : $displayDate, 'en') }}">
+    <link rel="alternate" hreflang="x-default" href="{{ horoscope_url_for_locale($sign, 'en') }}">
 
     <meta property="og:type" content="article">
-    <meta property="og:url" content="{{ horoscope_url_for_locale($sign, $displayDate, $currentLocale) }}">
+    <meta property="og:url" content="{{ horoscope_url_for_locale($sign, $currentLocale) }}">
     <meta property="og:title" content="{{ $metaTitle }}">
     <meta property="og:description" content="{{ Str::limit($content['overview'] ?? '', 150) }}">
     <meta property="og:image" content="{{ asset('images/zodiac/' . $sign . '.webp') }}">
@@ -178,7 +178,7 @@
                     </div>
                     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3">
                         {{ $signName }}
-                        <span class="text-indigo-400">{{ $isToday ? __('horoscope.today') : __('horoscope.horoscope') }}</span>
+                        <span class="text-indigo-400">{{ __('horoscope.today') }}</span>
                     </h1>
                     <p class="text-indigo-200/80 text-lg max-w-xl">
                         {{ __('horoscope.ruled_by') }} <span class="text-indigo-300 font-medium">{{ __('astrology.planet_' . $rulingPlanet) }}</span>
@@ -241,25 +241,6 @@
     </header>
 
     <main class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
-        <!-- Date Picker (for non-today) -->
-        @if(!$isToday)
-        <div class="mb-8 p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-calendar-alt text-indigo-400"></i>
-                <span class="text-indigo-200">{{ __('horoscope.viewing_date', ['date' => $formattedDate]) }}</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <input type="date" value="{{ $displayDate }}" max="{{ $today }}"
-                       data-base-url="{{ rtrim(horoscope_url_for_locale($sign, 'X', $currentLocale), 'X') }}"
-                       onchange="if(this.value) window.location.href=this.dataset.baseUrl+this.value"
-                       class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-indigo-500 focus:outline-none">
-                <a href="{{ locale_route('horoscope.sign', ['sign' => $sign]) }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors">
-                    {{ __('horoscope.view_today') }}
-                </a>
-            </div>
-        </div>
-        @endif
-
         <div class="grid lg:grid-cols-3 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
@@ -408,20 +389,48 @@
                     </dl>
                 </div>
 
-                <!-- Simple CTA Card -->
-                <a href="{{ locale_route('welcome') }}#heroSection" class="block rounded-2xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 p-5 hover:border-indigo-500/50 transition-all group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 flex-shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
-                            <i class="fas fa-sparkles text-white"></i>
-                        </div>
-                        <div class="flex-1">
-                            <div class="text-white font-semibold group-hover:text-indigo-300 transition-colors">{{ __('horoscope.cta_title') }}</div>
-                            <div class="text-indigo-400/70 text-sm">{{ __('horoscope.cta_free') }}</div>
-                        </div>
-                        <i class="fas fa-chevron-right text-indigo-400/40 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all"></i>
-                    </div>
-                </a>
             </aside>
+        </div>
+
+        <!-- Full-width CTA Card -->
+        <div class="mt-10 relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900/60 via-purple-900/50 to-indigo-900/60 border border-indigo-500/40 shadow-xl shadow-indigo-500/10">
+            <!-- Background decoration -->
+            <div class="absolute inset-0 opacity-30 pointer-events-none">
+                <div class="absolute -top-10 left-1/4 w-32 h-32 bg-purple-500 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-10 right-1/4 w-40 h-40 bg-indigo-500 rounded-full blur-3xl"></div>
+            </div>
+
+            <a href="{{ locale_route('welcome') }}#heroSection" class="relative block p-5 sm:p-6 lg:p-8 group">
+                <div class="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
+                    <!-- Icon -->
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 flex-shrink-0 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/40 group-hover:scale-105 transition-transform">
+                        <i class="fas fa-sun text-white text-xl sm:text-2xl lg:text-3xl"></i>
+                    </div>
+
+                    <!-- Text -->
+                    <div class="flex-1 text-center lg:text-left">
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-1 sm:mb-2">
+                            <h3 class="text-lg sm:text-xl lg:text-2xl text-white font-bold group-hover:text-indigo-200 transition-colors">
+                                {{ __('horoscope.cta_title') }}
+                            </h3>
+                            <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-semibold uppercase tracking-wide">
+                                {{ __('horoscope.cta_free_badge') }}
+                            </span>
+                        </div>
+                        <p class="text-indigo-200/70 text-sm sm:text-base max-w-xl">
+                            {{ __('horoscope.cta_subtitle') }}
+                        </p>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="flex-shrink-0 w-full sm:w-auto mt-2 lg:mt-0">
+                        <span class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/50 group-hover:scale-[1.02] transition-all">
+                            {{ __('horoscope.cta_button_text') }}
+                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
         </div>
 
         <!-- Other Signs -->
@@ -444,129 +453,6 @@
             </div>
         </section>
     </main>
-
-    <!-- Scroll-triggered CTA Modal (shows once at 50% scroll) -->
-    <div id="ctaModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div class="relative w-full max-w-lg bg-gradient-to-br from-[#1a1f3c] to-[#0f1629] rounded-3xl border border-indigo-500/30 shadow-2xl shadow-indigo-500/20 overflow-hidden animate-modal-in">
-            <!-- Close button -->
-            <button onclick="closeCtaModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-all z-10">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <!-- Decorative elements -->
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-            <div class="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl"></div>
-
-            <div class="relative p-6 sm:p-8 text-center">
-                <!-- Icon -->
-                <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30 animate-float">
-                    <i class="fas fa-stars text-3xl text-white"></i>
-                </div>
-
-                <!-- Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-4">
-                    <i class="fas fa-gift"></i>
-                    {{ __('horoscope.modal_free_badge') ?? '100% Kostenlos' }}
-                </div>
-
-                <!-- Title -->
-                <h3 class="text-2xl sm:text-3xl font-bold text-white mb-3">
-                    {{ __('horoscope.modal_title') ?? 'Deine persönliche Natalkarte' }}
-                </h3>
-
-                <!-- Description -->
-                <p class="text-indigo-200/80 mb-6 leading-relaxed">
-                    {{ __('horoscope.modal_text') ?? 'Erhalte eine detaillierte Analyse deiner Geburtskonstellation mit KI-gestützten Erklärungen. Verstehe deine Stärken, Herausforderungen und dein Potenzial.' }}
-                </p>
-
-                <!-- Features -->
-                <div class="flex flex-wrap justify-center gap-3 mb-6 text-sm">
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-indigo-300">
-                        <i class="fas fa-chart-pie text-indigo-400"></i>
-                        <span>{{ __('horoscope.modal_feature_chart') ?? 'Vollständige Karte' }}</span>
-                    </div>
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-indigo-300">
-                        <i class="fas fa-robot text-purple-400"></i>
-                        <span>{{ __('horoscope.modal_feature_ai') ?? 'KI-Erklärungen' }}</span>
-                    </div>
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-indigo-300">
-                        <i class="fas fa-clock text-pink-400"></i>
-                        <span>{{ __('horoscope.modal_feature_time') ?? '2 Minuten' }}</span>
-                    </div>
-                </div>
-
-                <!-- CTA Button -->
-                <a href="{{ locale_route('welcome') }}#heroSection"
-                   class="group inline-flex items-center justify-center gap-3 w-full px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-lg font-bold rounded-xl transition-all shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] active:scale-[0.98]">
-                    <i class="fas fa-sparkles"></i>
-                    {{ __('horoscope.modal_cta') ?? 'Jetzt Natalkarte erstellen' }}
-                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                </a>
-
-                <!-- Trust text -->
-                <p class="text-indigo-400/60 text-xs mt-4">
-                    <i class="fas fa-shield-check mr-1"></i>
-                    {{ __('horoscope.modal_trust') ?? 'Keine Kreditkarte erforderlich • Sofort verfügbar' }}
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        @keyframes modal-in {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .animate-modal-in { animation: modal-in 0.3s ease-out forwards; }
-    </style>
-
-    <script>
-        (function() {
-            const STORAGE_KEY = 'horoscope_cta_modal_shown';
-            const modal = document.getElementById('ctaModal');
-            let hasShown = false;
-
-            // Check if already shown
-            if (localStorage.getItem(STORAGE_KEY)) return;
-
-            function showModal() {
-                if (hasShown) return;
-                hasShown = true;
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                localStorage.setItem(STORAGE_KEY, '1');
-                document.body.style.overflow = 'hidden';
-            }
-
-            window.closeCtaModal = function() {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            };
-
-            // Close on backdrop click
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) closeCtaModal();
-            });
-
-            // Close on Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') closeCtaModal();
-            });
-
-            // Show at 50% scroll
-            function checkScroll() {
-                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-                if (scrollPercent >= 50) {
-                    showModal();
-                    window.removeEventListener('scroll', checkScroll);
-                }
-            }
-
-            window.addEventListener('scroll', checkScroll, { passive: true });
-        })();
-    </script>
 
     <!-- Footer -->
     <footer class="border-t border-white/5 mt-12">

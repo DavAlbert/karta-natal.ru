@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Rules\ValidRecaptcha;
+use App\Rules\ValidTurnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -28,7 +28,7 @@ class MagicLinkController extends Controller
     public function sendLoginLink(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'recaptcha_token' => ['required', new ValidRecaptcha()],
+            'cf_turnstile_response' => ['required', new ValidTurnstile()],
             'email' => 'required|email|exists:users,email',
         ]);
 

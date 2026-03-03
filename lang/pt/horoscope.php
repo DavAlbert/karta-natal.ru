@@ -41,6 +41,9 @@ return [
     'cta_button' => 'Calcule seu mapa natal',
     'cta_button_short' => 'Obtenha seu mapa natal',
     'cta_free' => 'Grátis • Em 2 minutos',
+    'cta_free_badge' => 'Grátis',
+    'cta_subtitle' => 'Obtenha seu mapa natal personalizado com análise de IA em apenas 2 minutos',
+    'cta_button_text' => 'Criar meu mapa',
 
     // Modal
     'modal_free_badge' => '100% Grátis',

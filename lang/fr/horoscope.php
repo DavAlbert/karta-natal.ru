@@ -41,6 +41,9 @@ return [
     'cta_button' => 'Calculez votre thème natal',
     'cta_button_short' => 'Obtenez votre thème',
     'cta_free' => 'Gratuit • En 2 minutes',
+    'cta_free_badge' => 'Gratuit',
+    'cta_subtitle' => 'Obtenez votre thème natal personnalisé avec analyse IA en seulement 2 minutes',
+    'cta_button_text' => 'Créer mon thème',
 
     // Modal
     'modal_free_badge' => '100% Gratuit',

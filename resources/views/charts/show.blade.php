@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/js/all.min.js"></script>
-    <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
@@ -20,6 +20,12 @@
         ym(106818761, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/106818761" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <!-- Google Analytics 4 -->
+    @if(config('services.google_analytics.id'))
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google_analytics.id') }}"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ config('services.google_analytics.id') }}');</script>
+    @endif
 
     <style>
         :root {
@@ -1912,9 +1918,9 @@
                                 </label>
                             </div>
 
-                            <!-- Captcha -->
+                            <!-- Turnstile Captcha -->
                             <div class="form-row" style="display: flex; justify-content: center;">
-                                <div id="compat-captcha" class="smart-captcha" data-sitekey="{{ config('services.yandex_captcha.site_key') }}"></div>
+                                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark" data-callback="onCompatTurnstileSuccess"></div>
                             </div>
 
                             <p x-show="error" x-text="error" style="color: var(--accent-red); font-size: 0.85rem; margin-bottom: 1rem;"></p>
@@ -2460,11 +2466,11 @@
                         return;
                     }
 
-                    // Get captcha token
-                    const captchaInput = document.querySelector('#compat-captcha input[name="smart-token"]');
-                    const captchaToken = captchaInput ? captchaInput.value : '';
-                    if (!captchaToken) {
-                        this.error = 'Пожалуйста, пройдите проверку капчи';
+                    // Get Turnstile token
+                    const turnstileInput = document.querySelector('input[name="cf-turnstile-response"]');
+                    const turnstileToken = turnstileInput ? turnstileInput.value : '';
+                    if (!turnstileToken) {
+                        this.error = 'Пожалуйста, пройдите проверку безопасности';
                         return;
                     }
 
@@ -2478,7 +2484,7 @@
                                 'Accept': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            body: JSON.stringify({...this.form, captcha_token: captchaToken})
+                            body: JSON.stringify({...this.form, 'cf_turnstile_response': turnstileToken})
                         });
 
                         const data = await response.json();
@@ -2496,11 +2502,11 @@
                             this.showForm = false;
                         } else {
                             this.error = data.error || 'Произошла ошибка. Попробуйте ещё раз.';
-                            if (window.smartCaptcha) window.smartCaptcha.reset();
+                            if (window.turnstile) window.turnstile.reset();
                         }
                     } catch (e) {
                         this.error = 'Ошибка соединения. Попробуйте ещё раз.';
-                        if (window.smartCaptcha) window.smartCaptcha.reset();
+                        if (window.turnstile) window.turnstile.reset();
                     }
 
                     this.submitting = false;
@@ -2525,7 +2531,7 @@
                     this.cityQuery = '';
                     this.selectedCity = null;
                     this.error = '';
-                    if (window.smartCaptcha) window.smartCaptcha.reset();
+                    if (window.turnstile) window.turnstile.reset();
                 },
 
                 startNew() {

@@ -44,6 +44,9 @@ return [
     'cta_button' => 'Calculate Your Natal Chart',
     'cta_button_short' => 'Get Your Natal Chart',
     'cta_free' => 'Free • Takes 2 minutes',
+    'cta_free_badge' => 'Free',
+    'cta_subtitle' => 'Get your personalized birth chart with AI-powered insights in just 2 minutes',
+    'cta_button_text' => 'Create My Chart',
 
     // Modal
     'modal_free_badge' => '100% Free',

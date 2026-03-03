@@ -61,6 +61,8 @@ return [
     'login_success_text' => 'Revisa tu correo y sigue el enlace para iniciar sesión.',
     'login_captcha_error' => 'Por favor, completa la verificación captcha.',
     'login_network_error' => 'Error de red. Por favor, inténtalo de nuevo.',
+    'captcha_error' => 'Error de verificación de seguridad. Inténtalo de nuevo.',
+    'captcha_failed' => 'Verificación de seguridad fallida. Inténtalo de nuevo.',
 
     'processing_title' => 'Calculando tu carta natal',
     'processing_step1' => 'Calculando posiciones planetarias...',

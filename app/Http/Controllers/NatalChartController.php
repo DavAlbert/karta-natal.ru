@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NatalChart;
-use App\Rules\ValidRecaptcha;
+use App\Rules\ValidTurnstile;
 use App\Services\AstrologyCalculationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +25,7 @@ class NatalChartController extends Controller
     public function processAsync(Request $Request)
     {
         $validated = $Request->validate([
-            'recaptcha_token' => ['required', new ValidRecaptcha()],
+            'cf_turnstile_response' => ['required', new ValidTurnstile()],
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'gender' => 'required|in:male,female',

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailyHoroscope;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
 
 class SitemapController extends Controller
@@ -13,7 +12,6 @@ class SitemapController extends Controller
         $baseUrl = rtrim(config('app.url', 'https://natalscope.com'), '/');
         $locales = config('app.available_locales', ['en']);
         $signs = DailyHoroscope::SIGNS;
-        $today = now()->format('Y-m-d');
 
         $urls = [];
 
@@ -32,7 +30,7 @@ class SitemapController extends Controller
             ];
         }
 
-        // Today's sign pages (no date = today)
+        // Sign pages (one per sign per locale, no date in URL)
         foreach ($locales as $loc) {
             $prefix = $loc === 'en' ? '' : '/' . $loc;
             foreach ($signs as $sign) {
@@ -41,23 +39,6 @@ class SitemapController extends Controller
                     'changefreq' => 'daily',
                     'priority' => '0.9',
                 ];
-            }
-        }
-
-        // Sign + date for every day: 180 days past + 14 days future (SEO: "cancer horoscope march 3" etc.)
-        $daysBack = 180;
-        $daysAhead = 14;
-        for ($i = -$daysAhead; $i <= $daysBack; $i++) {
-            $date = Carbon::today()->addDays($i)->format('Y-m-d');
-            foreach ($locales as $loc) {
-                $prefix = $loc === 'en' ? '' : '/' . $loc;
-                foreach ($signs as $sign) {
-                    $urls[] = [
-                        'loc' => $baseUrl . $prefix . '/horoscope/' . $sign . '/' . $date,
-                        'changefreq' => $i >= 0 && $i <= 1 ? 'daily' : 'weekly',
-                        'priority' => $i === 0 ? '0.9' : '0.8',
-                    ];
-                }
             }
         }
 
