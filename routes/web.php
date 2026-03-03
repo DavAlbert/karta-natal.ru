@@ -16,9 +16,6 @@ Route::group([
         return view('welcome');
     })->name('welcome');
 
-
-    Route::post('/calculate', [App\Http\Controllers\NatalChartController::class, 'processAsync'])->name('calculate');
-
     // Partner compatibility verification (public)
     Route::get('/compatibility/verify/{token}', [App\Http\Controllers\PartnerCompatibilityController::class, 'verify'])
         ->name('compatibility.verify');
@@ -132,6 +129,11 @@ Route::get('/robots.txt', function () {
     $sitemapUrl = rtrim(config('app.url', 'https://natalscope.com'), '/') . '/sitemap.xml';
     return response("User-agent: *\nAllow: /\n\nSitemap: {$sitemapUrl}\n", 200, ['Content-Type' => 'text/plain']);
 })->name('robots');
+
+// Calculate route (no locale prefix, AJAX endpoint)
+Route::post('/calculate', [App\Http\Controllers\NatalChartController::class, 'processAsync'])
+    ->middleware('set-locale')
+    ->name('calculate');
 
 // API-style routes (no locale prefix, always available)
 Route::get('/cities', function () {

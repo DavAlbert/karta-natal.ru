@@ -345,7 +345,7 @@
                             @endif
                         @endauth
                         @if(!Auth::check() || (Auth::check() && !Auth::user()->natalCharts()->first()))
-                            <form id="calcForm" action="{{ locale_route('calculate') }}" method="POST" class="space-y-4">
+                            <form id="calcForm" action="{{ route('calculate') }}" method="POST" class="space-y-4">
                                 @csrf
                                 <input type="hidden" name="locale" value="{{ $currentLocale }}">
 
@@ -835,7 +835,7 @@
 
     <!-- Scripts -->
     <script>
-        const CALC_URL = "{{ locale_route('calculate') }}";
+        const CALC_URL = "{{ route('calculate') }}";
         const TRANSLATIONS = {
             step1: @json(__('common.processing_step1')),
             step2: @json(__('common.processing_step2')),
