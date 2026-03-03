@@ -488,8 +488,8 @@
                                     </p>
                                 </div>
 
-                                <!-- Cloudflare Turnstile -->
-                                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark" data-callback="onTurnstileSuccess"></div>
+                                <!-- Cloudflare Turnstile (invisible) -->
+                                <div id="turnstile-widget" class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-size="invisible" data-callback="onCalcTurnstileSuccess"></div>
 
                                 <button type="submit" id="submit-btn" disabled
                                     class="w-full mt-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-base sm:text-lg">
@@ -945,16 +945,41 @@
         genderInputs.forEach(input => input.addEventListener('change', validateForm));
         validateForm();
 
+        // Turnstile callback - submit form after token received
+        let calcTurnstileToken = null;
+        window.onCalcTurnstileSuccess = function(token) {
+            calcTurnstileToken = token;
+            if (window.pendingCalcSubmit) {
+                window.pendingCalcSubmit();
+            }
+        };
+
         // Form submission with Turnstile
         if (calcForm) {
             calcForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                document.getElementById('loadingState')?.classList.remove('hidden');
+                const form = this;
 
-                try {
-                    const formData = new FormData(this);
+                // If no token yet, execute turnstile and wait
+                if (!calcTurnstileToken) {
+                    document.getElementById('loadingState')?.classList.remove('hidden');
+                    window.pendingCalcSubmit = () => submitCalcForm(form);
+                    turnstile.execute('#turnstile-widget');
+                    return;
+                }
 
-                    const response = await fetch(CALC_URL, {
+                submitCalcForm(form);
+            });
+        }
+
+        async function submitCalcForm(form) {
+            document.getElementById('loadingState')?.classList.remove('hidden');
+
+            try {
+                const formData = new FormData(form);
+                formData.set('cf-turnstile-response', calcTurnstileToken);
+
+                const response = await fetch(CALC_URL, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
