@@ -8,6 +8,7 @@ class PlanetMeaning extends Model
 {
     protected $fillable = [
         'planet',
+        'locale',
         'description',
         'strengths',
         'weaknesses',
@@ -18,8 +19,10 @@ class PlanetMeaning extends Model
 
     public $timestamps = false;
 
-    public static function getForPlanet(string $planet): ?self
+    public static function getForPlanet(string $planet, ?string $locale = null): ?self
     {
-        return static::where('planet', $planet)->first();
+        $locale = $locale ?? app()->getLocale();
+        return static::where('planet', $planet)->where('locale', $locale)->first()
+            ?? static::where('planet', $planet)->where('locale', 'en')->first();
     }
 }

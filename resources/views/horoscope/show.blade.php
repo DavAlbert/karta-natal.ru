@@ -108,6 +108,12 @@
         .score-circle {
             background: conic-gradient(from 0deg, #6366f1 calc(var(--score) * 3.6deg), rgba(255,255,255,0.1) 0deg);
         }
+        .horoscope-content p { margin: 0 0 0.5rem; }
+        .horoscope-content p:last-child { margin-bottom: 0; }
+        .horoscope-content strong { color: #e2e8f0; font-weight: 600; }
+        .horoscope-content em { color: #a5b4fc; }
+        .horoscope-content ul, .horoscope-content ol { margin: 0.25rem 0 0.5rem 1.25rem; }
+        .horoscope-content li { margin-bottom: 0.15rem; }
     </style>
 </head>
 <body class="font-sans antialiased constellation-bg min-h-screen">
@@ -252,7 +258,7 @@
                         </div>
                         <h2 class="text-xl font-bold text-white">{{ __('horoscope.daily_overview') }}</h2>
                     </div>
-                    <p class="text-indigo-100/90 leading-relaxed text-lg">{{ $content['overview'] ?? '' }}</p>
+                    <div class="text-indigo-100/90 leading-relaxed text-lg horoscope-content">{!! Str::markdown($content['overview'] ?? '') !!}</div>
                 </article>
 
                 <!-- Rating Cards Grid -->
@@ -271,7 +277,7 @@
                         <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-3">
                             <div class="h-full progress-bar-love rounded-full transition-all duration-1000" style="width: {{ $scores['love'] }}%"></div>
                         </div>
-                        <p class="text-indigo-200/80 text-sm leading-relaxed">{{ $content['love'] ?? '' }}</p>
+                        <div class="text-indigo-200/80 text-sm leading-relaxed horoscope-content">{!! Str::markdown($content['love'] ?? '') !!}</div>
                     </div>
 
                     <!-- Career -->
@@ -288,7 +294,7 @@
                         <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-3">
                             <div class="h-full progress-bar-career rounded-full transition-all duration-1000" style="width: {{ $scores['career'] }}%"></div>
                         </div>
-                        <p class="text-indigo-200/80 text-sm leading-relaxed">{{ $content['career'] ?? '' }}</p>
+                        <div class="text-indigo-200/80 text-sm leading-relaxed horoscope-content">{!! Str::markdown($content['career'] ?? '') !!}</div>
                     </div>
 
                     <!-- Health -->
@@ -305,7 +311,7 @@
                         <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-3">
                             <div class="h-full progress-bar-health rounded-full transition-all duration-1000" style="width: {{ $scores['health'] }}%"></div>
                         </div>
-                        <p class="text-indigo-200/80 text-sm leading-relaxed">{{ $content['health'] ?? '' }}</p>
+                        <div class="text-indigo-200/80 text-sm leading-relaxed horoscope-content">{!! Str::markdown($content['health'] ?? '') !!}</div>
                     </div>
 
                     <!-- Luck -->

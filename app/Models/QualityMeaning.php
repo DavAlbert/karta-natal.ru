@@ -8,6 +8,7 @@ class QualityMeaning extends Model
 {
     protected $fillable = [
         'quality',
+        'locale',
         'characteristics',
         'strengths',
         'challenges',
@@ -15,8 +16,10 @@ class QualityMeaning extends Model
 
     public $timestamps = false;
 
-    public static function getForQuality(string $quality): ?self
+    public static function getForQuality(string $quality, ?string $locale = null): ?self
     {
-        return static::where('quality', $quality)->first();
+        $locale = $locale ?? app()->getLocale();
+        return static::where('quality', $quality)->where('locale', $locale)->first()
+            ?? static::where('quality', $quality)->where('locale', 'en')->first();
     }
 }

@@ -20,16 +20,14 @@ if (!function_exists('locale_route')) {
     {
         $locale = app()->getLocale();
 
-        // Check if locale-specific route exists (e.g., horoscope.index.ru)
-        $localeName = $name . '.' . $locale;
-        if (\Illuminate\Support\Facades\Route::has($localeName)) {
-            return route($localeName, $parameters, $absolute);
+        // For non-English locales, use the locale-prefixed route name (e.g., "ru.charts.show")
+        if ($locale !== 'en') {
+            $localeName = $locale . '.' . $name;
+            if (\Illuminate\Support\Facades\Route::has($localeName)) {
+                return route($localeName, $parameters, $absolute);
+            }
         }
 
-        // Fall back to original route with locale parameter
-        if ($locale !== 'en') {
-            $parameters['locale'] = $locale;
-        }
         return route($name, $parameters, $absolute);
     }
 }

@@ -134,6 +134,16 @@ class NatalChart extends Model
         return $this->getAiSection('karma');
     }
 
+    public function getAiStrengthsWeaknesses(): mixed
+    {
+        return $this->getAiSection('strengths_weaknesses');
+    }
+
+    public function getAiHealthAnalysis(): mixed
+    {
+        return $this->getAiSection('health');
+    }
+
     public function getAiForecast(): mixed
     {
         return $this->getAiSection('forecast');

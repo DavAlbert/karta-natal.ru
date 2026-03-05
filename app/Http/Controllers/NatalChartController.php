@@ -19,15 +19,41 @@ class NatalChartController extends Controller
     public function index()
     {
         $charts = Auth::user()->natalCharts()->latest()->get();
-        return view('dashboard', compact('charts'));
+
+        $horoscope = null;
+        $sunSignKey = null;
+        if ($charts->isNotEmpty()) {
+            $chart = $charts->first();
+            $russianSunSign = $chart->chart_data['planets']['sun']['sign'] ?? null;
+            $signToKey = [
+                'Овен' => 'aries', 'Телец' => 'taurus', 'Близнецы' => 'gemini',
+                'Рак' => 'cancer', 'Лев' => 'leo', 'Дева' => 'virgo',
+                'Весы' => 'libra', 'Скорпион' => 'scorpio', 'Стрелец' => 'sagittarius',
+                'Козерог' => 'capricorn', 'Водолей' => 'aquarius', 'Рыбы' => 'pisces',
+            ];
+            $sunSignKey = $signToKey[$russianSunSign] ?? null;
+            if ($sunSignKey) {
+                $locale = app()->getLocale();
+                $horoscope = \App\Models\DailyHoroscope::where('sign', $sunSignKey)
+                    ->where('locale', $locale)
+                    ->first();
+            }
+        }
+
+        return view('dashboard', compact('charts', 'horoscope', 'sunSignKey'));
     }
 
     public function processAsync(Request $Request)
     {
+        $emailRules = ['required', 'email', 'max:255'];
+        if (!Auth::check()) {
+            $emailRules[] = 'unique:users,email';
+        }
+
         $validated = $Request->validate([
             'cf_turnstile_response' => ['required', new ValidTurnstile()],
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => $emailRules,
             'gender' => 'required|in:male,female',
             'purpose' => 'required|in:love,career,health,finance,personal,general',
             'birth_date' => 'required|date',
@@ -35,6 +61,8 @@ class NatalChartController extends Controller
             'city_id' => 'required|exists:cities,id',
             'marketing_consent' => 'nullable|boolean',
             'locale' => 'nullable|string|in:' . implode(',', config('app.available_locales', ['en'])),
+        ], [
+            'email.unique' => __('common.email_already_used'),
         ]);
 
         $locale = $validated['locale'] ?? app()->getLocale();
@@ -89,24 +117,14 @@ class NatalChartController extends Controller
             ]);
         }
 
-        // User is NOT logged in - find or create user
-        $user = User::firstOrCreate(
-            ['email' => $validated['email']],
-            [
-                'name' => $validated['name'],
-                'password' => Hash::make(Str::random(16)),
-                'marketing_consent' => $validated['marketing_consent'] ?? false,
-            ]
-        );
-
-        // Update marketing consent if user already exists
-        if (!$user->wasRecentlyCreated && isset($validated['marketing_consent'])) {
-            $user->marketing_consent = $validated['marketing_consent'];
-            $user->save();
-        }
-
-        // Delete existing charts - user can only have ONE chart
-        $user->natalCharts()->delete();
+        // User is NOT logged in - create new user (email uniqueness enforced by validation)
+        $user = User::create([
+            'email' => $validated['email'],
+            'name' => $validated['name'],
+            'password' => Hash::make(Str::random(16)),
+            'marketing_consent' => $validated['marketing_consent'] ?? false,
+            'locale' => $locale,
+        ]);
 
         // Create Chart with access token
         $chart = NatalChart::create([
@@ -151,7 +169,7 @@ class NatalChartController extends Controller
 
         // Log user in and redirect to chart
         Auth::login($user);
-        return redirect()->route('charts.show', $chart);
+        return redirect('/charts/' . $chart->id);
     }
 
     /**
@@ -209,7 +227,7 @@ class NatalChartController extends Controller
         // Log in the user
         Auth::login($user);
 
-        return redirect()->route('charts.show', $natalChart)->with('status', 'Password set successfully!');
+        return redirect(locale_route('charts.show', ['natalChart' => $natalChart]))->with('status', 'Password set successfully!');
     }
 
     public function show(NatalChart $natalChart)
@@ -222,10 +240,31 @@ class NatalChartController extends Controller
         $templates = $this->getChatTemplates();
         $chatMessages = $natalChart->chatMessages()->get();
 
+        // Fetch daily horoscope for this chart's sun sign
+        $horoscope = null;
+        $sunSignKey = null;
+        $russianSunSign = $natalChart->chart_data['planets']['sun']['sign'] ?? null;
+        if ($russianSunSign) {
+            $signToKey = [
+                'Овен' => 'aries', 'Телец' => 'taurus', 'Близнецы' => 'gemini',
+                'Рак' => 'cancer', 'Лев' => 'leo', 'Дева' => 'virgo',
+                'Весы' => 'libra', 'Скорпион' => 'scorpio', 'Стрелец' => 'sagittarius',
+                'Козерог' => 'capricorn', 'Водолей' => 'aquarius', 'Рыбы' => 'pisces',
+            ];
+            $sunSignKey = $signToKey[$russianSunSign] ?? null;
+            if ($sunSignKey) {
+                $horoscope = \App\Models\DailyHoroscope::where('sign', $sunSignKey)
+                    ->where('locale', app()->getLocale())
+                    ->first();
+            }
+        }
+
         return view('charts.show', [
             'chart' => $natalChart,
             'templates' => $templates,
             'chatMessages' => $chatMessages,
+            'horoscope' => $horoscope,
+            'sunSignKey' => $sunSignKey,
         ]);
     }
 
@@ -275,7 +314,7 @@ class NatalChartController extends Controller
             \App\Jobs\GenerateAiReport::dispatch($natalChart);
         }
 
-        return redirect()->route('charts.show', $natalChart)
+        return redirect(locale_route('charts.show', ['natalChart' => $natalChart]))
             ->with('status', 'AI Report generation started!');
     }
 

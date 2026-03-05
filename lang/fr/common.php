@@ -4,7 +4,6 @@ return [
     'brand' => 'NatalScope',
     'tagline' => 'Votre thème natal, décodé',
 
-    'nav_compatibility' => 'Compatibilité',
     'nav_my_chart' => 'Mon thème',
     'nav_logout' => 'Déconnexion',
     'nav_login' => 'Connexion',
@@ -39,6 +38,7 @@ return [
     'form_submit' => 'Calculer maintenant',
     'form_privacy_note' => '* En cliquant, vous consentez au traitement de vos données personnelles',
     'form_errors_default' => 'Veuillez remplir tous les champs obligatoires',
+    'email_already_used' => 'Cet email est déjà enregistré. Veuillez utiliser un autre email ou vous connecter.',
 
     'month_01' => 'Janvier',
     'month_02' => 'Février',
@@ -71,19 +71,54 @@ return [
     'processing_step4' => "Préparation de l'interprétation IA...",
     'processing_success_title' => 'Votre thème natal est prêt !',
     'processing_success_text' => 'Nous avons envoyé un lien à votre e-mail. Vérifiez votre boîte de réception.',
+    'processing_generation_note' => 'Votre interprétation IA est en cours de génération et peut prendre jusqu\'à 5 minutes. Vous recevrez l\'e-mail dès qu\'elle sera prête.',
     'processing_success_btn' => 'Vérifier l\'e-mail',
     'processing_error_title' => 'Une erreur est survenue',
     'processing_error_text' => 'Une erreur est survenue lors du traitement. Veuillez réessayer.',
     'processing_error_btn' => 'Réessayer',
+    'email_step_1' => 'Ouvrez votre boîte de réception',
+    'email_step_2' => 'Trouvez le message de NatalScope',
+    'email_step_3' => 'Cliquez sur le lien pour voir votre thème natal',
+    'email_check_spam' => "Vous ne trouvez pas l'email ? Vérifiez votre dossier spam.",
 
     'chart_exists_title' => 'Votre thème est déjà calculé !',
     'chart_exists_text' => 'Vous pouvez consulter les résultats',
     'chart_exists_btn' => 'Ouvrir le thème',
 
+    // Language names (for switcher)
+    'language' => 'Langue',
     'lang_en' => 'English',
     'lang_fr' => 'Français',
     'lang_es' => 'Español',
     'lang_pt' => 'Português',
     'lang_hi' => 'हिन्दी',
     'lang_ru' => 'Русский',
+
+    // Chat errors
+    'chat_error' => 'Erreur. Veuillez réessayer plus tard.',
+    'chat_connection_error' => 'Erreur de connexion.',
+    'chat_response_error' => 'Erreur lors de la récupération de la réponse.',
+    'chat_timeout' => 'Délai expiré. Veuillez réessayer plus tard.',
+
+    // Dashboard
+    'dashboard_title' => 'Mes Cartes',
+    'dashboard_empty_title' => 'Vous n\'avez pas encore de cartes enregistrées',
+    'dashboard_empty_text' => 'Créez votre première carte natale maintenant.',
+    'dashboard_create_btn' => 'Créer une Nouvelle Carte',
+    'dashboard_open_btn' => 'Ouvrir l\'Interprétation',
+
+    // Daily horoscope
+    'daily_horoscope_title' => 'Horoscope du jour',
+    'daily_score' => 'Score du jour',
+    'daily_love' => 'Amour',
+    'daily_career' => 'Carrière',
+    'daily_health' => 'Santé',
+    'daily_luck' => 'Chance',
+    'daily_tomorrow_hint' => 'Demain :date — nouvelle prévision',
+    'daily_updates_in' => 'Nouvelle prévision dans',
+    'daily_h' => 'h',
+    'daily_m' => 'm',
+    'daily_s' => 's',
+    'daily_read_more' => 'Lire la suite',
+    'time_unknown' => 'Inconnu',
 ];

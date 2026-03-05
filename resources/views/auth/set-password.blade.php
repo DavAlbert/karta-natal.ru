@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Установить пароль - AstroChart</title>
+    <title>{{ __('astrology.set_password_title') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -40,7 +40,7 @@
                 <h1 class="text-3xl font-serif font-bold text-white tracking-widest">
                     ASTRO<span class="text-gold-400">CHART</span>
                 </h1>
-                <p class="text-indigo-300 mt-2">Установите пароль для доступа</p>
+                <p class="text-indigo-300 mt-2">{{ __('astrology.set_password_subtitle') }}</p>
             </div>
 
             <form method="POST" action="{{ route('charts.store-password', $natalChart) }}">
@@ -48,9 +48,9 @@
                 <input type="hidden" name="token" value="{{ $token }}">
 
                 <div class="mb-4">
-                    <label for="password" class="block text-sm font-bold text-indigo-300 uppercase mb-2">Пароль</label>
+                    <label for="password" class="block text-sm font-bold text-indigo-300 uppercase mb-2">{{ __('astrology.set_password_label') }}</label>
                     <input id="password" type="password" name="password" required
-                        class="w-full input-professional rounded-lg px-4 py-3" placeholder="Минимум 8 символов">
+                        class="w-full input-professional rounded-lg px-4 py-3" placeholder="{{ __('astrology.set_password_placeholder') }}">
                     @error('password')
                         <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -58,18 +58,18 @@
 
                 <div class="mb-6">
                     <label for="password_confirmation"
-                        class="block text-sm font-bold text-indigo-300 uppercase mb-2">Подтвердите пароль</label>
+                        class="block text-sm font-bold text-indigo-300 uppercase mb-2">{{ __('astrology.set_password_confirm_label') }}</label>
                     <input id="password_confirmation" type="password" name="password_confirmation" required
-                        class="w-full input-professional rounded-lg px-4 py-3" placeholder="Повторите пароль">
+                        class="w-full input-professional rounded-lg px-4 py-3" placeholder="{{ __('astrology.set_password_confirm_placeholder') }}">
                 </div>
 
                 <button type="submit"
                     class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold py-4 rounded-lg shadow-lg transition-all transform hover:scale-[1.01] border border-indigo-500/50">
-                    Установить пароль и войти
+                    {{ __('astrology.set_password_submit') }}
                 </button>
 
                 <p class="text-xs text-center text-indigo-400/70 mt-4">
-                    После установки пароля вы получите доступ к вашей натальной карте
+                    {{ __('astrology.set_password_note') }}
                 </p>
             </form>
         </div>

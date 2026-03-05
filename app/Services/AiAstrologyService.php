@@ -157,10 +157,12 @@ class AiAstrologyService
         ];
     }
 
-    public function generateReport(array $chartData, string $locale = 'en'): array
+    public function generateReport(array $chartData, string $locale = 'en', array $personInfo = []): array
     {
         $langInstruction = $this->getLanguageInstruction($locale);
         $langName = $this->getLanguageName($locale);
+        $personName = $personInfo['name'] ?? '';
+        $personGender = $personInfo['gender'] ?? '';
 
         $toolSchema = [
             'type' => 'function',
@@ -170,13 +172,15 @@ class AiAstrologyService
                 'parameters' => [
                     'type' => 'object',
                     'properties' => [
-                        'identity' => ['type' => 'string', 'description' => trans('astrology.tool_identity_desc', [], $locale) . " In {$langName}."],
-                        'love' => ['type' => 'string', 'description' => trans('astrology.tool_love_desc', [], $locale) . " In {$langName}."],
-                        'career' => ['type' => 'string', 'description' => trans('astrology.tool_career_desc', [], $locale) . " In {$langName}."],
-                        'karma' => ['type' => 'string', 'description' => trans('astrology.tool_karma_desc', [], $locale) . " In {$langName}."],
-                        'forecast' => ['type' => 'string', 'description' => trans('astrology.tool_forecast_desc', [], $locale) . " In {$langName}."],
+                        'identity' => ['type' => 'string', 'description' => trans('astrology.tool_identity_desc', [], $locale) . " In {$langName}. Use markdown: **bold** for key terms, bullet lists for traits. 4-6 paragraphs."],
+                        'strengths_weaknesses' => ['type' => 'string', 'description' => trans('astrology.tool_strengths_desc', [], $locale) . " In {$langName}. Use markdown: ### subheadings, **bold**, bullet lists. 3-5 paragraphs."],
+                        'love' => ['type' => 'string', 'description' => trans('astrology.tool_love_desc', [], $locale) . " In {$langName}. Use markdown formatting. 4-6 paragraphs."],
+                        'career' => ['type' => 'string', 'description' => trans('astrology.tool_career_desc', [], $locale) . " In {$langName}. Use markdown formatting. 4-6 paragraphs."],
+                        'health' => ['type' => 'string', 'description' => trans('astrology.tool_health_desc', [], $locale) . " In {$langName}. Use markdown formatting. 3-4 paragraphs."],
+                        'karma' => ['type' => 'string', 'description' => trans('astrology.tool_karma_desc', [], $locale) . " In {$langName}. Use markdown formatting. 3-5 paragraphs."],
+                        'forecast' => ['type' => 'string', 'description' => trans('astrology.tool_forecast_desc', [], $locale) . " In {$langName}. Use markdown formatting. 3-4 paragraphs."],
                     ],
-                    'required' => ['identity', 'love', 'career', 'karma', 'forecast']
+                    'required' => ['identity', 'strengths_weaknesses', 'love', 'career', 'health', 'karma', 'forecast']
                 ]
             ]
         ];
@@ -186,7 +190,17 @@ class AiAstrologyService
 
             $context = $this->buildChartContext($chartData, $locale);
             $systemPrompt = trans('astrology.report_system_prompt', [], $locale) . "\n\n" . $langInstruction;
-            $userPrompt = $context . "\n\n" . trans('astrology.report_user_prompt', [], $locale);
+
+            $personalContext = '';
+            if ($personName) {
+                $personalContext .= "\n\nClient name: {$personName}.";
+            }
+            if ($personGender) {
+                $personalContext .= " Gender: {$personGender}.";
+            }
+            $personalContext .= "\n\nIMPORTANT: Address the client by their first name throughout the report. Write as if speaking directly to them (\"you\", \"{$personName}\"). For every claim, explain WHY based on specific planets, signs, houses from their chart. Use simple, warm language. Add a brief summary at the end of each section.";
+
+            $userPrompt = $context . $personalContext . "\n\n" . trans('astrology.report_user_prompt', [], $locale);
 
             $response = Http::withToken($this->apiKey)
                 ->timeout(120)
@@ -200,6 +214,7 @@ class AiAstrologyService
                     'tools' => [$toolSchema],
                     'tool_choice' => ['type' => 'function', 'function' => ['name' => 'generate_astrology_report']],
                     'temperature' => 0.7,
+                    'max_tokens' => 8000,
                 ]);
 
             if ($response->successful()) {
@@ -261,109 +276,5 @@ class AiAstrologyService
     public function chatStream(string $question, array $chartData, array $history = [], string $locale = 'en'): string
     {
         return $this->chat($question, $chartData, $history, $locale);
-    }
-
-    public function generateCompatibilityReport(array $chart1, array $chart2, array $synastry, string $name1 = '', string $name2 = '', string $locale = 'en'): array
-    {
-        $name1 = $name1 ?: trans('astrology.partner_1', [], $locale);
-        $name2 = $name2 ?: trans('astrology.partner_2', [], $locale);
-        $langInstruction = $this->getLanguageInstruction($locale);
-        $langName = $this->getLanguageName($locale);
-
-        $toolSchema = [
-            'type' => 'function',
-            'function' => [
-                'name' => 'generate_compatibility_report',
-                'description' => "Generate detailed compatibility analysis between two natal charts in {$langName}.",
-                'parameters' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'full_description' => ['type' => 'string', 'description' => "Comprehensive 800-1200 word PERSONAL analysis in {$langName}. USE BOTH PARTNER NAMES! Reference specific planets, signs and aspects."],
-                        'overall_score' => ['type' => 'integer', 'description' => 'Overall compatibility score from 1 to 10.'],
-                        'overall_analysis' => ['type' => 'string', 'description' => "Detailed overall compatibility analysis in {$langName}."],
-                        'emotional_score' => ['type' => 'integer', 'description' => 'Emotional compatibility score 1-10.'],
-                        'emotional_analysis' => ['type' => 'string', 'description' => "Emotional compatibility analysis in {$langName}."],
-                        'communication_score' => ['type' => 'integer', 'description' => 'Communication compatibility score 1-10.'],
-                        'communication_analysis' => ['type' => 'string', 'description' => "Communication analysis in {$langName}."],
-                        'romantic_score' => ['type' => 'integer', 'description' => 'Romantic compatibility score 1-10.'],
-                        'romantic_analysis' => ['type' => 'string', 'description' => "Romantic chemistry analysis in {$langName}."],
-                        'values_score' => ['type' => 'integer', 'description' => 'Value alignment score 1-10.'],
-                        'values_analysis' => ['type' => 'string', 'description' => "Values analysis in {$langName}."],
-                        'growth_score' => ['type' => 'integer', 'description' => 'Mutual growth score 1-10.'],
-                        'growth_analysis' => ['type' => 'string', 'description' => "Growth potential analysis in {$langName}."],
-                        'strengths' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "3-5 key strengths in {$langName}."],
-                        'challenges' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "3-5 challenges in {$langName}."],
-                        'recommendations' => ['type' => 'array', 'items' => ['type' => 'string'], 'description' => "3-5 recommendations in {$langName}."],
-                    ],
-                    'required' => [
-                        'full_description', 'overall_score', 'overall_analysis',
-                        'emotional_score', 'emotional_analysis', 'communication_score', 'communication_analysis',
-                        'romantic_score', 'romantic_analysis', 'values_score', 'values_analysis',
-                        'growth_score', 'growth_analysis', 'strengths', 'challenges', 'recommendations'
-                    ]
-                ]
-            ]
-        ];
-
-        try {
-            Log::info('Starting AI Compatibility Report Generation', ['locale' => $locale]);
-
-            $context1 = $this->buildChartContext($chart1, $locale);
-            $context2 = $this->buildChartContext($chart2, $locale);
-
-            $harmonyLabel = trans('astrology.synastry_harmony_nature', [], $locale);
-            $tensionLabel = trans('astrology.synastry_tension_nature', [], $locale);
-
-            $synastryContext = trans('astrology.synastry_label', [], $locale) . "\n";
-            $synastryContext .= trans('astrology.synastry_score', [], $locale) . " {$synastry['score']}/100\n";
-            $synastryContext .= trans('astrology.synastry_harmony', [], $locale) . " {$synastry['harmony']}\n";
-            $synastryContext .= trans('astrology.synastry_tension', [], $locale) . " {$synastry['tension']}\n\n";
-
-            foreach (($synastry['aspects'] ?? []) as $aspect) {
-                $nature = $aspect['nature'] === 'harmony' ? $harmonyLabel : $tensionLabel;
-                $synastryContext .= "- {$aspect['planet1']} → {$aspect['planet2']}: {$aspect['type']} ({$nature})\n";
-            }
-
-            $fullContext = "PARTNER NAMES:\n- {$name1}\n- {$name2}\n\n";
-            $fullContext .= "{$name1}'s NATAL CHART:\n{$context1}\n\n";
-            $fullContext .= "{$name2}'s NATAL CHART:\n{$context2}\n\n";
-            $fullContext .= $synastryContext;
-
-            $systemPrompt = trans('astrology.compatibility_system_prompt', [], $locale) . "\n\n" . $langInstruction;
-
-            $response = Http::withToken($this->apiKey)
-                ->timeout(180)
-                ->retry(3, 5000)
-                ->post($this->baseUrl . '/chat/completions', [
-                    'model' => $this->model,
-                    'messages' => [
-                        ['role' => 'system', 'content' => $systemPrompt],
-                        ['role' => 'user', 'content' => $fullContext . "\n\nWrite a PERSONAL astrological compatibility analysis of {$name1} and {$name2} in {$langName}."],
-                    ],
-                    'tools' => [$toolSchema],
-                    'tool_choice' => ['type' => 'function', 'function' => ['name' => 'generate_compatibility_report']],
-                    'temperature' => 0.7,
-                ]);
-
-            if ($response->successful()) {
-                $content = $response->json();
-                $toolCalls = $content['choices'][0]['message']['tool_calls'] ?? [];
-                if (!empty($toolCalls)) {
-                    $jsonStr = $toolCalls[0]['function']['arguments'];
-                    $data = json_decode($jsonStr, true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        $data['synastry'] = $synastry;
-                        return $data;
-                    }
-                    Log::error('Compatibility AI JSON Decode Error: ' . json_last_error_msg());
-                }
-            } else {
-                Log::error('Compatibility AI API Error: ' . $response->body());
-            }
-        } catch (\Exception $e) {
-            Log::error('Compatibility AI Exception: ' . $e->getMessage());
-        }
-
-        return [];
     }
 }

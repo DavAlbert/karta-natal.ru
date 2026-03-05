@@ -2,12 +2,11 @@
 
 return [
     // System prompts for AI
-    'report_system_prompt' => 'You are an expert in Vedic and Western astrology. Your task is to provide deep, mystical yet practical answers based on the client\'s natal chart. Always reference specific planets, signs, and houses from the client\'s chart.',
-    'report_user_prompt' => "Generate a detailed astrological report including:\n1. Personality analysis (Sun, Moon, Ascendant)\n2. Love and relationship analysis (Venus, Mars, 7th House)\n3. Career analysis (10th House, Saturn, MC)\n4. Karmic analysis (Nodes, Saturn, retrograde planets)\n5. Forecast for the upcoming period",
+    'report_system_prompt' => 'You are a warm, insightful astrologer who explains complex astrological concepts in simple, everyday language. Write as if talking to a friend — be personal, specific, and practical. Always reference specific planets, signs, and houses from the client\'s chart. Use short paragraphs for easy reading.',
+    'report_user_prompt' => "Generate a comprehensive, easy-to-read astrological report. For each section, write 3-6 clear paragraphs. Be specific to THIS person's chart — don't give generic descriptions. Include practical advice and real-life examples where possible.",
     'chat_system_prompt' => "You are a wise and professional astrologer, expert in Vedic and Western astrology. Your client has provided their natal chart:\n\n:context\n\nYour rules:\n1. Always reference specific planets, signs, and houses from the client's chart\n2. Give practical advice based on astrology\n3. If clarification is needed — ask\n4. Do not fabricate data that is not in the chart",
     'chat_error' => 'Sorry, I cannot respond right now. Please try again later.',
     'chat_error_stars' => 'Sorry, the stars are silent right now. Please try again later.',
-    'compatibility_system_prompt' => "You are a professional astrology consultant. RULES:\n1. ALWAYS name specific planets and signs from the charts\n2. ALWAYS explain WHY something happens based on aspects\n3. For problems — give SPECIFIC solutions\n4. Write in simple but professional language\n5. Address partners by name\n6. Describe real life situations based on their charts",
 
     // Language instruction appended to prompts
     'respond_in_language' => 'Respond ONLY in :language. All text must be in :language.',
@@ -39,6 +38,9 @@ return [
     'planet_south_node' => 'South Node',
     'planet_chiron' => 'Chiron',
     'planet_part_fortune' => 'Part of Fortune',
+    'planet_vertex' => 'Vertex',
+    'planet_ascendant' => 'Ascendant',
+    'planet_mc' => 'MC',
 
     // Element names
     'element_fire' => 'Fire',
@@ -61,12 +63,14 @@ return [
     'sign_pisces' => 'Pisces',
 
     // Tool schema descriptions for OpenAI
-    'tool_report_desc' => 'Generate a deep psychological and karmic astrology report based on natal chart data.',
-    'tool_identity_desc' => 'Deep analysis of personality, ego, and emotional nature (Sun/Moon/Ascendant).',
-    'tool_love_desc' => 'Analysis of relationships, love language, and needs (Venus/Mars/7th House).',
-    'tool_career_desc' => 'Analysis of professional path, ambition, and success (10th House/Saturn/MC).',
-    'tool_karma_desc' => 'Analysis of karmic destiny, lessons, and growth (Nodes/Saturn/Retrogrades).',
-    'tool_forecast_desc' => 'A brief forecast for the upcoming major transits or phases impacting the user.',
+    'tool_report_desc' => 'Generate a detailed, well-structured astrology report based on natal chart data. Write in a friendly, easy-to-understand style. Each section should have clear paragraphs.',
+    'tool_identity_desc' => 'Full personality description: who you are at your core, your ego, emotions, and how others see you (Sun/Moon/Ascendant). Write warmly and personally.',
+    'tool_strengths_desc' => 'Your key strengths and talents, as well as areas to watch out for. Be specific and practical.',
+    'tool_love_desc' => 'Deep analysis of your love life: how you love, what you need in a partner, relationship patterns and advice (Venus/Mars/7th House).',
+    'tool_career_desc' => 'Career and work analysis: best professions, work style, ambition, financial potential, and practical advice (10th House/Saturn/MC).',
+    'tool_health_desc' => 'Health tendencies and wellness tips based on the chart. Vulnerable areas and how to stay balanced (6th House/Mars/Saturn).',
+    'tool_karma_desc' => 'Karmic lessons and spiritual growth: past life patterns, soul purpose, what you need to learn (Nodes/Saturn/Retrogrades).',
+    'tool_forecast_desc' => 'Forecast for the upcoming period: key transits, opportunities, and challenges ahead.',
 
     // Chat templates
     'chat_category_general' => 'General',
@@ -91,4 +95,102 @@ return [
     'synastry_tension' => 'Tense aspects:',
     'synastry_harmony_nature' => 'Harmony',
     'synastry_tension_nature' => 'Tension',
+
+    // Chart UI
+    'chart_title' => 'Natal Chart',
+    'tab_overview' => 'Overview',
+    'tab_analysis' => 'Analysis',
+    'tab_chat' => 'AI Chat',
+    'section_summary' => 'Brief Summary',
+    'section_planets' => 'Planets',
+    'section_houses' => 'Houses',
+    'section_aspects' => 'Aspects',
+    'section_balance' => 'Balance',
+    'section_character' => 'Character & Personality',
+    'section_career' => 'Career & Profession',
+    'btn_back' => 'Back',
+    'btn_logout' => 'Log Out',
+    'btn_edit' => 'Edit',
+    'btn_home' => 'Home',
+    'balance_cardinal' => 'Card.',
+    'balance_fixed' => 'Fixed',
+    'balance_mutable' => 'Mut.',
+    'balance_yang' => 'Yang',
+    'balance_yin' => 'Yin',
+    'sun_in' => 'Sun in :sign',
+    'moon_in' => 'Moon in :sign',
+    'asc_in' => 'Ascendant in :sign',
+    'mc_in' => 'MC in :sign',
+    'link_sent' => 'Link sent to your email!',
+    'link_save_hint' => 'Save the link to access your chart',
+
+    // Chat UI
+    'chat_ask_ai' => 'Ask the AI Astrologer',
+    'chat_welcome' => 'Hello! Ask any question about your natal chart. I will help you understand aspects, planets, and houses.',
+    'chat_placeholder' => 'Enter your question...',
+    'chat_loading' => 'Loading...',
+
+    // Analysis sections
+    'section_love' => 'Love & Relationships',
+    'section_strengths' => 'Strengths & Weaknesses',
+    'section_health' => 'Health & Wellness',
+    'section_karma' => 'Karmic Lessons',
+    'section_forecast' => 'Forecast',
+    'section_planets_in_houses' => 'Planets in Houses',
+    'ai_generated_label' => 'AI Analysis',
+    'ai_generated_hint' => 'Personalized interpretation based on your natal chart',
+    'report_language_hint' => 'This report was generated in :language and will stay in that language.',
+    'language_en' => 'English',
+    'language_ru' => 'Russian',
+    'language_fr' => 'French',
+    'language_es' => 'Spanish',
+    'language_pt' => 'Portuguese',
+    'language_hi' => 'Hindi',
+    'venus_in' => 'Venus in :sign',
+    'north_node_in' => 'North Node in :sign',
+    'chiron_in' => 'Chiron in :sign',
+
+    // Fallback descriptions
+    'fallback_asc' => ':sign on the Ascendant creates the first impression you make on others.',
+    'fallback_career' => 'Your career and social standing are connected to the qualities of :sign.',
+    'fallback_love' => 'Venus determines your love style and what you value in relationships.',
+    'fallback_north_node' => 'Indicates the direction of spiritual growth — qualities that need to be developed.',
+    'fallback_chiron' => '"Wounded healer" — an area of deep wound that becomes your gift.',
+    'fallback_planet_in_house' => 'Expression of :planet energy in the :house house sphere.',
+    'planet_in_house' => ':planet in :house house',
+    'house_label' => 'house',
+    'thinking' => 'Thinking...',
+    'typing' => 'Typing...',
+    'chat_error_generic' => 'Sorry, an error occurred. Please try again later.',
+
+    // Chat page
+    'chat_page_title' => 'Astrology Chat — :name',
+    'chat_back' => 'Back',
+    'chat_title' => 'Astrology Chat',
+    'chat_greeting' => 'Hello! I am your astrological assistant. I have studied your natal chart and am ready to answer your questions.',
+    'chat_greeting_hint' => 'You can choose a topic below or ask your own question.',
+    'chat_quick_topics' => 'Quick Topics',
+    'chat_input_placeholder' => 'Ask a question...',
+    'chat_send' => 'Send',
+
+    // Processing page
+    'processing_page_title' => 'Calculating...',
+    'processing_heading' => 'Analyzing Planetary Positions',
+    'processing_init' => 'Initializing ephemeris...',
+    'processing_sun' => 'Calculating Sun coordinates...',
+    'processing_nodes' => 'Determining lunar nodes...',
+    'processing_houses' => 'Computing house system (Placidus)...',
+    'processing_aspects' => 'Analyzing major aspects...',
+    'processing_report' => 'Generating report...',
+    'processing_done' => 'Done!',
+
+    // Set password page
+    'set_password_title' => 'Set Password - AstroChart',
+    'set_password_subtitle' => 'Set a password for access',
+    'set_password_label' => 'Password',
+    'set_password_placeholder' => 'Minimum 8 characters',
+    'set_password_confirm_label' => 'Confirm Password',
+    'set_password_confirm_placeholder' => 'Repeat password',
+    'set_password_submit' => 'Set Password and Sign In',
+    'set_password_note' => 'After setting a password, you will get access to your natal chart',
 ];

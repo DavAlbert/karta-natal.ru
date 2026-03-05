@@ -99,7 +99,7 @@ class MagicLinkController extends Controller
         $chart = $user->natalCharts()->first();
 
         if ($chart) {
-            return redirect()->route('charts.show', $chart);
+            return redirect(locale_route('charts.show', ['natalChart' => $chart->id]));
         }
 
         return redirect()->route('calculate');
@@ -110,11 +110,14 @@ class MagicLinkController extends Controller
      */
     public function logout(Request $request)
     {
+        $locale = app()->getLocale();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        $prefix = ($locale && $locale !== 'en') ? '/' . $locale : '';
+        return redirect($prefix . '/');
     }
 }

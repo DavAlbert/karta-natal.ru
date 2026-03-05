@@ -4,7 +4,6 @@ return [
     'brand' => 'NatalScope',
     'tagline' => 'Tu carta natal, decodificada',
 
-    'nav_compatibility' => 'Compatibilidad',
     'nav_my_chart' => 'Mi carta',
     'nav_logout' => 'Cerrar sesión',
     'nav_login' => 'Iniciar sesión',
@@ -39,6 +38,7 @@ return [
     'form_submit' => 'Calcular ahora',
     'form_privacy_note' => '* Al hacer clic, consientes el procesamiento de datos personales',
     'form_errors_default' => 'Por favor, completa todos los campos obligatorios',
+    'email_already_used' => 'Este email ya está registrado. Por favor, usa otro email o inicia sesión.',
 
     'month_01' => 'Enero',
     'month_02' => 'Febrero',
@@ -71,19 +71,54 @@ return [
     'processing_step4' => 'Preparando interpretación IA...',
     'processing_success_title' => '¡Tu carta natal está lista!',
     'processing_success_text' => 'Hemos enviado un enlace a tu correo. Revisa tu bandeja de entrada.',
+    'processing_generation_note' => 'Tu interpretación con IA se está generando y puede tardar hasta 5 minutos. Recibirás el correo cuando esté lista.',
     'processing_success_btn' => 'Revisar correo',
     'processing_error_title' => 'Algo salió mal',
     'processing_error_text' => 'Hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo.',
     'processing_error_btn' => 'Reintentar',
+    'email_step_1' => 'Abre tu bandeja de entrada',
+    'email_step_2' => 'Busca el mensaje de NatalScope',
+    'email_step_3' => 'Haz clic en el enlace para ver tu carta natal',
+    'email_check_spam' => '¿No ves el correo? Revisa tu carpeta de spam.',
 
     'chart_exists_title' => '¡Tu carta ya está calculada!',
     'chart_exists_text' => 'Puedes ver los resultados',
     'chart_exists_btn' => 'Abrir carta',
 
+    // Language names (for switcher)
+    'language' => 'Idioma',
     'lang_en' => 'English',
     'lang_fr' => 'Français',
     'lang_es' => 'Español',
     'lang_pt' => 'Português',
     'lang_hi' => 'हिन्दी',
     'lang_ru' => 'Русский',
+
+    // Chat errors
+    'chat_error' => 'Error. Por favor, inténtalo más tarde.',
+    'chat_connection_error' => 'Error de conexión.',
+    'chat_response_error' => 'Error al obtener la respuesta.',
+    'chat_timeout' => 'Tiempo de espera agotado. Por favor, inténtalo más tarde.',
+
+    // Dashboard
+    'dashboard_title' => 'Mis Cartas',
+    'dashboard_empty_title' => 'Aún no tienes cartas guardadas',
+    'dashboard_empty_text' => 'Crea tu primera carta natal ahora mismo.',
+    'dashboard_create_btn' => 'Crear Nueva Carta',
+    'dashboard_open_btn' => 'Abrir Interpretación',
+
+    // Daily horoscope
+    'daily_horoscope_title' => 'Horóscopo del día',
+    'daily_score' => 'Puntuación del día',
+    'daily_love' => 'Amor',
+    'daily_career' => 'Carrera',
+    'daily_health' => 'Salud',
+    'daily_luck' => 'Suerte',
+    'daily_tomorrow_hint' => 'Mañana :date — nueva predicción',
+    'daily_updates_in' => 'Nueva predicción en',
+    'daily_h' => 'h',
+    'daily_m' => 'm',
+    'daily_s' => 's',
+    'daily_read_more' => 'Leer más',
+    'time_unknown' => 'Desconocido',
 ];

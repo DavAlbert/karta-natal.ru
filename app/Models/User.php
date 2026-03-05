@@ -32,6 +32,7 @@ class User extends Authenticatable
         'marketing_consent',
         'magic_login_token',
         'magic_login_expires_at',
+        'locale',
     ];
 
     /**

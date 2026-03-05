@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чат с астрологом — {{ $chart->name }}</title>
+    <title>{{ __('astrology.chat_page_title', ['name' => $chart->name]) }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @if(config('services.google_analytics.id'))
@@ -189,31 +189,31 @@
 </head>
 <body>
     <header class="header">
-        <a href="{{ route('charts.show', $chart) }}" class="header-back">
+        <a href="{{ locale_route('charts.show', ['natalChart' => $chart]) }}" class="header-back">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
             </svg>
-            Назад
+            {{ __('astrology.chat_back') }}
         </a>
         <h1 class="header-title">
             <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="color:var(--accent-gold)">
                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
             </svg>
-            Астрологический чат
+            {{ __('astrology.chat_title') }}
         </h1>
     </header>
 
     <div class="chat-container">
         <div class="messages" id="messages">
             <div class="message assistant">
-                Привет! Я — ваш астрологический помощник. Я изучил вашу натальную карту и готов ответить на ваши вопросы.
+                {{ __('astrology.chat_greeting') }}
                 <br><br>
-                Вы можете выбрать готовую тему ниже или задать свой вопрос.
+                {{ __('astrology.chat_greeting_hint') }}
             </div>
         </div>
 
         <div class="templates">
-            <div class="templates-title">Быстрые темы</div>
+            <div class="templates-title">{{ __('astrology.chat_quick_topics') }}</div>
             <div class="templates-grid" id="templates">
                 @foreach($templates as $key => $template)
                 <button class="template-btn" data-key="{{ $key }}" data-prompt="{{ $template['prompt'] }}">
@@ -230,14 +230,14 @@
                 <textarea
                     id="message-input"
                     class="input-field"
-                    placeholder="Задайте вопрос..."
+                    placeholder="{{ __('astrology.chat_input_placeholder') }}"
                     rows="1"
                 ></textarea>
                 <button type="submit" class="send-btn" id="send-btn">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5M5 12l7-7 7 7"/>
                     </svg>
-                    Отправить
+                    {{ __('astrology.chat_send') }}
                 </button>
             </form>
         </div>
@@ -279,7 +279,7 @@
             const div = document.createElement('div');
             div.className = 'message assistant typing';
             div.id = 'typing';
-            div.textContent = 'Печатает...';
+            div.textContent = @json(__('astrology.typing'));
             messagesEl.appendChild(div);
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
@@ -314,11 +314,11 @@
                     const data = await response.json();
                     addMessage(data.message.replace(/\n/g, '<br>'), 'assistant');
                 } else {
-                    addMessage('Извините, произошла ошибка. Попробуйте позже.', 'assistant');
+                    addMessage(@json(__('astrology.chat_error_generic')), 'assistant');
                 }
             } catch (error) {
                 hideTyping();
-                addMessage('Извините, произошла ошибка. Попробуйте позже.', 'assistant');
+                addMessage(@json(__('astrology.chat_error_generic')), 'assistant');
             }
 
             sendBtn.disabled = false;

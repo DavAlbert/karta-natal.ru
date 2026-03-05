@@ -8,6 +8,7 @@ class SignMeaning extends Model
 {
     protected $fillable = [
         'sign',
+        'locale',
         'characteristics',
         'ruling_planet',
         'element',
@@ -18,8 +19,10 @@ class SignMeaning extends Model
 
     public $timestamps = false;
 
-    public static function getForSign(string $sign): ?self
+    public static function getForSign(string $sign, ?string $locale = null): ?self
     {
-        return static::where('sign', $sign)->first();
+        $locale = $locale ?? app()->getLocale();
+        return static::where('sign', $sign)->where('locale', $locale)->first()
+            ?? static::where('sign', $sign)->where('locale', 'en')->first();
     }
 }

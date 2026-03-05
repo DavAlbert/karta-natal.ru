@@ -75,7 +75,7 @@ class RegisteredUserController extends Controller
 
             session()->forget('natal_chart_data');
 
-            return redirect(route('charts.show', $chart));
+            return redirect(locale_route('charts.show', ['natalChart' => $chart->id]));
         }
 
         return redirect(route('dashboard', absolute: false));

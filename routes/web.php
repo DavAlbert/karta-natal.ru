@@ -4,47 +4,31 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\City;
 
-$localePattern = implode('|', array_filter(config('app.available_locales', ['en']), fn($l) => $l !== 'en'));
+// Token-based access MUST be defined BEFORE locale group to avoid route conflicts
+Route::get('/charts/access/{token}', [App\Http\Controllers\NatalChartController::class, 'accessViaToken'])
+    ->middleware('set-locale')
+    ->name('charts.access');
+Route::get('/charts/preview/{token}', [App\Http\Controllers\NatalChartController::class, 'preview'])
+    ->middleware('set-locale')
+    ->name('charts.preview');
+Route::get('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'showSetPassword'])
+    ->middleware('set-locale')
+    ->name('charts.set-password');
+Route::post('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'storePassword'])
+    ->middleware('set-locale')
+    ->name('charts.store-password');
 
-Route::group([
-    'prefix' => '{locale?}',
-    'where' => ['locale' => $localePattern],
-    'middleware' => 'set-locale',
-], function () {
-
+// Shared route definitions for both English (no prefix) and locale-prefixed routes
+$registerRoutes = function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('welcome');
-
-    // Partner compatibility verification (public)
-    Route::get('/compatibility/verify/{token}', [App\Http\Controllers\PartnerCompatibilityController::class, 'verify'])
-        ->name('compatibility.verify');
-    Route::post('/compatibility/verify/{token}', [App\Http\Controllers\PartnerCompatibilityController::class, 'confirm'])
-        ->name('compatibility.confirm');
-
-    // Public sharing of compatibility
-    Route::get('/compatibility/shared/{token}', [App\Http\Controllers\CompatibilityController::class, 'shared'])
-        ->name('compatibility.shared');
-
-    // Token-based access (no auth required)
-    Route::get('/charts/access/{token}', [App\Http\Controllers\NatalChartController::class, 'accessViaToken'])
-        ->name('charts.access');
-
-    Route::get('/charts/preview/{token}', [App\Http\Controllers\NatalChartController::class, 'preview'])
-        ->name('charts.preview');
-
-    Route::get('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'showSetPassword'])
-        ->name('charts.set-password');
-
-    Route::post('/charts/{natalChart}/set-password', [App\Http\Controllers\NatalChartController::class, 'storePassword'])
-        ->name('charts.store-password');
 
     // Magic login routes
     Route::get('/login', [App\Http\Controllers\Auth\MagicLinkController::class, 'showLoginForm'])
         ->name('login');
     Route::post('/login/send', [App\Http\Controllers\Auth\MagicLinkController::class, 'sendLoginLink'])
         ->name('magic.login.send');
-
     Route::get('/login/{token}', [App\Http\Controllers\Auth\MagicLinkController::class, 'loginViaToken'])
         ->name('magic.login.token');
     Route::post('/logout', [App\Http\Controllers\Auth\MagicLinkController::class, 'logout'])
@@ -54,11 +38,9 @@ Route::group([
     Route::get('/charts/{natalChart}', [App\Http\Controllers\NatalChartController::class, 'show'])
         ->middleware('auth')
         ->name('charts.show');
-
     Route::post('/charts/{natalChart}/generate-report', [App\Http\Controllers\NatalChartController::class, 'generateReport'])
         ->middleware('auth')
         ->name('charts.generate-report');
-
     Route::get('/charts/{natalChart}/status', [App\Http\Controllers\NatalChartController::class, 'checkStatus'])
         ->middleware('auth')
         ->name('charts.status');
@@ -67,51 +49,34 @@ Route::group([
     Route::get('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatController::class, 'index'])
         ->middleware('auth')
         ->name('charts.chat');
-
     Route::post('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatController::class, 'send'])
         ->middleware('auth')
         ->name('charts.chat.send');
-
     Route::get('/charts/{natalChart}/chat/{chatMessage}/status', [App\Http\Controllers\AstrologyChatController::class, 'status'])
         ->middleware('auth')
         ->name('charts.chat.status');
-
     Route::delete('/charts/{natalChart}/chat', [App\Http\Controllers\AstrologyChatController::class, 'clear'])
         ->middleware('auth')
         ->name('charts.chat.clear');
 
-    // Partner compatibility routes (auth required)
-    Route::get('/charts/{natalChart}/compatibility', [App\Http\Controllers\PartnerCompatibilityController::class, 'show'])
-        ->middleware('auth')
-        ->name('charts.compatibility.show');
-
-    Route::post('/charts/{natalChart}/compatibility', [App\Http\Controllers\PartnerCompatibilityController::class, 'store'])
-        ->middleware('auth')
-        ->name('charts.compatibility.store');
-
-    Route::get('/compatibility/{compatibility}/ai-status', [App\Http\Controllers\PartnerCompatibilityController::class, 'checkAiReportStatus'])
-        ->middleware('auth')
-        ->name('compatibility.ai-status');
+    // Horoscope
+    Route::get('/horoscope', [App\Http\Controllers\HoroscopeController::class, 'index'])->name('horoscope.index');
+    Route::get('/horoscope/{sign}', [App\Http\Controllers\HoroscopeController::class, 'show'])->name('horoscope.sign');
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
-});
+};
 
-// Horoscope routes without locale prefix (English default)
-Route::middleware('set-locale')->group(function () {
-    Route::get('/horoscope', [App\Http\Controllers\HoroscopeController::class, 'index'])->name('horoscope.index.en');
-    Route::get('/horoscope/{sign}', [App\Http\Controllers\HoroscopeController::class, 'show'])->name('horoscope.sign.en');
-});
+// English routes (no prefix)
+Route::middleware('set-locale')->group($registerRoutes);
 
-// Explicit locale horoscope routes (to work around optional parameter issue)
-foreach (['fr', 'es', 'pt', 'hi', 'ru'] as $loc) {
-    Route::middleware('set-locale')->prefix($loc)->group(function () use ($loc) {
-        Route::get('/horoscope', [App\Http\Controllers\HoroscopeController::class, 'index'])->name("horoscope.index.{$loc}");
-        Route::get('/horoscope/{sign}', [App\Http\Controllers\HoroscopeController::class, 'show'])->name("horoscope.sign.{$loc}");
-    });
+// Locale-prefixed routes
+$locales = array_filter(config('app.available_locales', ['en']), fn($l) => $l !== 'en');
+foreach ($locales as $locale) {
+    Route::middleware('set-locale')->prefix($locale)->name("{$locale}.")->group($registerRoutes);
 }
 
 // Privacy & Terms (always English, no locale prefix)

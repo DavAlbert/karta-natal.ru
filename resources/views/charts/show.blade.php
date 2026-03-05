@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $chart->name }} — Натальная карта</title>
+    <title>{{ $chart->name }} — {{ __('astrology.chart_title') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/js/all.min.js"></script>
@@ -544,640 +544,6 @@
         ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* Compatibility Tab Styles */
-        .compat-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Actions Bar */
-        .compat-actions-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-            padding: 1rem 1.25rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            flex-wrap: wrap;
-        }
-        .compat-partner-selector {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .compat-partner-selector label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        .compat-partner-selector select {
-            padding: 0.5rem 2rem 0.5rem 0.75rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            cursor: pointer;
-            min-width: 180px;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239CA3AF' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-        }
-        .compat-partner-selector select:focus {
-            outline: none;
-            border-color: var(--accent-purple);
-        }
-        .compat-new-partner-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1rem;
-            background: linear-gradient(135deg, #EC4899, #8B5CF6);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .compat-new-partner-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
-        }
-        @media (max-width: 500px) {
-            .compat-actions-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .compat-partner-selector {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .compat-partner-selector select {
-                width: 100%;
-            }
-        }
-
-        /* Hero Section for Form */
-        .compat-hero {
-            text-align: center;
-            padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(139, 92, 246, 0.08));
-            border-radius: 1.25rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(236, 72, 153, 0.15);
-        }
-        .compat-hero-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.25rem;
-            background: linear-gradient(135deg, #EC4899, #8B5CF6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3);
-        }
-        .compat-hero h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            margin: 0 0 0.5rem;
-            color: var(--text-primary);
-        }
-        .compat-hero p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin: 0;
-            max-width: 400px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        @media (max-width: 500px) {
-            .compat-hero {
-                padding: 1.5rem 1rem;
-            }
-            .compat-hero-icon {
-                width: 64px;
-                height: 64px;
-                font-size: 1.5rem;
-            }
-            .compat-hero h2 {
-                font-size: 1.25rem;
-            }
-        }
-
-        /* Form Card */
-        .compat-form {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 1.75rem;
-        }
-        @media (max-width: 500px) {
-            .compat-form {
-                padding: 1.25rem;
-            }
-        }
-        .compat-form-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-primary);
-        }
-        .compat-form-title i { color: var(--accent-pink); }
-        .compat-form-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-        .compat-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.625rem;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-            padding: 0.75rem;
-            background: var(--bg-tertiary);
-            border-radius: 0.5rem;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s;
-        }
-        .compat-checkbox:hover {
-            border-color: var(--accent-indigo);
-        }
-        .compat-checkbox input {
-            margin-top: 2px;
-            flex-shrink: 0;
-            accent-color: var(--accent-indigo);
-            width: 16px;
-            height: 16px;
-        }
-        .compat-checkbox a {
-            color: var(--accent-indigo);
-            text-decoration: underline;
-        }
-        .compat-checkbox a:hover { color: var(--accent-gold); }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-        }
-        @media (min-width: 500px) {
-            .form-row.two-col { grid-template-columns: 1fr 1fr; }
-        }
-        .form-group { }
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 0.625rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--accent-indigo);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-        .form-group input::placeholder { color: var(--text-muted); }
-
-        /* Gender Buttons */
-        .gender-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-        .gender-btn { cursor: pointer; }
-        .gender-btn input { display: none; }
-        .gender-btn-inner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.625rem;
-            padding: 0.875rem 1rem;
-            border-radius: 0.625rem;
-            border: 2px solid var(--border);
-            background: var(--bg-tertiary);
-            transition: all 0.2s;
-        }
-        .gender-btn-inner:hover {
-            border-color: var(--accent-indigo);
-            background: rgba(99, 102, 241, 0.08);
-        }
-        .gender-btn input:checked + .gender-btn-inner {
-            border-color: var(--accent-pink);
-            background: rgba(236, 72, 153, 0.12);
-        }
-        .gender-btn input:checked + .gender-btn-inner i { color: var(--accent-pink); }
-        .gender-btn-inner i { font-size: 1.125rem; color: var(--text-muted); transition: color 0.2s; }
-        .gender-btn-inner span { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
-
-        /* Date/Time Dropdowns */
-        .date-dropdowns, .time-dropdowns {
-            display: grid;
-            gap: 0.5rem;
-        }
-        .date-dropdowns { grid-template-columns: 1fr 1.5fr 1fr; }
-        .time-dropdowns { grid-template-columns: 1fr 1fr; }
-        .date-dropdowns select, .time-dropdowns select {
-            padding: 0.75rem 0.5rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 0.625rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            cursor: pointer;
-            text-align: center;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23818CF8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.25em 1.25em;
-            padding-right: 2rem;
-        }
-        .date-dropdowns select:focus, .time-dropdowns select:focus {
-            outline: none;
-            border-color: var(--accent-indigo);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-        .date-dropdowns select option, .time-dropdowns select option {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-        .time-unknown-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        .time-unknown-checkbox:hover { color: var(--text-secondary); }
-        .time-unknown-checkbox input {
-            width: auto;
-            margin: 0;
-            cursor: pointer;
-        }
-        @media (max-width: 480px) {
-            .date-dropdowns {
-                grid-template-columns: 1fr 1fr;
-            }
-            .date-dropdowns select:nth-child(2) { /* Month */
-                grid-column: 1 / -1;
-                order: -1;
-            }
-            .date-dropdowns select, .time-dropdowns select {
-                font-size: 16px; /* Prevent zoom on iOS */
-                min-height: 48px;
-                padding: 0.5rem 0.25rem;
-                padding-right: 1.5rem;
-                background-size: 1em 1em;
-            }
-        }
-
-        .compat-submit {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, #EC4899, #8B5CF6);
-            border: none;
-            border-radius: 0.75rem;
-            color: white;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.25s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.625rem;
-            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
-            margin-top: 0.5rem;
-        }
-        .compat-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(236, 72, 153, 0.45);
-        }
-        .compat-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        /* Compatibility Result */
-        .compat-result {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 1.25rem;
-            overflow: hidden;
-        }
-        .compat-result-header {
-            padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.1));
-            border-bottom: 1px solid var(--border);
-            text-align: center;
-        }
-        @media (max-width: 500px) {
-            .compat-result-header {
-                padding: 1.5rem 1rem;
-            }
-        }
-        .compat-score-circle {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: conic-gradient(var(--score-color) calc(var(--score) * 3.6deg), rgba(255,255,255,0.08) 0);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-bottom: 1rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-        @media (max-width: 500px) {
-            .compat-score-circle {
-                width: 120px;
-                height: 120px;
-            }
-        }
-        .compat-score-circle::before {
-            content: '';
-            position: absolute;
-            inset: 10px;
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border-radius: 50%;
-        }
-        .compat-score-value {
-            position: relative;
-            font-size: 3rem;
-            font-weight: 700;
-        }
-        @media (max-width: 500px) {
-            .compat-score-value {
-                font-size: 2.5rem;
-            }
-        }
-        .compat-score-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.75rem;
-        }
-        .compat-partner-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0.5rem 0.75rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        @media (max-width: 500px) {
-            .compat-partner-info {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            .compat-partner-info span:not(.compat-status-badge) {
-                display: none;
-            }
-            .compat-partner-info span:first-child,
-            .compat-partner-info .compat-status-badge {
-                display: inline;
-            }
-        }
-        .compat-status-badge {
-            padding: 0.375rem 0.875rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .compat-status-pending { background: rgba(234, 179, 8, 0.15); color: var(--accent-gold); border: 1px solid rgba(234, 179, 8, 0.3); }
-        .compat-status-completed { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); border: 1px solid rgba(34, 197, 94, 0.3); }
-        .compat-result-body { padding: 1.5rem; }
-        @media (max-width: 500px) {
-            .compat-result-body { padding: 1.25rem; }
-        }
-
-        /* Pending Message */
-        .compat-pending-msg {
-            text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(234, 179, 8, 0.08), rgba(234, 179, 8, 0.04));
-            border: 1px solid rgba(234, 179, 8, 0.2);
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-        }
-        .compat-pending-msg p {
-            margin: 0 0 1rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        .compat-pending-msg strong {
-            color: var(--accent-gold);
-        }
-        .compat-refresh-btn {
-            padding: 0.625rem 1.25rem;
-            background: var(--accent-gold);
-            color: #000;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-        }
-        .compat-refresh-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
-        }
-
-        /* Scores Grid */
-        .compat-scores-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.875rem;
-        }
-        @media (max-width: 500px) {
-            .compat-scores-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .compat-score-item {
-            padding: 1rem;
-            background: var(--bg-tertiary);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-        }
-        .compat-score-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        .compat-score-name {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        .compat-score-val {
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-        .compat-progress {
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .compat-progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.8s ease-out;
-        }
-
-        /* Sections */
-        .compat-section {
-            margin-top: 1.5rem;
-            padding: 1.25rem;
-            background: var(--bg-tertiary);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-        }
-        .compat-section-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-        }
-        .compat-list-item {
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.625rem;
-            line-height: 1.5;
-        }
-        .compat-list-item:last-child { margin-bottom: 0; }
-        .compat-list-item svg { flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.2rem; }
-        .compat-strengths .compat-list-item {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.15);
-        }
-        .compat-strengths .compat-list-item svg { color: var(--accent-green); }
-        .compat-challenges .compat-list-item {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.15);
-        }
-        .compat-challenges .compat-list-item svg { color: var(--accent-red); }
-        .compat-recommendations .compat-list-item {
-            background: rgba(234, 179, 8, 0.1);
-            border: 1px solid rgba(234, 179, 8, 0.15);
-        }
-        .compat-recommendations .compat-list-item svg { color: var(--accent-gold); }
-
-        .compat-new-btn {
-            width: 100%;
-            margin-top: 1.5rem;
-            padding: 0.875rem 1.25rem;
-            background: transparent;
-            border: 2px solid var(--border);
-            border-radius: 0.75rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .compat-new-btn:hover {
-            border-color: var(--accent-pink);
-            color: var(--accent-pink);
-            background: rgba(236, 72, 153, 0.05);
-        }
-        .compat-new-btn i { font-size: 0.8rem; }
-
-        /* City Search */
-        .city-search-container { position: relative; }
-        .city-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            margin-top: 0.25rem;
-        }
-        .city-result-item {
-            padding: 0.5rem 0.75rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--border);
-        }
-        .city-result-item:last-child { border-bottom: none; }
-        .city-result-item:hover { background: var(--bg-secondary); }
-        .city-result-country { color: var(--text-muted); font-size: 0.75rem; }
-        .city-hint {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.375rem;
-        }
-        .city-warning {
-            font-size: 0.75rem;
-            color: var(--accent-orange);
-            margin-top: 0.375rem;
-        }
-        .city-warning i { margin-right: 0.25rem; }
-        .city-details {
-            margin-top: 0.5rem;
-            padding: 0.625rem 0.75rem;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .city-details span:first-child { color: var(--text-primary); font-weight: 500; }
-        .city-details-sep { color: var(--accent-indigo); opacity: 0.5; }
-        .city-details-coords { font-family: monospace; color: var(--text-muted); }
-
         /* Responsive */
         @media (max-width: 1024px) {
             .overview-grid {
@@ -1198,6 +564,7 @@
             .page-header { padding: 0.5rem 0; margin-bottom: 0.5rem; }
             .page-header .btn { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
             .page-header .btn span { display: none; }
+            .page-header .btn .lang-flag { display: inline !important; }
             .header-center h1 { font-size: 1rem; }
             .header-meta { font-size: 0.7rem; }
             .key-stats { gap: 0.35rem; padding: 0.5rem 0; margin-bottom: 0.75rem; }
@@ -1238,19 +605,181 @@
             .tab-btn { padding: 0.75rem 0.5rem; }
             .tab-btn svg { width: 1.75rem; height: 1.75rem; }
         }
+        .ai-section-collapsed { display: none; }
+        .tab-btn { position: relative; }
+        .tab-dot {
+            position: absolute; top: 6px; right: 6px;
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #818cf8;
+            box-shadow: 0 0 6px 2px rgba(129,140,248,0.6);
+            animation: dot-pulse 2s ease-in-out infinite;
+        }
+        .tab-new { animation: tab-glow 2.5s ease-in-out infinite; }
+        @keyframes dot-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        @keyframes tab-glow {
+            0%, 100% { box-shadow: none; }
+            50% { box-shadow: inset 0 0 12px rgba(129,140,248,0.15); }
+        }
+        .ai-report-content h1, .ai-report-content h2, .ai-report-content h3 { color: var(--text-primary); margin: 0.75rem 0 0.35rem; font-size: 0.95rem; font-weight: 600; }
+        .ai-report-content h3 { font-size: 0.9rem; }
+        .ai-report-content p { margin: 0 0 0.6rem; }
+        .ai-report-content ul, .ai-report-content ol { margin: 0.25rem 0 0.6rem 1.25rem; padding: 0; }
+        .ai-report-content li { margin-bottom: 0.25rem; }
+        .ai-report-content strong { color: var(--text-primary); }
+        .ai-report-content em { color: var(--accent-indigo); font-style: italic; }
+
+        /* Daily Horoscope Card */
+        .horoscope-card {
+            position: relative; overflow: hidden;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+        .horoscope-top {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.875rem 1rem;
+        }
+        .horoscope-sign-img { width: 2.5rem; height: 2.5rem; flex-shrink: 0; filter: drop-shadow(0 0 6px rgba(129,140,248,0.35)); }
+        .horoscope-info { flex: 1; min-width: 0; }
+        .horoscope-info-row { display: flex; align-items: center; gap: 0.4rem; }
+        .horoscope-title { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+        .horoscope-live { width: 6px; height: 6px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 6px rgba(34,197,94,0.5); animation: h-pulse 2s ease-in-out infinite; }
+        @keyframes h-pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+        .horoscope-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+        .horoscope-text { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.45; margin-top: 0.3rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .horoscope-score-big { flex-shrink: 0; text-align: center; }
+        .horoscope-score-num { font-size: 1.75rem; font-weight: 800; color: var(--accent-indigo); line-height: 1; }
+        .horoscope-score-num small { font-size: 0.75rem; opacity: 0.5; }
+        .horoscope-score-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Scores row */
+        .horoscope-scores-row {
+            display: flex; gap: 0.5rem;
+            padding: 0 1rem 0.75rem;
+        }
+        .h-score-pill {
+            flex: 1;
+            display: flex; align-items: center; gap: 0.4rem;
+            padding: 0.4rem 0.6rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 0.5rem;
+        }
+        .h-score-emoji { font-size: 0.85rem; line-height: 1; }
+        .h-score-info { display: flex; flex-direction: column; }
+        .h-score-label { font-size: 0.6rem; color: var(--text-muted); line-height: 1; }
+        .h-score-bar {
+            width: 3.5rem; height: 3px; background: rgba(255,255,255,0.06);
+            border-radius: 2px; margin-top: 3px; overflow: hidden;
+        }
+        .h-score-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+        .h-score-fill.love { background: linear-gradient(90deg, #EC4899, #F472B6); }
+        .h-score-fill.career { background: linear-gradient(90deg, #F97316, #FBBF24); }
+        .h-score-fill.health { background: linear-gradient(90deg, #22C55E, #34D399); }
+        .h-score-fill.luck { background: linear-gradient(90deg, #818CF8, #A78BFA); }
+        .h-score-val { font-size: 0.7rem; font-weight: 700; line-height: 1; }
+        .h-score-val.love { color: #EC4899; }
+        .h-score-val.career { color: #F97316; }
+        .h-score-val.health { color: #22C55E; }
+        .h-score-val.luck { color: #818CF8; }
+
+        /* Countdown bar */
+        .horoscope-countdown-bar {
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+            padding: 0.6rem 1rem;
+            background: linear-gradient(90deg, rgba(129,140,248,0.06) 0%, rgba(168,85,247,0.08) 50%, rgba(129,140,248,0.06) 100%);
+            border-top: 1px solid var(--border);
+        }
+        .hcb-label { font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; }
+        .hcb-timer { display: flex; align-items: center; gap: 0.2rem; }
+        .hcb-digit {
+            font-size: 0.95rem; font-weight: 800; color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+            background: rgba(129,140,248,0.12);
+            border: 1px solid rgba(129,140,248,0.15);
+            padding: 0.15rem 0.35rem; border-radius: 0.3rem;
+            min-width: 1.5rem; text-align: center; line-height: 1.2;
+        }
+        .hcb-sep { font-size: 0.85rem; font-weight: 700; color: var(--accent-indigo); opacity: 0.5; animation: hcb-blink 1s step-end infinite; }
+        @keyframes hcb-blink { 50% { opacity: 0.15; } }
+        .hcb-unit { font-size: 0.5rem; color: var(--text-muted); text-transform: uppercase; margin-left: -0.05rem; }
+        .hcb-link {
+            margin-left: auto;
+            font-size: 0.7rem; font-weight: 600; color: var(--accent-indigo); text-decoration: none; white-space: nowrap;
+            transition: color 0.15s;
+        }
+        .hcb-link:hover { color: var(--text-primary); }
+
+        @media (max-width: 768px) {
+            .horoscope-scores-row { flex-wrap: wrap; gap: 0.35rem; padding: 0 0.875rem 0.75rem; }
+            .h-score-pill { min-width: calc(50% - 0.2rem); }
+        }
+        @media (max-width: 480px) {
+            .horoscope-top { gap: 0.5rem; padding: 0.75rem; }
+            .horoscope-sign-img { width: 2rem; height: 2rem; }
+            .horoscope-title { font-size: 0.8rem; }
+            .horoscope-text { -webkit-line-clamp: 1; }
+            .horoscope-score-num { font-size: 1.4rem; }
+            .horoscope-scores .hs-icon { display: none; }
+            .hcb-digit { font-size: 0.85rem; min-width: 1.3rem; padding: 0.1rem 0.25rem; }
+        }
     </style>
 </head>
-<body x-data="{ activeTab: new URLSearchParams(window.location.search).get('tab') || localStorage.getItem('activeTab') || 'overview' }" x-init="localStorage.removeItem('activeTab')">
+<body x-data="chartPage()" x-init="init()">
     @php
     // ==================== DATA PREPARATION ====================
-    $signToFile = ['Овен' => 'aries', 'Телец' => 'taurus', 'Близнецы' => 'gemini', 'Рак' => 'cancer', 'Лев' => 'leo', 'Дева' => 'virgo', 'Весы' => 'libra', 'Скорпион' => 'scorpio', 'Стрелец' => 'sagittarius', 'Козерог' => 'capricorn', 'Водолей' => 'aquarius', 'Рыбы' => 'pisces'];
+    // Mapping from Russian sign names (stored in DB) to keys
+    $signToKey = ['Овен' => 'aries', 'Телец' => 'taurus', 'Близнецы' => 'gemini', 'Рак' => 'cancer', 'Лев' => 'leo', 'Дева' => 'virgo', 'Весы' => 'libra', 'Скорпион' => 'scorpio', 'Стрелец' => 'sagittarius', 'Козерог' => 'capricorn', 'Водолей' => 'aquarius', 'Рыбы' => 'pisces'];
+    $signToFile = $signToKey; // Same mapping for file names
+
+    // Localized sign names (Russian sign -> localized name)
+    $signNames = [];
+    foreach ($signToKey as $ru => $key) {
+        $signNames[$ru] = __('astrology.sign_' . $key);
+    }
+
     $planetFiles = ['sun' => 'sun', 'moon' => 'moon', 'mercury' => 'mercury', 'venus' => 'venus', 'mars' => 'mars', 'jupiter' => 'jupiter', 'saturn' => 'saturn', 'uranus' => 'uranus', 'neptune' => 'neptune', 'pluto' => 'pluto', 'north_node' => 'north_node', 'south_node' => 'south_node', 'chiron' => 'chiron', 'part_fortune' => 'part_fortune', 'vertex' => 'vertex'];
-    $planetNames = ['sun' => 'Солнце', 'moon' => 'Луна', 'mercury' => 'Меркурий', 'venus' => 'Венера', 'mars' => 'Марс', 'jupiter' => 'Юпитер', 'saturn' => 'Сатурн', 'uranus' => 'Уран', 'neptune' => 'Нептун', 'pluto' => 'Плутон', 'north_node' => 'Сев. узел', 'south_node' => 'Южн. узел', 'chiron' => 'Хирон', 'part_fortune' => 'Колесо фортуны', 'vertex' => 'Вертекс'];
-    $signOrder = ['Овен', 'Телец', 'Близнецы', 'Рак', 'Лев', 'Дева', 'Весы', 'Скорпион', 'Стрелец', 'Козерог', 'Водолей', 'Рыбы'];
+
+    // Localized planet names
+    $planetNames = [
+        'sun' => __('astrology.planet_sun'),
+        'moon' => __('astrology.planet_moon'),
+        'mercury' => __('astrology.planet_mercury'),
+        'venus' => __('astrology.planet_venus'),
+        'mars' => __('astrology.planet_mars'),
+        'jupiter' => __('astrology.planet_jupiter'),
+        'saturn' => __('astrology.planet_saturn'),
+        'uranus' => __('astrology.planet_uranus'),
+        'neptune' => __('astrology.planet_neptune'),
+        'pluto' => __('astrology.planet_pluto'),
+        'north_node' => __('astrology.planet_north_node'),
+        'south_node' => __('astrology.planet_south_node'),
+        'chiron' => __('astrology.planet_chiron'),
+        'part_fortune' => __('astrology.planet_part_fortune'),
+        'vertex' => __('astrology.planet_vertex'),
+    ];
+
+    // Russian planet names for aspect matching (data is stored in Russian)
+    $planetNamesRuToKey = ['Солнце' => 'sun', 'Луна' => 'moon', 'Меркурий' => 'mercury', 'Венера' => 'venus', 'Марс' => 'mars', 'Юпитер' => 'jupiter', 'Сатурн' => 'saturn', 'Уран' => 'uranus', 'Нептун' => 'neptune', 'Плутон' => 'pluto', 'Сев. узел' => 'north_node', 'Южн. узел' => 'south_node', 'Хирон' => 'chiron', 'Колесо фортуны' => 'part_fortune', 'Вертекс' => 'vertex', 'Асцендент' => 'ascendant', 'MC' => 'mc'];
+
+    $signOrderRu = ['Овен', 'Телец', 'Близнецы', 'Рак', 'Лев', 'Дева', 'Весы', 'Скорпион', 'Стрелец', 'Козерог', 'Водолей', 'Рыбы'];
+    $signOrder = $signOrderRu; // Keep for internal calculations
     $signElems = ['fire' => 'rgba(239, 68, 68, 0.08)', 'earth' => 'rgba(249, 115, 22, 0.08)', 'air' => 'rgba(59, 130, 246, 0.08)', 'water' => 'rgba(139, 92, 246, 0.08)'];
     $elemMap = ['Овен' => 'fire', 'Телец' => 'earth', 'Близнецы' => 'air', 'Рак' => 'water', 'Лев' => 'fire', 'Дева' => 'earth', 'Весы' => 'air', 'Скорпион' => 'water', 'Стрелец' => 'fire', 'Козерог' => 'earth', 'Водолей' => 'air', 'Рыбы' => 'water'];
     $qualityMap = ['Овен' => 'cardinal', 'Рак' => 'cardinal', 'Весы' => 'cardinal', 'Козерог' => 'cardinal', 'Телец' => 'fixed', 'Лев' => 'fixed', 'Скорпион' => 'fixed', 'Водолей' => 'fixed', 'Близнецы' => 'mutable', 'Дева' => 'mutable', 'Стрелец' => 'mutable', 'Рыбы' => 'mutable'];
     $polarityMap = ['Овен' => 'yang', 'Близнецы' => 'yang', 'Лев' => 'yang', 'Весы' => 'yang', 'Стрелец' => 'yang', 'Водолей' => 'yang', 'Телец' => 'yin', 'Рак' => 'yin', 'Дева' => 'yin', 'Скорпион' => 'yin', 'Козерог' => 'yin', 'Рыбы' => 'yin'];
+
+    // Helper to translate sign name from Russian to localized
+    function translateSign($ruSign, $signNames) { return $signNames[$ruSign] ?? $ruSign; }
+    // Helper to translate planet name from Russian to localized
+    function translatePlanet($ruPlanet, $planetNamesRuToKey, $planetNames) {
+        $key = $planetNamesRuToKey[$ruPlanet] ?? null;
+        return $key ? ($planetNames[$key] ?? $ruPlanet) : $ruPlanet;
+    }
 
     function getAbsDeg($s, $d) { $idx = array_search($s, ['Овен','Телец','Близнецы','Рак','Лев','Дева','Весы','Скорпион','Стрелец','Козерог','Водолей','Рыбы']); return ($idx?:0)*30+$d; }
     function toSvgAngle($deg, $asc) { return 180 - ($deg - $asc); }
@@ -1301,12 +830,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
                 <div>
-                    <p class="text-white font-medium">Ссылка отправлена на почту!</p>
-                    <p class="text-emerald-300 text-sm">Сохраните ссылку для доступа к карте</p>
+                    <p class="text-white font-medium">{{ __('astrology.link_sent') }}</p>
+                    <p class="text-emerald-300 text-sm">{{ __('astrology.link_save_hint') }}</p>
                 </div>
             </div>
             <a href="/" class="text-emerald-400 hover:text-white transition-colors text-sm">
-                На главную
+                {{ __('astrology.btn_home') }}
             </a>
         </div>
     </div>
@@ -1317,7 +846,7 @@
         <header class="page-header">
             <a href="/" class="btn">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                <span>Назад</span>
+                <span>{{ __('astrology.btn_back') }}</span>
             </a>
             <div class="header-center">
                 <h1>{{ $chart->name }}</h1>
@@ -1327,7 +856,29 @@
                     • {{ $chart->birth_place }}
                 </div>
             </div>
-            <div style="display: flex; gap: 0.5rem;">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                @php
+                    $chartLocales = config('app.available_locales', ['en']);
+                    $chartLangFlags = ['en' => '🇬🇧', 'ru' => '🇷🇺', 'es' => '🇪🇸', 'fr' => '🇫🇷', 'pt' => '🇧🇷', 'hi' => '🇮🇳'];
+                    $chartBaseUrl = rtrim(config('app.url', request()->getSchemeAndHttpHost()), '/');
+                    $chartCurrentLocale = app()->getLocale();
+                @endphp
+                <div x-data="{ langOpen: false }" style="position: relative;">
+                    <button @click="langOpen = !langOpen" @click.outside="langOpen = false" class="btn" style="gap: 0.25rem;">
+                        <span class="lang-flag" style="font-size: 1rem; line-height: 1;">{{ $chartLangFlags[$chartCurrentLocale] ?? '🌐' }}</span>
+                        <span class="lang-code uppercase" style="font-size: 0.7rem;">{{ $chartCurrentLocale }}</span>
+                    </button>
+                    <div x-show="langOpen" x-transition style="position: absolute; right: 0; top: 100%; margin-top: 0.25rem; width: 10rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; z-index: 50;">
+                        @foreach($chartLocales as $loc)
+                        <a href="{{ $chartBaseUrl }}{{ $loc === 'en' ? '' : '/' . $loc }}/charts/{{ $chart->id }}"
+                           style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.8rem; color: {{ $loc === $chartCurrentLocale ? 'var(--accent-indigo)' : 'var(--text-secondary)' }}; background: {{ $loc === $chartCurrentLocale ? 'rgba(99,102,241,0.1)' : 'transparent' }}; text-decoration: none; transition: background 0.15s;"
+                           onmouseover="this.style.background='rgba(99,102,241,0.08)'" onmouseout="this.style.background='{{ $loc === $chartCurrentLocale ? 'rgba(99,102,241,0.1)' : 'transparent' }}'">
+                            <span>{{ $chartLangFlags[$loc] ?? '🌐' }}</span>
+                            {{ __('common.lang_' . $loc) }}
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
                 @if(!isset($showEmailBanner) || !$showEmailBanner)
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
@@ -1335,7 +886,7 @@
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
-                        <span>Выйти</span>
+                        <span>{{ __('astrology.btn_logout') }}</span>
                     </button>
                 </form>
                 @endif
@@ -1350,45 +901,127 @@
         <div class="key-stats">
             <div class="key-badge">
                 <img src="/images/planets/sun.webp" alt="">
-                <span class="key-badge-label">Солнце</span>
+                <span class="key-badge-label">{{ __('astrology.planet_sun') }}</span>
                 <img src="/images/zodiac/{{ $signToFile[$sunSign] ?? 'aries' }}.webp" alt="">
-                <span class="key-badge-value">{{ $sunSign }}</span>
+                <span class="key-badge-value">{{ $signNames[$sunSign] ?? $sunSign }}</span>
             </div>
             <div class="key-badge">
                 <img src="/images/planets/moon.webp" alt="">
-                <span class="key-badge-label">Луна</span>
+                <span class="key-badge-label">{{ __('astrology.planet_moon') }}</span>
                 <img src="/images/zodiac/{{ $signToFile[$moonSign] ?? 'cancer' }}.webp" alt="">
-                <span class="key-badge-value">{{ $moonSign }}</span>
+                <span class="key-badge-value">{{ $signNames[$moonSign] ?? $moonSign }}</span>
             </div>
             <div class="key-badge">
                 <span class="key-badge-label">ASC</span>
                 <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.webp" alt="">
-                <span class="key-badge-value">{{ $ascSign }}</span>
+                <span class="key-badge-value">{{ $signNames[$ascSign] ?? $ascSign }}</span>
             </div>
             <div class="key-badge">
                 <span class="key-badge-label">MC</span>
                 <img src="/images/zodiac/{{ $signToFile[$mcSign] ?? 'capricorn' }}.webp" alt="">
-                <span class="key-badge-value">{{ $mcSign }}</span>
+                <span class="key-badge-value">{{ $signNames[$mcSign] ?? $mcSign }}</span>
             </div>
         </div>
 
+        <!-- ==================== DAILY HOROSCOPE ==================== -->
+        @if(isset($horoscope) && $horoscope && $sunSignKey)
+        @php
+            $hContent = $horoscope->content ?? [];
+            $hScores = $hContent['scores'] ?? ['overall' => 75, 'love' => 70, 'career' => 80, 'health' => 75];
+            $hSignName = __('astrology.sign_' . $sunSignKey);
+            $hDate = now()->locale(app()->getLocale())->translatedFormat('j F');
+            $hOverall = $hScores['overall'] ?? 75;
+            $hCircumference = 2 * 3.14159 * 18;
+            $hOffset = $hCircumference - ($hCircumference * $hOverall / 100);
+        @endphp
+        <div class="horoscope-card" x-data="horoscopeCountdown()">
+            {{-- Top: sign icon + text + overall score --}}
+            <div class="horoscope-top">
+                <img src="/images/zodiac/{{ $sunSignKey }}.webp" alt="{{ $hSignName }}" class="horoscope-sign-img">
+                <div class="horoscope-info">
+                    <div class="horoscope-info-row">
+                        <span class="horoscope-title">{{ __('common.daily_horoscope_title') }}</span>
+                        <span class="horoscope-live"></span>
+                    </div>
+                    <div class="horoscope-meta">{{ $hSignName }} · {{ $hDate }}</div>
+                    @if(!empty($hContent['overview']))
+                    <div class="horoscope-text">{{ Str::limit($hContent['overview'], 180) }}</div>
+                    @endif
+                </div>
+                <div class="horoscope-score-big">
+                    <div class="horoscope-score-num">{{ $hOverall }}<small>%</small></div>
+                    <div class="horoscope-score-label">{{ __('common.daily_score') }}</div>
+                </div>
+            </div>
+
+            {{-- Score pills with bars --}}
+            <div class="horoscope-scores-row">
+                <div class="h-score-pill">
+                    <span class="h-score-emoji">❤️</span>
+                    <div class="h-score-info">
+                        <span class="h-score-label">{{ __('common.daily_love') }}</span>
+                        <div class="h-score-bar"><div class="h-score-fill love" style="width: {{ $hScores['love'] ?? 70 }}%"></div></div>
+                    </div>
+                    <span class="h-score-val love">{{ $hScores['love'] ?? 70 }}%</span>
+                </div>
+                <div class="h-score-pill">
+                    <span class="h-score-emoji">💼</span>
+                    <div class="h-score-info">
+                        <span class="h-score-label">{{ __('common.daily_career') }}</span>
+                        <div class="h-score-bar"><div class="h-score-fill career" style="width: {{ $hScores['career'] ?? 80 }}%"></div></div>
+                    </div>
+                    <span class="h-score-val career">{{ $hScores['career'] ?? 80 }}%</span>
+                </div>
+                <div class="h-score-pill">
+                    <span class="h-score-emoji">🍀</span>
+                    <div class="h-score-info">
+                        <span class="h-score-label">{{ __('common.daily_luck') }}</span>
+                        <div class="h-score-bar"><div class="h-score-fill luck" style="width: {{ $hScores['luck'] ?? 65 }}%"></div></div>
+                    </div>
+                    <span class="h-score-val luck">{{ $hScores['luck'] ?? 65 }}%</span>
+                </div>
+                <div class="h-score-pill">
+                    <span class="h-score-emoji">✨</span>
+                    <div class="h-score-info">
+                        <span class="h-score-label">{{ __('common.daily_health') }}</span>
+                        <div class="h-score-bar"><div class="h-score-fill health" style="width: {{ $hScores['health'] ?? 75 }}%"></div></div>
+                    </div>
+                    <span class="h-score-val health">{{ $hScores['health'] ?? 75 }}%</span>
+                </div>
+            </div>
+
+            {{-- Countdown bar --}}
+            <div class="horoscope-countdown-bar">
+                <span class="hcb-label">{{ __('common.daily_updates_in') }}</span>
+                <div class="hcb-timer">
+                    <span class="hcb-digit" x-text="hours">00</span><span class="hcb-unit">{{ __('common.daily_h') }}</span>
+                    <span class="hcb-sep">:</span>
+                    <span class="hcb-digit" x-text="minutes">00</span><span class="hcb-unit">{{ __('common.daily_m') }}</span>
+                    <span class="hcb-sep">:</span>
+                    <span class="hcb-digit" x-text="seconds">00</span><span class="hcb-unit">{{ __('common.daily_s') }}</span>
+                </div>
+                @if(Route::has('horoscope.sign'))
+                <a href="{{ locale_route('horoscope.sign', ['sign' => $sunSignKey]) }}" target="_blank" class="hcb-link">{{ __('common.daily_read_more') }} →</a>
+                @endif
+            </div>
+        </div>
+        @endif
+
         <!-- ==================== TAB NAVIGATION ==================== -->
         <nav class="tab-nav">
-            <button class="tab-btn" :class="{ 'active': activeTab === 'overview' }" @click="activeTab = 'overview'">
+            <button class="tab-btn" :class="{ 'active': activeTab === 'overview' }" @click="visitTab('overview')">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-width="2" d="M12 6v6l4 2"/></svg>
-                <span class="tab-btn-text">Обзор</span>
+                <span class="tab-btn-text">{{ __('astrology.tab_overview') }}</span>
             </button>
-            <button class="tab-btn" :class="{ 'active': activeTab === 'analysis' }" @click="activeTab = 'analysis'">
+            <button class="tab-btn" :class="{ 'active': activeTab === 'analysis', 'tab-new': !visited.analysis }" @click="visitTab('analysis')">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <span class="tab-btn-text">Анализ</span>
+                <span class="tab-btn-text">{{ __('astrology.tab_analysis') }}</span>
+                <span x-show="!visited.analysis" class="tab-dot"></span>
             </button>
-            <button class="tab-btn" :class="{ 'active': activeTab === 'chat' }" @click="activeTab = 'chat'">
+            <button class="tab-btn" :class="{ 'active': activeTab === 'chat', 'tab-new': !visited.chat }" @click="visitTab('chat')">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                <span class="tab-btn-text">Чат с ИИ</span>
-            </button>
-            <button class="tab-btn" :class="{ 'active': activeTab === 'compatibility' }" @click="activeTab = 'compatibility'">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                <span class="tab-btn-text">Совместимость</span>
+                <span class="tab-btn-text">{{ __('astrology.tab_chat') }}</span>
+                <span x-show="!visited.chat" class="tab-dot"></span>
             </button>
         </nav>
 
@@ -1452,9 +1085,9 @@
                     <div class="ai-summary">
                         <div class="ai-summary-header">
                             <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                            Краткое резюме
+                            {{ __('astrology.section_summary') }}
                         </div>
-                        <p style="margin: 0;">{{ Str::limit($chart->getAiCharacterAnalysis(), 350) }}</p>
+                        <div class="ai-report-content" style="margin: 0;">{!! Str::markdown($chart->getAiCharacterAnalysis()) !!}</div>
                     </div>
                     @endif
                 </div>
@@ -1465,7 +1098,7 @@
                     <div class="section-card">
                         <div class="section-header" style="color: var(--accent-indigo);">
                             <svg fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
-                            Планеты
+                            {{ __('astrology.section_planets') }}
                         </div>
                         <div class="section-body">
                             <div class="planet-list">
@@ -1477,7 +1110,7 @@
                                         {{ $planetNames[$k] ?? ucfirst($k) }}
                                         @if($p['retrograde'] ?? false)<span class="planet-row-retro">R</span>@endif
                                     </div>
-                                    <div class="planet-row-deg">{{ $p['sign'] ?? '-' }} {{ floor($p['degree'] ?? 0) }}°</div>
+                                    <div class="planet-row-deg">{{ $signNames[$p['sign'] ?? ''] ?? ($p['sign'] ?? '-') }} {{ floor($p['degree'] ?? 0) }}°</div>
                                 </div>
                                 @endforeach
                             </div>
@@ -1488,7 +1121,7 @@
                     <div class="section-card">
                         <div class="section-header" style="color: var(--accent-cyan);">
                             <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-7h1"/></svg>
-                            Дома
+                            {{ __('astrology.section_houses') }}
                         </div>
                         <div class="section-body">
                             <div class="houses-grid">
@@ -1509,7 +1142,7 @@
                     <div class="section-card">
                         <div class="section-header" style="color: var(--accent-purple);">
                             <svg fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                            Аспекты
+                            {{ __('astrology.section_aspects') }}
                         </div>
                         <div class="section-body">
                             <div class="aspects-list">
@@ -1519,9 +1152,15 @@
                                     $isTension = in_array($a['type'] ?? '', $stressAspects);
                                     $colorClass = $isHarmony ? 'green' : ($isTension ? 'red' : 'purple');
                                 @endphp
+                                @php
+                                    $p1Key = $planetNamesRuToKey[$a['planet1'] ?? ''] ?? null;
+                                    $p2Key = $planetNamesRuToKey[$a['planet2'] ?? ''] ?? null;
+                                    $p1Name = $p1Key ? ($planetNames[$p1Key] ?? $a['planet1']) : ($a['planet1'] ?? '');
+                                    $p2Name = $p2Key ? ($planetNames[$p2Key] ?? $a['planet2']) : ($a['planet2'] ?? '');
+                                @endphp
                                 <div class="aspect-row">
                                     <span class="aspect-symbol {{ $colorClass }}">{{ $aspectSymbols[$a['type']] ?? '•' }}</span>
-                                    <span class="aspect-planets">{{ $a['planet1'] ?? '' }} — {{ $a['planet2'] ?? '' }}</span>
+                                    <span class="aspect-planets">{{ $p1Name }} — {{ $p2Name }}</span>
                                     <span class="aspect-orb">{{ $a['orb'] ?? '' }}°</span>
                                 </div>
                                 @endforeach
@@ -1534,32 +1173,32 @@
                     <div class="section-card">
                         <div class="section-header" style="color: var(--accent-orange);">
                             <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-                            Баланс
+                            {{ __('astrology.section_balance') }}
                         </div>
                         <div class="section-body">
                             <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                                 <div style="flex:1; text-align:center; padding:0.35rem; background:var(--bg-tertiary); border-radius:0.375rem; font-size:0.7rem;">
                                     <div style="font-weight:600;">{{ $qualityCount['cardinal'] }}</div>
-                                    <div style="color:var(--text-muted);">Кард.</div>
+                                    <div style="color:var(--text-muted);">{{ __('astrology.balance_cardinal') }}</div>
                                 </div>
                                 <div style="flex:1; text-align:center; padding:0.35rem; background:var(--bg-tertiary); border-radius:0.375rem; font-size:0.7rem;">
                                     <div style="font-weight:600;">{{ $qualityCount['fixed'] }}</div>
-                                    <div style="color:var(--text-muted);">Фикс.</div>
+                                    <div style="color:var(--text-muted);">{{ __('astrology.balance_fixed') }}</div>
                                 </div>
                                 <div style="flex:1; text-align:center; padding:0.35rem; background:var(--bg-tertiary); border-radius:0.375rem; font-size:0.7rem;">
                                     <div style="font-weight:600;">{{ $qualityCount['mutable'] }}</div>
-                                    <div style="color:var(--text-muted);">Мут.</div>
+                                    <div style="color:var(--text-muted);">{{ __('astrology.balance_mutable') }}</div>
                                 </div>
                             </div>
                             <div style="display: flex; gap: 0.5rem;">
                                 <div style="flex:1; display:flex; align-items:center; gap:0.35rem; padding:0.35rem 0.5rem; background:var(--bg-tertiary); border-radius:0.375rem; font-size:0.7rem;">
                                     <span style="color:#3B82F6">☀</span>
-                                    <span style="color:var(--text-muted)">Ян</span>
+                                    <span style="color:var(--text-muted)">{{ __('astrology.balance_yang') }}</span>
                                     <span style="font-weight:600; margin-left:auto;">{{ $polarityCount['yang'] }}</span>
                                 </div>
                                 <div style="flex:1; display:flex; align-items:center; gap:0.35rem; padding:0.35rem 0.5rem; background:var(--bg-tertiary); border-radius:0.375rem; font-size:0.7rem;">
                                     <span style="color:#EC4899">☽</span>
-                                    <span style="color:var(--text-muted)">Инь</span>
+                                    <span style="color:var(--text-muted)">{{ __('astrology.balance_yin') }}</span>
                                     <span style="font-weight:600; margin-left:auto;">{{ $polarityCount['yin'] }}</span>
                                 </div>
                             </div>
@@ -1571,17 +1210,51 @@
 
         <!-- ==================== TAB 2: ANALYSIS ==================== -->
         <div class="tab-content" :class="{ 'active': activeTab === 'analysis' }">
-            <!-- Character & Personality -->
-            @if($chart->hasAiReport() && $chart->getAiCharacterAnalysis())
-            <div class="section-card" style="margin-bottom: 1rem;">
-                <div class="section-header" style="color: var(--accent-indigo); font-size: 0.9rem;">
-                    <svg fill="currentColor" viewBox="0 0 24 24" width="20" height="20"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                    Характер и личность
-                </div>
-                <div class="section-body" style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.8; padding: 1rem;">
-                    {!! nl2br(e($chart->getAiCharacterAnalysis())) !!}
-                </div>
+
+            <!-- Language hint when report was generated in a different language -->
+            @if($chart->hasAiReport() && $chart->locale && $chart->locale !== app()->getLocale())
+            <div style="background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.65rem;">
+                <span style="font-size: 1rem;">🌐</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">{{ __('astrology.report_language_hint', ['language' => __('astrology.language_' . $chart->locale)]) }}</span>
             </div>
+            @endif
+
+            @php
+                $aiSections = [
+                    ['key' => 'identity', 'method' => 'getAiCharacterAnalysis', 'label' => 'astrology.section_character', 'icon' => '👤', 'color' => 'var(--accent-indigo)'],
+                    ['key' => 'strengths_weaknesses', 'method' => 'getAiStrengthsWeaknesses', 'label' => 'astrology.section_strengths', 'icon' => '💪', 'color' => 'var(--accent-gold)'],
+                    ['key' => 'love', 'method' => 'getAiLoveAnalysis', 'label' => 'astrology.section_love', 'icon' => '❤️', 'color' => 'var(--accent-pink, #ec4899)'],
+                    ['key' => 'career', 'method' => 'getAiCareerAnalysis', 'label' => 'astrology.section_career', 'icon' => '💼', 'color' => 'var(--accent-gold)'],
+                    ['key' => 'health', 'method' => 'getAiHealthAnalysis', 'label' => 'astrology.section_health', 'icon' => '🏥', 'color' => 'var(--accent-teal, #14b8a6)'],
+                    ['key' => 'karma', 'method' => 'getAiKarmaAnalysis', 'label' => 'astrology.section_karma', 'icon' => '🔮', 'color' => 'var(--accent-purple, #a855f7)'],
+                    ['key' => 'forecast', 'method' => 'getAiForecast', 'label' => 'astrology.section_forecast', 'icon' => '🌟', 'color' => 'var(--accent-cyan, #06b6d4)'],
+                ];
+            @endphp
+
+            <!-- AI Report Sections -->
+            @if($chart->hasAiReport())
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; padding: 0.5rem 0;">
+                <span style="display: inline-flex; align-items: center; gap: 0.35rem; background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15)); border: 1px solid rgba(99,102,241,0.25); border-radius: 2rem; padding: 0.3rem 0.75rem; font-size: 0.7rem; color: var(--accent-indigo); font-weight: 500;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                    {{ __('astrology.ai_generated_label') }}
+                </span>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">{{ __('astrology.ai_generated_hint') }}</span>
+            </div>
+            @foreach($aiSections as $section)
+                @php $sectionContent = $chart->{$section['method']}(); @endphp
+                @if($sectionContent)
+                <div class="section-card" style="margin-bottom: 0.75rem;">
+                    <div class="section-header" style="color: {{ $section['color'] }}; font-size: 0.9rem; cursor: pointer; user-select: none;" onclick="this.parentElement.querySelector('.section-body').classList.toggle('ai-section-collapsed')">
+                        <span style="font-size: 1.1rem;">{{ $section['icon'] }}</span>
+                        {{ __($section['label']) }}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: auto; transition: transform 0.2s;"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="section-body ai-report-content" style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.8; padding: 0.75rem 1rem;">
+                        {!! Str::markdown(is_array($sectionContent) ? json_encode($sectionContent, JSON_UNESCAPED_UNICODE) : $sectionContent) !!}
+                    </div>
+                </div>
+                @endif
+            @endforeach
             @endif
 
             <!-- Sun, Moon, Ascendant Cards -->
@@ -1591,7 +1264,7 @@
                 <div class="analysis-card">
                     <div class="analysis-card-header">
                         <img src="/images/planets/sun.webp" alt="">
-                        <span class="analysis-card-title">Солнце в {{ $sunSign }}</span>
+                        <span class="analysis-card-title">{{ __('astrology.sun_in', ['sign' => $signNames[$sunSign] ?? $sunSign]) }}</span>
                     </div>
                     <div class="analysis-card-body">
                         @if($sunMeaning)<p>{{ $sunMeaning->description }}</p>@endif
@@ -1604,7 +1277,7 @@
                 <div class="analysis-card">
                     <div class="analysis-card-header">
                         <img src="/images/planets/moon.webp" alt="">
-                        <span class="analysis-card-title">Луна в {{ $moonSign }}</span>
+                        <span class="analysis-card-title">{{ __('astrology.moon_in', ['sign' => $signNames[$moonSign] ?? $moonSign]) }}</span>
                     </div>
                     <div class="analysis-card-body">
                         @if($moonMeaning)<p>{{ $moonMeaning->description }}</p>@endif
@@ -1617,64 +1290,11 @@
                 <div class="analysis-card">
                     <div class="analysis-card-header">
                         <img src="/images/zodiac/{{ $signToFile[$ascSign] ?? 'aries' }}.webp" alt="">
-                        <span class="analysis-card-title">Асцендент в {{ $ascSign }}</span>
+                        <span class="analysis-card-title">{{ __('astrology.asc_in', ['sign' => $signNames[$ascSign] ?? $ascSign]) }}</span>
                     </div>
                     <div class="analysis-card-body">
                         @if($ascMeaning)<p>{{ $ascMeaning->characteristics }}</p>@else
-                        <p>{{ $ascSign }} на Асцендент создаёт первое впечатление, которое вы производите на окружающих.</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- Analysis Sections (always open) -->
-            <div class="analysis-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-                <!-- Career -->
-                <div class="analysis-card">
-                    <div class="analysis-card-header">
-                        <span style="font-size: 1.1rem;">💼</span>
-                        <span class="analysis-card-title">Карьера и профессия</span>
-                    </div>
-                    <div class="analysis-card-body">
-                        @php $houseMeaning10 = $chart->getHouseMeaning(10); @endphp
-                        <p><strong style="color: var(--accent-gold);">MC в {{ $mcSign }}:</strong>
-                        @if($houseMeaning10) {{ $houseMeaning10->general }}@else
-                        Ваша карьера и общественное положение связаны с качествами знака {{ $mcSign }}.
-                        @endif</p>
-                    </div>
-                </div>
-
-                <!-- Love -->
-                <div class="analysis-card">
-                    <div class="analysis-card-header">
-                        <span style="font-size: 1.1rem;">❤️</span>
-                        <span class="analysis-card-title">Любовь и отношения</span>
-                    </div>
-                    <div class="analysis-card-body">
-                        @php $venusMeaning = $chart->getPlanetMeaning('venus'); $venusSign = $planets['venus']['sign'] ?? 'Телец'; @endphp
-                        <p><strong style="color: var(--accent-pink);">Венера в {{ $venusSign }}:</strong>
-                        @if($venusMeaning) {{ $venusMeaning->description }}@else
-                        Венера определяет ваш стиль любви и то, что вы цените в отношениях.
-                        @endif</p>
-                    </div>
-                </div>
-
-                <!-- Karma -->
-                <div class="analysis-card">
-                    <div class="analysis-card-header">
-                        <span style="font-size: 1.1rem;">🔮</span>
-                        <span class="analysis-card-title">Кармические уроки</span>
-                    </div>
-                    <div class="analysis-card-body">
-                        @if(isset($planets['north_node']))
-                        @php $nnSign = $planets['north_node']['sign'] ?? ''; @endphp
-                        <p><strong style="color: var(--accent-purple);">Северный узел в {{ $nnSign }}:</strong>
-                        Указывает направление духовного роста — качества, которые нужно развивать.</p>
-                        @endif
-                        @if(isset($planets['chiron']))
-                        @php $chSign = $planets['chiron']['sign'] ?? ''; @endphp
-                        <p style="margin-top: 0.75rem;"><strong style="color: var(--accent-teal);">Хирон в {{ $chSign }}:</strong>
-                        «Раненый целитель» — область глубокой раны, которая становится вашим даром.</p>
+                        <p>{{ __('astrology.fallback_asc', ['sign' => $signNames[$ascSign] ?? $ascSign]) }}</p>
                         @endif
                     </div>
                 </div>
@@ -1684,7 +1304,7 @@
             <div class="section-card" style="margin-top: 1rem;">
                 <div class="section-header" style="color: var(--accent-cyan);">
                     <span style="font-size: 1rem;">🏠</span>
-                    Планеты в домах
+                    {{ __('astrology.section_planets_in_houses') }}
                 </div>
                 <div class="section-body">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem;">
@@ -1698,11 +1318,11 @@
                         <div style="padding: 0.75rem; background: var(--bg-tertiary); border-radius: 0.5rem; border: 1px solid var(--border);">
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
                                 <img src="/images/planets/{{ $planetFiles[$planet] }}.webp" alt="" style="width: 1.25rem; height: 1.25rem;">
-                                <strong style="color: var(--text-primary); font-size: 0.85rem;">{{ $planetNames[$planet] }} в {{ $houseNum }} доме</strong>
+                                <strong style="color: var(--text-primary); font-size: 0.85rem;">{{ __('astrology.planet_in_house', ['planet' => $planetNames[$planet], 'house' => $houseNum]) }}</strong>
                             </div>
                             <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
                                 @if($hMeaning) {{ Str::limit($hMeaning->general, 120) }}@else
-                                Проявление энергии {{ $planetNames[$planet] }} в сфере {{ $houseNum }} дома.
+                                {{ __('astrology.fallback_planet_in_house', ['planet' => $planetNames[$planet], 'house' => $houseNum]) }}
                                 @endif
                             </p>
                         </div>
@@ -1718,7 +1338,7 @@
             <div class="chat-container">
                 <div class="chat-header">
                     <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                    <span class="chat-title">Спросите астролога ИИ</span>
+                    <span class="chat-title">{{ __('astrology.chat_ask_ai') }}</span>
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     @forelse($chatMessages as $msg)
@@ -1731,7 +1351,7 @@
                         </div>
                     @empty
                         <div class="chat-message assistant">
-                            Привет! Задайте любой вопрос о вашей натальной карте. Я помогу разобраться в аспектах, планетах и домах.
+                            {{ __('astrology.chat_welcome') }}
                         </div>
                     @endforelse
                 </div>
@@ -1744,340 +1364,13 @@
                 </div>
                 <form id="chat-form" class="chat-input-container">
                     @csrf
-                    <textarea id="chat-input" class="chat-input" placeholder="Введите ваш вопрос..." rows="1"></textarea>
+                    <textarea id="chat-input" class="chat-input" placeholder="{{ __('astrology.chat_placeholder') }}" rows="1"></textarea>
                     <button type="submit" class="chat-send" id="chat-send">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5M5 12l7-7 7 7"/>
                         </svg>
                     </button>
                 </form>
-            </div>
-        </div>
-
-        <!-- ==================== TAB 4: COMPATIBILITY ==================== -->
-        <div class="tab-content" :class="{ 'active': activeTab === 'compatibility' }" x-data="compatibilityTab()" x-init="loadCompatibility()">
-            <div class="compat-container">
-                <!-- Loading State -->
-                <div x-show="loading" style="text-align: center; padding: 3rem;">
-                    <p style="color: var(--text-muted);">Загрузка...</p>
-                </div>
-
-                <!-- No Partners Yet OR Show Form Mode - Show Form -->
-                <div x-show="!loading && (partners.length === 0 || showForm)" x-cloak>
-                    <!-- Partner selector when in form mode with existing partners -->
-                    <div x-show="partners.length > 0" class="compat-actions-bar" style="margin-bottom: 1rem;">
-                        <div class="compat-partner-selector">
-                            <label>Или выбрать:</label>
-                            <select @change="if($event.target.value) { selectPartnerById($event.target.value); showForm = false; } $event.target.value = '';">
-                                <option value="">— Выбрать партнёра —</option>
-                                <template x-for="partner in partners" :key="partner.id">
-                                    <option :value="partner.id" x-text="partner.partner_name + ' (' + (partner.overall_score ? partner.overall_score + '%' : 'ожидание') + ')'"></option>
-                                </template>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="compat-form">
-                        <div class="compat-form-title">
-                            <i class="fas fa-heart"></i>
-                            Новый партнёр
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem;">
-                            Введите данные партнёра для анализа совместимости.
-                        </p>
-                        <form @submit.prevent="submitForm()">
-                            <div class="form-row two-col">
-                                <div class="form-group">
-                                    <label>Имя партнёра *</label>
-                                    <input type="text" x-model="form.partner_name" placeholder="Например: Анна" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email партнёра *</label>
-                                    <input type="email" x-model="form.partner_email" placeholder="partner@email.com" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Пол партнёра *</label>
-                                    <div class="gender-buttons">
-                                        <label class="gender-btn">
-                                            <input type="radio" x-model="form.partner_gender" value="male" required>
-                                            <div class="gender-btn-inner">
-                                                <i class="fas fa-mars"></i>
-                                                <span>Мужской</span>
-                                            </div>
-                                        </label>
-                                        <label class="gender-btn">
-                                            <input type="radio" x-model="form.partner_gender" value="female" required>
-                                            <div class="gender-btn-inner">
-                                                <i class="fas fa-venus"></i>
-                                                <span>Женский</span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Дата рождения - Dropdowns -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Дата рождения *</label>
-                                    <div class="date-dropdowns">
-                                        <select x-model="form.birth_day" @change="syncBirthDate()" required>
-                                            <option value="">День</option>
-                                            <template x-for="day in getDaysInMonth()" :key="day">
-                                                <option :value="day" x-text="parseInt(day)"></option>
-                                            </template>
-                                        </select>
-                                        <select x-model="form.birth_month" @change="syncBirthDate()" required>
-                                            <option value="">Месяц</option>
-                                            <option value="01">Январь</option>
-                                            <option value="02">Февраль</option>
-                                            <option value="03">Март</option>
-                                            <option value="04">Апрель</option>
-                                            <option value="05">Май</option>
-                                            <option value="06">Июнь</option>
-                                            <option value="07">Июль</option>
-                                            <option value="08">Август</option>
-                                            <option value="09">Сентябрь</option>
-                                            <option value="10">Октябрь</option>
-                                            <option value="11">Ноябрь</option>
-                                            <option value="12">Декабрь</option>
-                                        </select>
-                                        <select x-model="form.birth_year" @change="syncBirthDate()" required>
-                                            <option value="">Год</option>
-                                            <template x-for="year in getYears()" :key="year">
-                                                <option :value="year" x-text="year"></option>
-                                            </template>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Время рождения - Dropdowns -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Время рождения</label>
-                                    <div class="time-dropdowns">
-                                        <select x-model="form.birth_hour" @change="syncBirthTime()" :disabled="form.time_unknown" :class="{ 'opacity-50': form.time_unknown }">
-                                            <option value="">Час</option>
-                                            <template x-for="hour in getHours()" :key="hour">
-                                                <option :value="hour" x-text="hour"></option>
-                                            </template>
-                                        </select>
-                                        <select x-model="form.birth_minute" @change="syncBirthTime()" :disabled="form.time_unknown" :class="{ 'opacity-50': form.time_unknown }">
-                                            <option value="">Минута</option>
-                                            <template x-for="minute in getMinutes()" :key="minute">
-                                                <option :value="minute" x-text="minute"></option>
-                                            </template>
-                                        </select>
-                                    </div>
-                                    <label class="time-unknown-checkbox">
-                                        <input type="checkbox" x-model="form.time_unknown" @change="syncBirthTime()">
-                                        <span>Не знаю точное время (будет использовано 12:00)</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Город рождения *</label>
-                                    <div class="city-search-container">
-                                        <input type="text"
-                                               x-model="cityQuery"
-                                               @input.debounce.300ms="searchCities()"
-                                               @focus="showCityResults = cityResults.length > 0"
-                                               placeholder="Начните вводить город..."
-                                               required>
-                                        <div class="city-results" x-show="showCityResults && cityResults.length > 0" @click.outside="showCityResults = false">
-                                            <template x-for="city in cityResults" :key="city.id">
-                                                <div class="city-result-item" @click="selectCity(city)">
-                                                    <span x-text="city.name_ru || city.name"></span>
-                                                    <span class="city-result-country" x-text="city.country"></span>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </div>
-                                    <p class="city-hint">Можно вводить на русском или латиницей</p>
-                                    <p class="city-warning" x-show="cityQuery && !form.partner_city_id">
-                                        <i class="fas fa-exclamation-triangle"></i> Выберите город из списка
-                                    </p>
-                                    <!-- City Details -->
-                                    <div class="city-details" x-show="selectedCity" x-cloak>
-                                        <span x-text="selectedCity?.name_ru || selectedCity?.name"></span>
-                                        <span class="city-details-sep">•</span>
-                                        <span x-text="selectedCity?.country"></span>
-                                        <span class="city-details-sep">•</span>
-                                        <span class="city-details-coords" x-text="selectedCity ? selectedCity.latitude.toFixed(2) + ', ' + selectedCity.longitude.toFixed(2) : ''"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Terms Checkbox -->
-                            <div class="form-row">
-                                <label class="compat-checkbox">
-                                    <input type="checkbox" x-model="form.terms_accepted" required>
-                                    <span>Я подтверждаю согласие партнёра на обработку данных и принимаю <a href="/terms" target="_blank">условия</a> и <a href="/privacy" target="_blank">политику конфиденциальности</a></span>
-                                </label>
-                            </div>
-
-                            <!-- Turnstile Captcha -->
-                            <div class="form-row" style="display: flex; justify-content: center;">
-                                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark" data-callback="onCompatTurnstileSuccess"></div>
-                            </div>
-
-                            <p x-show="error" x-text="error" style="color: var(--accent-red); font-size: 0.85rem; margin-bottom: 1rem;"></p>
-                            <button type="submit" class="compat-submit" :disabled="submitting || !form.terms_accepted">
-                                <span x-text="submitting ? 'Отправка...' : 'Отправить приглашение'"></span>
-                            </button>
-                        </form>
-
-                    </div>
-                </div>
-
-                <!-- Has Partners - Show Result -->
-                <div x-show="!loading && partners.length > 0 && !showForm && selectedPartner" x-cloak>
-                    <!-- Partner Selector + Actions -->
-                    <div class="compat-actions-bar">
-                        <div class="compat-partner-selector">
-                            <label>Партнёр:</label>
-                            <select x-model="selectedPartnerId" @change="selectPartnerById($event.target.value)">
-                                <template x-for="partner in partners" :key="partner.id">
-                                    <option :value="partner.id" x-text="partner.partner_name + ' (' + (partner.overall_score ? partner.overall_score + '%' : 'ожидание') + ')'"></option>
-                                </template>
-                            </select>
-                        </div>
-                        <button @click="showForm = true; resetForm()" class="compat-new-partner-btn">
-                            <i class="fas fa-plus"></i>
-                            Новый партнёр
-                        </button>
-                    </div>
-
-                    <div class="compat-result">
-                    <div class="compat-result-header" :style="`--score: ${selectedPartner?.overall_score || 50}; --score-color: ${selectedPartner?.score_color || '#EAB308'}`">
-                        <div class="compat-score-circle">
-                            <span class="compat-score-value" :style="`color: ${selectedPartner?.score_color}`" x-text="selectedPartner?.overall_score || '—'"></span>
-                        </div>
-                        <p class="compat-score-label" x-text="selectedPartner?.score_description || 'Совместимость'"></p>
-                        <div class="compat-partner-info">
-                            <span>Партнёр: <strong x-text="selectedPartner?.partner_name"></strong></span>
-                            <span>&bull;</span>
-                            <span x-text="selectedPartner?.partner_birth_date"></span>
-                            <span>&bull;</span>
-                            <span class="compat-status-badge" :class="selectedPartner?.status === 'completed' ? 'compat-status-completed' : 'compat-status-pending'" x-text="selectedPartner?.status === 'completed' ? 'Подтверждено' : 'Ожидание партнёра'"></span>
-                        </div>
-                    </div>
-
-                    <div class="compat-result-body">
-                        <!-- Pending Message -->
-                        <div x-show="selectedPartner?.status === 'pending'" style="text-align: center; padding: 1.5rem; background: rgba(234, 179, 8, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
-                            <p style="margin: 0 0 1rem; color: var(--accent-gold);">
-                                Приглашение отправлено на <strong x-text="selectedPartner?.partner_email"></strong>.<br>
-                                Полный результат будет доступен после подтверждения партнёром.
-                            </p>
-                            <button @click="loaded = false; loadCompatibility()" style="padding: 0.5rem 1rem; background: var(--accent-gold); color: #000; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
-                                <i class="fas fa-sync-alt" style="margin-right: 0.5rem;"></i>Обновить статус
-                            </button>
-                        </div>
-
-                        <!-- Scores Grid (show if completed) -->
-                        <div x-show="selectedPartner?.status === 'completed' && selectedPartner?.scores">
-                            <div class="compat-scores-grid">
-                                <template x-for="(score, key) in selectedPartner?.scores" :key="key">
-                                    <div class="compat-score-item">
-                                        <div class="compat-score-header">
-                                            <span class="compat-score-name" x-text="score.label"></span>
-                                            <span class="compat-score-val" x-text="score.value + '%'"></span>
-                                        </div>
-                                        <div class="compat-progress">
-                                            <div class="compat-progress-fill" :style="`width: ${score.value}%; background: ${score.value >= 70 ? 'var(--accent-green)' : (score.value >= 50 ? 'var(--accent-gold)' : 'var(--accent-red)')}`"></div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <!-- AI Report Loading State -->
-                            <div x-show="selectedPartner?.ai_report_status === 'pending' || selectedPartner?.ai_report_status === 'processing'" class="compat-ai-loading" style="text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05)); border-radius: 0.75rem; margin: 1.5rem 0;">
-                                <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-                                    <div style="position: relative; width: 48px; height: 48px;">
-                                        <div style="position: absolute; inset: 0; border: 2px solid rgba(99, 102, 241, 0.2); border-radius: 50%;"></div>
-                                        <div style="position: absolute; inset: 0; border: 2px solid transparent; border-top-color: var(--accent-indigo); border-radius: 50%; animation: compat-spin 1s linear infinite;"></div>
-                                        <div style="position: absolute; inset: 8px; background: rgba(99, 102, 241, 0.1); border-radius: 50%; animation: compat-pulse 2s ease-in-out infinite;"></div>
-                                    </div>
-                                </div>
-                                <p style="color: var(--text-secondary); margin: 0 0 0.5rem; font-size: 0.95rem;">
-                                    ИИ-астролог анализирует вашу совместимость...
-                                </p>
-                                <p style="color: var(--text-muted); margin: 0; font-size: 0.8rem;">
-                                    Это может занять несколько секунд
-                                </p>
-                            </div>
-
-                            <!-- AI Report Failed State -->
-                            <div x-show="selectedPartner?.ai_report_status === 'failed'" style="text-align: center; padding: 1.5rem; background: rgba(239, 68, 68, 0.1); border-radius: 0.75rem; margin: 1.5rem 0; border: 1px solid rgba(239, 68, 68, 0.2);">
-                                <p style="color: var(--accent-red); margin: 0 0 0.5rem;">
-                                    Не удалось сгенерировать ИИ-анализ
-                                </p>
-                                <p style="color: var(--text-muted); margin: 0; font-size: 0.85rem;">
-                                    Пожалуйста, попробуйте позже
-                                </p>
-                            </div>
-
-                            <!-- Full Description (under scores) -->
-                            <div x-show="selectedPartner?.ai_report?.full_description && selectedPartner?.ai_report_status === 'completed'" class="compat-full-description" style="margin: 1.5rem 0;">
-                                <div class="compat-section-title" style="color: var(--accent-indigo); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                    Анализ совместимости от ИИ-астролога
-                                </div>
-                                <div class="compat-description-text" x-html="formatDescription(selectedPartner?.ai_report?.full_description)" style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; background: var(--bg-tertiary); padding: 1.5rem; border-radius: 0.75rem;"></div>
-                            </div>
-
-                            <!-- AI Report Sections -->
-                            <template x-if="selectedPartner?.ai_report && selectedPartner?.ai_report_status === 'completed'">
-                                <div>
-                                    <!-- Strengths -->
-                                    <div class="compat-section compat-strengths" x-show="selectedPartner?.ai_report?.strengths && selectedPartner?.ai_report?.strengths.length > 0">
-                                        <div class="compat-section-title" style="color: var(--accent-green);">
-                                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                                            Сильные стороны
-                                        </div>
-                                        <template x-for="s in selectedPartner?.ai_report?.strengths" :key="s">
-                                            <div class="compat-list-item">
-                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                                <span x-text="s"></span>
-                                            </div>
-                                        </template>
-                                    </div>
-
-                                    <!-- Challenges -->
-                                    <div class="compat-section compat-challenges" x-show="selectedPartner?.ai_report?.challenges && selectedPartner?.ai_report?.challenges.length > 0">
-                                        <div class="compat-section-title" style="color: var(--accent-red);">
-                                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                            Потенциальные вызовы
-                                        </div>
-                                        <template x-for="c in selectedPartner?.ai_report?.challenges" :key="c">
-                                            <div class="compat-list-item">
-                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/></svg>
-                                                <span x-text="c"></span>
-                                            </div>
-                                        </template>
-                                    </div>
-
-                                    <!-- Recommendations -->
-                                    <div class="compat-section" x-show="selectedPartner?.ai_report?.recommendations && selectedPartner?.ai_report?.recommendations.length > 0">
-                                        <div class="compat-section-title" style="color: var(--accent-gold);">
-                                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                                            Рекомендации
-                                        </div>
-                                        <template x-for="r in selectedPartner?.ai_report?.recommendations" :key="r">
-                                            <div class="compat-list-item" style="background: rgba(234, 179, 8, 0.1);">
-                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent-gold);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                                <span x-text="r"></span>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -2087,7 +1380,7 @@
         const tooltip = document.getElementById('tooltip');
         document.querySelectorAll('.planet').forEach(g => {
             g.addEventListener('mouseenter', () => {
-                tooltip.innerHTML = `<div class="tooltip-name">${g.dataset.name}</div><div class="tooltip-detail">${g.dataset.sign}</div><div class="tooltip-detail">${g.dataset.house} дом</div>`;
+                tooltip.innerHTML = `<div class="tooltip-name">${g.dataset.name}</div><div class="tooltip-detail">${g.dataset.sign}</div><div class="tooltip-detail">${g.dataset.house} {{ __('astrology.house_label') }}</div>`;
                 tooltip.classList.add('show');
             });
             g.addEventListener('mousemove', (e) => {
@@ -2143,7 +1436,7 @@
             const div = document.createElement('div');
             div.className = 'chat-message assistant typing';
             div.id = 'typing-indicator';
-            div.textContent = 'Думаю...';
+            div.textContent = '{{ __('astrology.thinking') }}';
             chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -2162,7 +1455,7 @@
             chatSend.disabled = true;
 
             try {
-                const response = await fetch(`/charts/{{ $chart->id }}/chat`, {
+                const response = await fetch(`{{ route('charts.chat.send', ['natalChart' => $chart->id]) }}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2177,11 +1470,11 @@
                     await pollChatResponse(data.message_id);
                 } else {
                     hideTyping();
-                    addChatMessage('Ошибка. Попробуйте позже.', 'assistant');
+                    addChatMessage('{{ __("common.chat_error") }}', 'assistant');
                 }
             } catch (error) {
                 hideTyping();
-                addChatMessage('Ошибка соединения.', 'assistant');
+                addChatMessage('{{ __("common.chat_connection_error") }}', 'assistant');
             }
 
             chatSend.disabled = false;
@@ -2194,7 +1487,8 @@
 
             while (attempts < maxAttempts) {
                 try {
-                    const response = await fetch(`/charts/{{ $chart->id }}/chat/${messageId}/status`, {
+                    const statusUrl = `{{ route('charts.chat.status', ['natalChart' => $chart->id, 'chatMessage' => '__MSG_ID__']) }}`.replace('__MSG_ID__', messageId);
+                    const response = await fetch(statusUrl, {
                         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                     });
 
@@ -2203,7 +1497,7 @@
 
                         if (data.status === 'completed' || data.status === 'failed') {
                             hideTyping();
-                            addChatMessage(data.content || 'Ошибка при получении ответа.', 'assistant');
+                            addChatMessage(data.content || '{{ __("common.chat_response_error") }}', 'assistant');
                             return;
                         }
                     }
@@ -2216,7 +1510,7 @@
             }
 
             hideTyping();
-            addChatMessage('Время ожидания истекло. Попробуйте позже.', 'assistant');
+            addChatMessage('{{ __("common.chat_timeout") }}', 'assistant');
         }
 
         chatForm.addEventListener('submit', async (e) => {
@@ -2236,322 +1530,48 @@
 
         // Scroll to bottom on load
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        // Compatibility Tab Alpine Component
-        function compatibilityTab() {
-            return {
-                loading: true,
-                partners: [],
-                selectedPartner: null,
-                selectedPartnerId: null,
-                showForm: false,
-                form: {
-                    partner_name: '',
-                    partner_email: '',
-                    partner_gender: '',
-                    partner_birth_date: '',
-                    partner_birth_time: '',
-                    partner_city_id: null,
-                    terms_accepted: false,
-                    // Dropdown values
-                    birth_day: '',
-                    birth_month: '',
-                    birth_year: '',
-                    birth_hour: '',
-                    birth_minute: '',
-                    time_unknown: false
-                },
-                cityQuery: '',
-                cityResults: [],
-                showCityResults: false,
-                selectedCity: null,
-                submitting: false,
-                error: '',
-                loaded: false,
-                aiPollInterval: null,
-
-                async loadCompatibility() {
-                    if (this.loaded) return;
-                    this.loading = true;
-
-                    try {
-                        const response = await fetch(`/charts/{{ $chart->id }}/compatibility`, {
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            this.partners = data.partners || [];
-                            // Auto-select first partner if exists
-                            if (this.partners.length > 0 && !this.selectedPartner) {
-                                this.selectedPartner = this.partners[0];
-                                this.selectedPartnerId = this.partners[0].id;
-                            }
-                            // Start polling for AI report if needed
-                            this.startAiReportPolling();
-                        }
-                    } catch (e) {
-                        console.error('Failed to load compatibility:', e);
-                    }
-
-                    this.loading = false;
-                    this.loaded = true;
-                },
-
-                startAiReportPolling() {
-                    // Clear any existing interval
-                    if (this.aiPollInterval) {
-                        clearInterval(this.aiPollInterval);
-                    }
-
-                    // Check if any partner needs AI report polling
-                    const needsPolling = this.partners.some(p =>
-                        p.ai_report_status === 'pending' || p.ai_report_status === 'processing'
-                    );
-
-                    if (!needsPolling) return;
-
-                    // Poll every 3 seconds
-                    this.aiPollInterval = setInterval(async () => {
-                        await this.pollAiReportStatus();
-                    }, 3000);
-                },
-
-                async pollAiReportStatus() {
-                    const partnersNeedingUpdate = this.partners.filter(p =>
-                        p.ai_report_status === 'pending' || p.ai_report_status === 'processing'
-                    );
-
-                    if (partnersNeedingUpdate.length === 0) {
-                        if (this.aiPollInterval) {
-                            clearInterval(this.aiPollInterval);
-                            this.aiPollInterval = null;
-                        }
-                        return;
-                    }
-
-                    for (const partner of partnersNeedingUpdate) {
-                        try {
-                            const response = await fetch(`/compatibility/${partner.id}/ai-status`, {
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                }
-                            });
-
-                            if (response.ok) {
-                                const data = await response.json();
-                                // Update the partner in our list
-                                const idx = this.partners.findIndex(p => p.id === partner.id);
-                                if (idx !== -1) {
-                                    this.partners[idx].ai_report_status = data.ai_report_status;
-                                    if (data.ai_report) {
-                                        this.partners[idx].ai_report = data.ai_report;
-                                    }
-                                    // Update selectedPartner if it's the same
-                                    if (this.selectedPartner?.id === partner.id) {
-                                        this.selectedPartner = {...this.selectedPartner, ...this.partners[idx]};
-                                    }
-                                }
-                            }
-                        } catch (e) {
-                            console.error('Failed to poll AI status:', e);
-                        }
-                    }
-                },
-
-                selectPartner(partner) {
-                    this.selectedPartner = partner;
-                    this.selectedPartnerId = partner.id;
-                },
-
-                selectPartnerById(id) {
-                    const partner = this.partners.find(p => p.id == id);
-                    if (partner) {
-                        this.selectedPartner = partner;
-                    }
-                },
-
-                async searchCities() {
-                    if (this.cityQuery.length < 2) {
-                        this.cityResults = [];
-                        return;
-                    }
-
-                    try {
-                        const response = await fetch(`/cities/search/${encodeURIComponent(this.cityQuery)}`);
-                        if (response.ok) {
-                            this.cityResults = await response.json();
-                            this.showCityResults = true;
-                        }
-                    } catch (e) {
-                        console.error('City search failed:', e);
-                    }
-                },
-
-                selectCity(city) {
-                    this.form.partner_city_id = city.id;
-                    this.cityQuery = city.name_ru || city.name;
-                    this.selectedCity = city;
-                    this.showCityResults = false;
-                    this.cityResults = [];
-                },
-
-                syncBirthDate() {
-                    if (this.form.birth_day && this.form.birth_month && this.form.birth_year) {
-                        this.form.partner_birth_date = `${this.form.birth_year}-${this.form.birth_month}-${this.form.birth_day}`;
-                    } else {
-                        this.form.partner_birth_date = '';
-                    }
-                },
-
-                syncBirthTime() {
-                    if (this.form.time_unknown) {
-                        this.form.partner_birth_time = '12:00';
-                    } else if (this.form.birth_hour && this.form.birth_minute) {
-                        this.form.partner_birth_time = `${this.form.birth_hour}:${this.form.birth_minute}`;
-                    } else {
-                        this.form.partner_birth_time = '';
-                    }
-                },
-
-                getDaysInMonth() {
-                    const days = [];
-                    for (let d = 1; d <= 31; d++) {
-                        days.push(String(d).padStart(2, '0'));
-                    }
-                    return days;
-                },
-
-                getYears() {
-                    const years = [];
-                    const currentYear = new Date().getFullYear();
-                    for (let y = currentYear; y >= 1920; y--) {
-                        years.push(y);
-                    }
-                    return years;
-                },
-
-                getHours() {
-                    const hours = [];
-                    for (let h = 0; h <= 23; h++) {
-                        hours.push(String(h).padStart(2, '0'));
-                    }
-                    return hours;
-                },
-
-                getMinutes() {
-                    const minutes = [];
-                    for (let m = 0; m <= 59; m += 5) {
-                        minutes.push(String(m).padStart(2, '0'));
-                    }
-                    return minutes;
-                },
-
-                async submitForm() {
-                    this.error = '';
-
-                    // Validate
-                    if (!this.form.partner_name || !this.form.partner_email || !this.form.partner_gender ||
-                        !this.form.partner_birth_date || !this.form.partner_city_id) {
-                        this.error = 'Пожалуйста, заполните все обязательные поля';
-                        return;
-                    }
-
-                    if (!this.form.terms_accepted) {
-                        this.error = 'Пожалуйста, подтвердите согласие с условиями';
-                        return;
-                    }
-
-                    // Get Turnstile token
-                    const turnstileInput = document.querySelector('input[name="cf-turnstile-response"]');
-                    const turnstileToken = turnstileInput ? turnstileInput.value : '';
-                    if (!turnstileToken) {
-                        this.error = 'Пожалуйста, пройдите проверку безопасности';
-                        return;
-                    }
-
-                    this.submitting = true;
-
-                    try {
-                        const response = await fetch(`/charts/{{ $chart->id }}/compatibility`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({...this.form, 'cf_turnstile_response': turnstileToken})
-                        });
-
-                        const data = await response.json();
-
-                        if (data.success) {
-                            // Reload partners list and select new partner
-                            this.loaded = false;
-                            this.resetForm();
-                            await this.loadCompatibility();
-                            // Select the newly added partner (first in list) and show results
-                            if (this.partners.length > 0) {
-                                this.selectedPartner = this.partners[0];
-                                this.selectedPartnerId = this.partners[0].id;
-                            }
-                            this.showForm = false;
-                        } else {
-                            this.error = data.error || 'Произошла ошибка. Попробуйте ещё раз.';
-                            if (window.turnstile) window.turnstile.reset();
-                        }
-                    } catch (e) {
-                        this.error = 'Ошибка соединения. Попробуйте ещё раз.';
-                        if (window.turnstile) window.turnstile.reset();
-                    }
-
-                    this.submitting = false;
-                },
-
-                resetForm() {
-                    this.form = {
-                        partner_name: '',
-                        partner_email: '',
-                        partner_gender: '',
-                        partner_birth_date: '',
-                        partner_birth_time: '',
-                        partner_city_id: null,
-                        terms_accepted: false,
-                        birth_day: '',
-                        birth_month: '',
-                        birth_year: '',
-                        birth_hour: '',
-                        birth_minute: '',
-                        time_unknown: false
-                    };
-                    this.cityQuery = '';
-                    this.selectedCity = null;
-                    this.error = '';
-                    if (window.turnstile) window.turnstile.reset();
-                },
-
-                startNew() {
-                    this.selectedPartner = null;
-                    this.resetForm();
-                },
-
-                formatDescription(text) {
-                    if (!text) return '';
-                    // Handle both escaped \n and real newlines
-                    return text
-                        .replace(/\\n\\n/g, '</p><p style="margin: 0 0 1rem 0;">')
-                        .replace(/\\n/g, '<br>')
-                        .replace(/\n\n/g, '</p><p style="margin: 0 0 1rem 0;">')
-                        .replace(/\n/g, '<br>')
-                        .replace(/^/, '<p style="margin: 0 0 1rem 0;">')
-                        .replace(/$/, '</p>');
+    </script>
+    <script>
+    function horoscopeCountdown() {
+        return {
+            hours: '00', minutes: '00', seconds: '00',
+            init() {
+                this.tick();
+                setInterval(() => this.tick(), 1000);
+            },
+            tick() {
+                const now = new Date();
+                const nextUpdate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 5, 0));
+                if (now >= nextUpdate) {
+                    nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
                 }
-            };
-        }
+                const diff = nextUpdate - now;
+                this.hours = String(Math.floor(diff / 3600000)).padStart(2, '0');
+                this.minutes = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+                this.seconds = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+            }
+        };
+    }
+
+    function chartPage() {
+        const storageKey = 'chart_tabs_{{ $chart->id }}';
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        const startTab = new URLSearchParams(window.location.search).get('tab') || 'overview';
+        saved[startTab] = true;
+        localStorage.setItem(storageKey, JSON.stringify(saved));
+        return {
+            activeTab: startTab,
+            visited: { overview: !!saved.overview, analysis: !!saved.analysis, chat: !!saved.chat },
+            init() {},
+            visitTab(tab) {
+                this.activeTab = tab;
+                this.visited[tab] = true;
+                const s = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                s[tab] = true;
+                localStorage.setItem(storageKey, JSON.stringify(s));
+            }
+        };
+    }
     </script>
 </body>
 </html>

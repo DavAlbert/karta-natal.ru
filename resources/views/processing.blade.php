@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Выполнение расчета...</title>
+    <title>{{ __('astrology.processing_page_title') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         tailwind.config = {
@@ -29,8 +29,8 @@
             <div class="absolute inset-0 border-t-4 border-gold-500 rounded-full animate-spin"></div>
         </div>
 
-        <h2 class="text-2xl font-serif font-bold mb-2">Анализ положения планет</h2>
-        <p class="text-slate-400 text-sm mb-8" id="status-text">Инициализация эфемерид...</p>
+        <h2 class="text-2xl font-serif font-bold mb-2">{{ __('astrology.processing_heading') }}</h2>
+        <p class="text-slate-400 text-sm mb-8" id="status-text">{{ __('astrology.processing_init') }}</p>
 
         <!-- Progress Bar -->
         <div class="w-full bg-slate-800 rounded-full h-1.5 mb-2 overflow-hidden">
@@ -43,12 +43,12 @@
 
     <script>
         const steps = [
-            { pct: 15, text: "Расчет координат Солнца..." },
-            { pct: 30, text: "Определение лунных узлов..." },
-            { pct: 55, text: "Вычисление системы домов (Placidus)..." },
-            { pct: 75, text: "Анализ мажорных аспектов..." },
-            { pct: 90, text: "Формирование отчета..." },
-            { pct: 100, text: "Готово!" }
+            { pct: 15, text: @json(__('astrology.processing_sun')) },
+            { pct: 30, text: @json(__('astrology.processing_nodes')) },
+            { pct: 55, text: @json(__('astrology.processing_houses')) },
+            { pct: 75, text: @json(__('astrology.processing_aspects')) },
+            { pct: 90, text: @json(__('astrology.processing_report')) },
+            { pct: 100, text: @json(__('astrology.processing_done')) }
         ];
 
         let currentStep = 0;

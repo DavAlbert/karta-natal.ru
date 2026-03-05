@@ -8,6 +8,7 @@ class AspectMeaning extends Model
 {
     protected $fillable = [
         'aspect_type',
+        'locale',
         'general',
         'harmonious',
         'stressful',
@@ -16,9 +17,11 @@ class AspectMeaning extends Model
 
     public $timestamps = false;
 
-    public static function getForAspect(string $aspectType): ?self
+    public static function getForAspect(string $aspectType, ?string $locale = null): ?self
     {
-        return static::where('aspect_type', $aspectType)->first();
+        $locale = $locale ?? app()->getLocale();
+        return static::where('aspect_type', $aspectType)->where('locale', $locale)->first()
+            ?? static::where('aspect_type', $aspectType)->where('locale', 'en')->first();
     }
 
     public function isHarmonious(): bool

@@ -8,6 +8,7 @@ class HouseMeaning extends Model
 {
     protected $fillable = [
         'house_number',
+        'locale',
         'general',
         'keywords',
         'ruling_planet',
@@ -20,8 +21,10 @@ class HouseMeaning extends Model
 
     public $timestamps = false;
 
-    public static function getForHouse(int $houseNumber): ?self
+    public static function getForHouse(int $houseNumber, ?string $locale = null): ?self
     {
-        return static::where('house_number', $houseNumber)->first();
+        $locale = $locale ?? app()->getLocale();
+        return static::where('house_number', $houseNumber)->where('locale', $locale)->first()
+            ?? static::where('house_number', $houseNumber)->where('locale', 'en')->first();
     }
 }

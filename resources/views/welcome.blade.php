@@ -59,7 +59,7 @@
     <meta property="og:url" content="{{ $baseUrl }}{{ $currentLocale === 'en' ? '/' : '/' . $currentLocale . '/' }}">
     <meta property="og:title" content="{{ __('seo.og_title') }}">
     <meta property="og:description" content="{{ __('seo.og_description') }}">
-    <meta property="og:image" content="{{ asset('images/demo.webp') }}">
+    <meta property="og:image" content="{{ $baseUrl }}/images/demos/{{ $currentLocale }}.webp">
     <meta property="og:locale" content="{{ $ogLocaleMap[$currentLocale] ?? 'en_US' }}">
     @foreach($locales as $loc)
     @if($loc !== $currentLocale)
@@ -72,7 +72,7 @@
     <meta name="twitter:url" content="{{ $baseUrl }}{{ $currentLocale === 'en' ? '/' : '/' . $currentLocale . '/' }}">
     <meta name="twitter:title" content="{{ __('seo.og_title') }}">
     <meta name="twitter:description" content="{{ __('seo.og_description') }}">
-    <meta name="twitter:image" content="{{ asset('images/demo.webp') }}">
+    <meta name="twitter:image" content="{{ $baseUrl }}/images/demos/{{ $currentLocale }}.webp">
 
     <script type="application/ld+json">
     {
@@ -221,7 +221,10 @@
 <body class="font-sans antialiased constellation-bg">
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 border-b border-white/5 bg-[#0B1120]/90 backdrop-blur-md">
+    @php
+        $langFlags = ['en' => '🇬🇧', 'ru' => '🇷🇺', 'es' => '🇪🇸', 'fr' => '🇫🇷', 'pt' => '🇧🇷', 'hi' => '🇮🇳'];
+    @endphp
+    <nav class="fixed w-full z-50 border-b border-white/5 bg-[#0B1120]/90 backdrop-blur-md" x-data="{ mobileMenu: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ locale_route('welcome') }}" class="flex items-center gap-2">
@@ -230,18 +233,15 @@
                     </span>
                 </a>
 
-                <div class="flex items-center gap-3 sm:gap-5">
-                    <a href="{{ locale_route('horoscope.index') }}" class="hidden sm:flex items-center gap-1.5 text-indigo-300 text-sm hover:text-white transition-colors">
+                {{-- Desktop nav --}}
+                <div class="hidden sm:flex items-center gap-5">
+                    <a href="{{ locale_route('horoscope.index') }}" class="flex items-center gap-1.5 text-indigo-300 text-sm hover:text-white transition-colors">
                         <i class="fas fa-moon text-xs"></i>
                         {{ __('horoscope.title') }}
                     </a>
                     @auth
                         @php $chart = Auth::user()->natalCharts()->first(); @endphp
                         @if($chart)
-                            <a href="{{ locale_route('charts.show', ['natalChart' => $chart]) }}" class="hidden sm:flex items-center gap-1.5 text-indigo-300 text-sm hover:text-white transition-colors" onclick="localStorage.setItem('activeTab', 'compatibility')">
-                                <i class="fas fa-heart text-xs"></i>
-                                {{ __('common.nav_compatibility') }}
-                            </a>
                             <a href="{{ locale_route('charts.show', ['natalChart' => $chart]) }}" class="flex items-center gap-1.5 text-indigo-300 text-sm font-medium hover:text-white transition-colors">
                                 <i class="fas fa-user text-xs"></i>
                                 {{ __('common.nav_my_chart') }}
@@ -251,7 +251,7 @@
                             @csrf
                             <button type="submit" class="flex items-center gap-1.5 text-indigo-400 text-sm hover:text-white transition-colors">
                                 <i class="fas fa-sign-out-alt text-xs"></i>
-                                <span class="hidden sm:inline">{{ __('common.nav_logout') }}</span>
+                                {{ __('common.nav_logout') }}
                             </button>
                         </form>
                     @else
@@ -261,10 +261,7 @@
                         </button>
                     @endauth
 
-                    <!-- Language Switcher -->
-                    @php
-                        $langFlags = ['en' => '🇬🇧', 'ru' => '🇷🇺', 'es' => '🇪🇸', 'fr' => '🇫🇷', 'pt' => '🇧🇷', 'hi' => '🇮🇳'];
-                    @endphp
+                    {{-- Language Switcher (desktop) --}}
                     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                         <button @click="open = !open" class="flex items-center gap-1.5 text-indigo-300 text-sm hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-white/5">
                             <span class="text-base">{{ $langFlags[$currentLocale] ?? '🌐' }}</span>
@@ -280,6 +277,56 @@
                             </a>
                             @endforeach
                         </div>
+                    </div>
+                </div>
+
+                {{-- Burger button (mobile) --}}
+                <button @click="mobileMenu = !mobileMenu" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-lg text-indigo-300 hover:text-white hover:bg-white/5 transition-colors">
+                    <svg x-show="!mobileMenu" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile menu --}}
+        <div x-show="mobileMenu" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2" x-cloak class="sm:hidden border-t border-white/5 bg-[#0B1120]/95 backdrop-blur-md">
+            <div class="px-4 py-3 space-y-1">
+                <a href="{{ locale_route('horoscope.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-indigo-200 hover:text-white hover:bg-white/5 transition-colors text-sm">
+                    <i class="fas fa-moon w-4 text-center text-indigo-400"></i>
+                    {{ __('horoscope.title') }}
+                </a>
+                @auth
+                    @php $chart = $chart ?? Auth::user()->natalCharts()->first(); @endphp
+                    @if($chart)
+                    <a href="{{ locale_route('charts.show', ['natalChart' => $chart]) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-indigo-200 hover:text-white hover:bg-white/5 transition-colors text-sm">
+                        <i class="fas fa-user w-4 text-center text-indigo-400"></i>
+                        {{ __('common.nav_my_chart') }}
+                    </a>
+                    @endif
+                    <form method="POST" action="{{ locale_route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-indigo-200 hover:text-white hover:bg-white/5 transition-colors text-sm w-full text-left">
+                            <i class="fas fa-sign-out-alt w-4 text-center text-indigo-400"></i>
+                            {{ __('common.nav_logout') }}
+                        </button>
+                    </form>
+                @else
+                    <button onclick="document.getElementById('loginModal').classList.remove('hidden'); this.closest('[x-data]').__x.$data.mobileMenu = false;" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-indigo-200 hover:text-white hover:bg-white/5 transition-colors text-sm w-full text-left">
+                        <i class="fas fa-user w-4 text-center text-indigo-400"></i>
+                        {{ __('common.nav_login') }}
+                    </button>
+                @endauth
+
+                {{-- Language switcher (mobile) --}}
+                <div class="pt-2 mt-2 border-t border-white/5">
+                    <div class="flex flex-wrap gap-2 px-3 py-2">
+                        @foreach($locales as $loc)
+                        <a href="{{ $baseUrl }}{{ $loc === 'en' ? '/' : '/' . $loc . '/' }}"
+                           class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors {{ $loc === $currentLocale ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30' : 'text-indigo-300/70 hover:text-white hover:bg-white/5' }}">
+                            <span>{{ $langFlags[$loc] ?? '🌐' }}</span>
+                            <span class="uppercase text-xs font-medium">{{ $loc }}</span>
+                        </a>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -515,7 +562,7 @@
                 <p class="text-indigo-300/70">{{ __('landing.preview_subtitle') }}</p>
             </div>
             <div class="relative rounded-2xl overflow-hidden border border-white/5 shadow-2xl shadow-indigo-900/20">
-                <img src="{{ asset('images/demo.webp') }}" alt="{{ __('landing.preview_title') }}" class="w-full h-auto">
+                <img src="{{ asset('images/demos/' . $currentLocale . '.webp') }}" alt="{{ __('landing.preview_title') }}" class="w-full h-auto">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent"></div>
             </div>
             <div class="mt-8 grid md:grid-cols-3 gap-4 text-center">
@@ -633,30 +680,61 @@
                 <p class="text-indigo-300/70">{{ __('landing.elements_subtitle') }}</p>
             </div>
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @php
-                    $elements = [
-                        ['key' => 'fire', 'emoji' => '🔥', 'color' => 'red', 'signs' => ['aries','leo','sagittarius']],
-                        ['key' => 'earth', 'emoji' => '🌍', 'color' => 'amber', 'signs' => ['taurus','virgo','capricorn']],
-                        ['key' => 'air', 'emoji' => '💨', 'color' => 'cyan', 'signs' => ['gemini','libra','aquarius']],
-                        ['key' => 'water', 'emoji' => '💧', 'color' => 'blue', 'signs' => ['cancer','scorpio','pisces']],
-                    ];
-                @endphp
-                @foreach($elements as $el)
-                <div class="group p-6 rounded-2xl bg-gradient-to-b from-{{ $el['color'] }}-900/20 to-[#111827]/60 border border-{{ $el['color'] }}-500/15 hover:border-{{ $el['color'] }}-500/30 transition-all hover:-translate-y-1">
+                {{-- Fire --}}
+                <div class="group p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background: linear-gradient(to bottom, rgba(127,29,29,0.2), rgba(17,24,39,0.6)); border-color: rgba(239,68,68,0.15);">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-{{ $el['color'] }}-500/10 flex items-center justify-center">
-                            <span class="text-2xl">{{ $el['emoji'] }}</span>
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(239,68,68,0.1);">
+                            <span class="text-2xl">🔥</span>
                         </div>
-                        <h3 class="text-xl font-bold text-{{ $el['color'] }}-400">{{ __('landing.element_' . $el['key']) }}</h3>
+                        <h3 class="text-xl font-bold" style="color: #f87171;">{{ __('landing.element_fire') }}</h3>
                     </div>
-                    <p class="text-indigo-300/60 text-sm mb-4 leading-relaxed">{{ __('landing.element_' . $el['key'] . '_desc') }}</p>
+                    <p class="text-indigo-300/60 text-sm mb-4 leading-relaxed">{{ __('landing.element_fire_desc') }}</p>
                     <div class="flex items-center gap-2 pt-4 border-t border-white/5">
-                        @foreach($el['signs'] as $signFile)
-                        <img src="/images/zodiac/{{ $signFile }}.webp" alt="{{ __('landing.zodiac_' . $signFile) }}" class="w-7 h-7 opacity-70 hover:opacity-100 transition-opacity">
-                        @endforeach
+                        @foreach(['aries','leo','sagittarius'] as $s)<img src="/images/zodiac/{{ $s }}.webp" alt="{{ __('astrology.sign_' . $s) }}" class="w-7 h-7 opacity-70 hover:opacity-100 transition-opacity">@endforeach
                     </div>
                 </div>
-                @endforeach
+
+                {{-- Earth --}}
+                <div class="group p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background: linear-gradient(to bottom, rgba(120,53,15,0.2), rgba(17,24,39,0.6)); border-color: rgba(245,158,11,0.15);">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(245,158,11,0.1);">
+                            <span class="text-2xl">🌍</span>
+                        </div>
+                        <h3 class="text-xl font-bold" style="color: #fbbf24;">{{ __('landing.element_earth') }}</h3>
+                    </div>
+                    <p class="text-indigo-300/60 text-sm mb-4 leading-relaxed">{{ __('landing.element_earth_desc') }}</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-white/5">
+                        @foreach(['taurus','virgo','capricorn'] as $s)<img src="/images/zodiac/{{ $s }}.webp" alt="{{ __('astrology.sign_' . $s) }}" class="w-7 h-7 opacity-70 hover:opacity-100 transition-opacity">@endforeach
+                    </div>
+                </div>
+
+                {{-- Air --}}
+                <div class="group p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background: linear-gradient(to bottom, rgba(14,116,144,0.2), rgba(17,24,39,0.6)); border-color: rgba(6,182,212,0.15);">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(6,182,212,0.1);">
+                            <span class="text-2xl">💨</span>
+                        </div>
+                        <h3 class="text-xl font-bold" style="color: #22d3ee;">{{ __('landing.element_air') }}</h3>
+                    </div>
+                    <p class="text-indigo-300/60 text-sm mb-4 leading-relaxed">{{ __('landing.element_air_desc') }}</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-white/5">
+                        @foreach(['gemini','libra','aquarius'] as $s)<img src="/images/zodiac/{{ $s }}.webp" alt="{{ __('astrology.sign_' . $s) }}" class="w-7 h-7 opacity-70 hover:opacity-100 transition-opacity">@endforeach
+                    </div>
+                </div>
+
+                {{-- Water --}}
+                <div class="group p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background: linear-gradient(to bottom, rgba(30,58,138,0.2), rgba(17,24,39,0.6)); border-color: rgba(59,130,246,0.15);">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: rgba(59,130,246,0.1);">
+                            <span class="text-2xl">💧</span>
+                        </div>
+                        <h3 class="text-xl font-bold" style="color: #60a5fa;">{{ __('landing.element_water') }}</h3>
+                    </div>
+                    <p class="text-indigo-300/60 text-sm mb-4 leading-relaxed">{{ __('landing.element_water_desc') }}</p>
+                    <div class="flex items-center gap-2 pt-4 border-t border-white/5">
+                        @foreach(['cancer','scorpio','pisces'] as $s)<img src="/images/zodiac/{{ $s }}.webp" alt="{{ __('astrology.sign_' . $s) }}" class="w-7 h-7 opacity-70 hover:opacity-100 transition-opacity">@endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -775,19 +853,47 @@
         </div>
     </div>
 
-    <!-- Email Sent Modal -->
-    <div id="emailSentModal" class="fixed inset-0 z-[100] hidden">
+    <!-- Email Sent Modal (non-dismissable) -->
+    <div id="emailSentModal" class="fixed inset-0 z-[200] hidden">
         <div class="absolute inset-0 bg-[#0B1120]"></div>
-        <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-            <div class="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mb-8">
-                <svg class="w-12 h-12 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
+            <div class="max-w-md w-full text-center">
+                {{-- Animated envelope icon --}}
+                <div class="relative mx-auto mb-8 w-28 h-28">
+                    <div class="absolute inset-0 bg-indigo-500/10 rounded-full animate-ping" style="animation-duration: 2s;"></div>
+                    <div class="relative w-28 h-28 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-indigo-500/20">
+                        <svg class="w-14 h-14 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-3">{{ __('common.processing_success_title') }}</h2>
+                <p class="text-indigo-300/80 text-base leading-relaxed mb-2">{{ __('common.processing_success_text') }}</p>
+                <p class="text-amber-400/80 text-sm leading-relaxed mb-8">{{ __('common.processing_generation_note') }}</p>
+
+                {{-- Steps --}}
+                <div class="bg-[#111827]/80 rounded-xl border border-white/5 p-5 mb-8 text-left">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="w-7 h-7 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-indigo-400 text-xs font-bold">1</span>
+                        </div>
+                        <p class="text-indigo-200/80 text-sm">{{ __('common.email_step_1') }}</p>
+                    </div>
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="w-7 h-7 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-indigo-400 text-xs font-bold">2</span>
+                        </div>
+                        <p class="text-indigo-200/80 text-sm">{{ __('common.email_step_2') }}</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-indigo-400 text-xs font-bold">3</span>
+                        </div>
+                        <p class="text-indigo-200/80 text-sm">{{ __('common.email_step_3') }}</p>
+                    </div>
+                </div>
+
+                <p class="text-indigo-500/60 text-xs">{{ __('common.email_check_spam') }}</p>
             </div>
-            <h2 class="text-3xl font-bold text-white mb-4">{{ __('common.processing_success_title') }}</h2>
-            <p class="text-indigo-300 text-center max-w-md mb-8">{{ __('common.processing_success_text') }}</p>
-            <button onclick="document.getElementById('emailSentModal').classList.add('hidden'); resetForm();"
-                class="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors">
-                {{ __('common.processing_success_btn') }}
-            </button>
         </div>
     </div>
 
@@ -795,39 +901,62 @@
     <div id="loginModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
         <div class="absolute inset-0 bg-[#0B1120]/98 backdrop-blur-sm" onclick="closeLoginModal()"></div>
         <div class="relative z-10 max-w-md w-full px-6">
-            <div class="bg-[#111827] rounded-2xl border border-white/10 p-8 shadow-2xl relative">
-                <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-indigo-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-                <div id="loginSuccessState" class="hidden">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div class="relative">
+                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
+                <div class="relative bg-[#111827] rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+                    {{-- Header bar --}}
+                    <div class="bg-gradient-to-r from-indigo-600/10 to-purple-600/10 border-b border-white/5 px-8 py-5 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-indigo-500/15 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white" id="loginModalTitle">{{ __('common.login_title') }}</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">{{ __('common.login_success_title') }}</h3>
-                        <p class="text-indigo-300 text-sm mb-6">{{ __('common.login_success_text') }}</p>
-                    </div>
-                </div>
-                <div id="loginFormState">
-                    <div class="text-center mb-6">
-                        <h3 class="text-xl font-bold text-white">{{ __('common.login_title') }}</h3>
-                        <p class="text-indigo-300 text-sm mt-1">{{ __('common.login_subtitle') }}</p>
-                    </div>
-                    <form id="loginForm" action="{{ locale_route('magic.login.send') }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <input type="email" name="email" id="loginEmail" required autocomplete="email"
-                                class="w-full bg-[#0f172a] border border-indigo-800/50 rounded-lg px-4 py-3 text-white placeholder-indigo-500 focus:border-indigo-500 focus:outline-none text-center"
-                                placeholder="{{ __('common.form_email_placeholder') }}" autofocus>
-                            <p id="loginError" class="text-red-400 text-sm mt-2 text-center hidden"></p>
-                        </div>
-                        <!-- Cloudflare Turnstile -->
-                        <div class="cf-turnstile mb-4 flex justify-center" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark"></div>
-                        <button type="submit" id="loginSubmitBtn"
-                            class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                            {{ __('common.login_submit') }}
+                        <button onclick="closeLoginModal()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-indigo-400 hover:text-white transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
-                    </form>
+                    </div>
+
+                    <div class="p-8">
+                        {{-- Login success state (non-dismissable) --}}
+                        <div id="loginSuccessState" class="hidden">
+                            <div class="text-center">
+                                <div class="relative mx-auto mb-6 w-20 h-20">
+                                    <div class="absolute inset-0 bg-indigo-500/10 rounded-full animate-ping" style="animation-duration: 2s;"></div>
+                                    <div class="relative w-20 h-20 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full flex items-center justify-center border border-indigo-500/20">
+                                        <svg class="w-10 h-10 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2">{{ __('common.login_success_title') }}</h3>
+                                <p class="text-indigo-300/80 text-sm mb-6 leading-relaxed">{{ __('common.login_success_text') }}</p>
+                                <div class="bg-[#0f172a]/60 rounded-lg border border-white/5 p-4">
+                                    <p class="text-indigo-500/60 text-xs">{{ __('common.email_check_spam') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Login form state --}}
+                        <div id="loginFormState">
+                            <p class="text-indigo-300/70 text-sm text-center mb-6">{{ __('common.login_subtitle') }}</p>
+                            <form id="loginForm" action="{{ locale_route('magic.login.send') }}" method="POST">
+                                @csrf
+                                <div class="mb-5">
+                                    <label class="block text-xs font-semibold text-indigo-300/60 uppercase tracking-wider mb-1.5">{{ __('common.form_email') }}</label>
+                                    <input type="email" name="email" id="loginEmail" required autocomplete="email"
+                                        class="w-full bg-[#0f172a] border border-indigo-800/50 rounded-lg px-4 py-3.5 text-white placeholder-indigo-500/50 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none transition-colors"
+                                        placeholder="{{ __('common.form_email_placeholder') }}" autofocus>
+                                    <p id="loginError" class="text-red-400 text-sm mt-2 text-center hidden"></p>
+                                </div>
+                                <!-- Cloudflare Turnstile -->
+                                <div class="cf-turnstile mb-5 flex justify-center" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark"></div>
+                                <button type="submit" id="loginSubmitBtn"
+                                    class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                    <span id="loginSubmitText">{{ __('common.login_submit') }}</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -849,6 +978,8 @@
             loginSending: @json(__('common.login_sending')),
             loginSubmit: @json(__('common.login_submit')),
             loginNetworkError: @json(__('common.login_network_error')),
+            loginTitle: @json(__('common.login_title')),
+            loginSuccessTitle: @json(__('common.login_success_title')),
         };
 
         // Form validation
@@ -974,80 +1105,91 @@
 
         async function submitCalcForm(form) {
             document.getElementById('loadingState')?.classList.remove('hidden');
+            document.getElementById('form-errors')?.classList.add('hidden');
 
             try {
                 const formData = new FormData(form);
-                formData.set('cf-turnstile-response', calcTurnstileToken);
+                formData.set('cf_turnstile_response', calcTurnstileToken);
 
                 const response = await fetch(CALC_URL, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json'
-                        },
-                        body: formData
-                    });
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
 
-                    if (!response.ok) {
-                        const errData = await response.json();
-                        let msg = errData.message || TRANSLATIONS.error;
-                        if (errData.errors) {
-                            const first = Object.values(errData.errors)[0];
-                            if (Array.isArray(first)) msg = first[0];
-                        }
-                        throw new Error(msg);
+                if (!response.ok) {
+                    const errData = await response.json();
+                    let msg = errData.message || TRANSLATIONS.error;
+                    if (errData.errors) {
+                        const first = Object.values(errData.errors)[0];
+                        if (Array.isArray(first)) msg = first[0];
                     }
-
-                    const data = await response.json();
-                    if (data.success === false) {
-                        alert(data.message || TRANSLATIONS.error);
-                        validateForm();
-                        return;
-                    }
-
-                    const modal = document.getElementById('processingModal');
-                    if (modal) modal.classList.remove('hidden');
-
-                    const steps = [
-                        { pct: 15, text: TRANSLATIONS.step1 },
-                        { pct: 30, text: TRANSLATIONS.step2 },
-                        { pct: 55, text: TRANSLATIONS.step3 },
-                        { pct: 75, text: TRANSLATIONS.step4 },
-                        { pct: 100, text: TRANSLATIONS.done }
-                    ];
-
-                    let curStep = 0;
-                    const progressBar = document.getElementById('progressBar');
-                    const statusText = document.getElementById('statusText');
-                    const pctText = document.getElementById('percentage');
-
-                    function nextStep() {
-                        if (curStep >= steps.length) return;
-                        const s = steps[curStep];
-                        if (progressBar) progressBar.style.width = s.pct + '%';
-                        if (statusText) statusText.innerText = s.text;
-                        if (pctText) pctText.innerText = s.pct + '%';
-                        curStep++;
-                        if (curStep < steps.length) setTimeout(nextStep, 800);
-                    }
-                    nextStep();
-
-                    setTimeout(() => {
-                        if (data.redirect && data.redirect.includes('charts/show')) {
-                            window.location.href = data.redirect;
-                        } else {
-                            document.getElementById('processingModal').classList.add('hidden');
-                            document.getElementById('emailSentModal').classList.remove('hidden');
-                        }
-                    }, 4000);
-
-                } catch (error) {
-                    console.error('Error:', error);
-                    document.getElementById('processingModal')?.classList.add('hidden');
-                    alert(error.message || TRANSLATIONS.error);
-                    validateForm();
+                    throw new Error(msg);
                 }
-            });
+
+                const data = await response.json();
+                if (data.success === false) {
+                    alert(data.message || TRANSLATIONS.error);
+                    calcTurnstileToken = null;
+                    turnstile.reset('#turnstile-widget');
+                    validateForm();
+                    return;
+                }
+
+                const modal = document.getElementById('processingModal');
+                if (modal) modal.classList.remove('hidden');
+
+                const steps = [
+                    { pct: 15, text: TRANSLATIONS.step1 },
+                    { pct: 30, text: TRANSLATIONS.step2 },
+                    { pct: 55, text: TRANSLATIONS.step3 },
+                    { pct: 75, text: TRANSLATIONS.step4 },
+                    { pct: 100, text: TRANSLATIONS.done }
+                ];
+
+                let curStep = 0;
+                const progressBar = document.getElementById('progressBar');
+                const statusText = document.getElementById('statusText');
+                const pctText = document.getElementById('percentage');
+
+                function nextStep() {
+                    if (curStep >= steps.length) return;
+                    const s = steps[curStep];
+                    if (progressBar) progressBar.style.width = s.pct + '%';
+                    if (statusText) statusText.innerText = s.text;
+                    if (pctText) pctText.innerText = s.pct + '%';
+                    curStep++;
+                    if (curStep < steps.length) setTimeout(nextStep, 800);
+                }
+                nextStep();
+
+                setTimeout(() => {
+                    if (data.redirect && data.redirect.includes('charts/show')) {
+                        window.location.href = data.redirect;
+                    } else {
+                        document.getElementById('processingModal').classList.add('hidden');
+                        document.getElementById('emailSentModal').classList.remove('hidden');
+                    }
+                }, 4000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('processingModal')?.classList.add('hidden');
+                document.getElementById('loadingState')?.classList.add('hidden');
+                const errBox = document.getElementById('form-errors');
+                const errText = document.getElementById('form-errors-text');
+                if (errBox && errText) {
+                    errText.textContent = error.message || TRANSLATIONS.error;
+                    errBox.classList.remove('hidden');
+                    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                calcTurnstileToken = null;
+                turnstile.reset('#turnstile-widget');
+                validateForm();
+            }
         }
 
         function resetForm() {
@@ -1195,8 +1337,12 @@
             document.getElementById('loginSuccessState')?.classList.add('hidden');
             document.getElementById('loginForm')?.reset();
             const btn = document.getElementById('loginSubmitBtn');
-            if (btn) { btn.disabled = false; btn.textContent = TRANSLATIONS.loginSubmit; }
+            if (btn) { btn.disabled = false; const span = document.getElementById('loginSubmitText'); if (span) span.textContent = TRANSLATIONS.loginSubmit; }
             document.getElementById('loginError')?.classList.add('hidden');
+            const modalTitle = document.getElementById('loginModalTitle');
+            if (modalTitle) modalTitle.textContent = '{{ __("common.login_title") }}';
+            const closeBtn = document.querySelector('#loginModal [onclick="closeLoginModal()"]');
+            if (closeBtn) closeBtn.style.display = '';
         }
 
         const loginForm = document.getElementById('loginForm');
@@ -1208,7 +1354,14 @@
                 const errEl = document.getElementById('loginError');
                 errEl?.classList.add('hidden');
 
-                if (btn) { btn.disabled = true; btn.textContent = TRANSLATIONS.loginSending; }
+                // Fix turnstile field name (Turnstile uses dashes, Laravel expects underscores)
+                const turnstileToken = formData.get('cf-turnstile-response');
+                if (turnstileToken) {
+                    formData.set('cf_turnstile_response', turnstileToken);
+                    formData.delete('cf-turnstile-response');
+                }
+
+                if (btn) { btn.disabled = true; const span = document.getElementById('loginSubmitText'); if (span) span.textContent = TRANSLATIONS.loginSending; }
 
                 try {
                     const resp = await fetch(this.action, {
@@ -1220,14 +1373,20 @@
                     if (data.errors) {
                         const first = data.errors.email?.[0] || data.errors.cf_turnstile_response?.[0] || TRANSLATIONS.loginNetworkError;
                         if (errEl) { errEl.textContent = first; errEl.classList.remove('hidden'); }
-                        if (btn) { btn.disabled = false; btn.textContent = TRANSLATIONS.loginSubmit; }
+                        if (btn) { btn.disabled = false; const span = document.getElementById('loginSubmitText'); if (span) span.textContent = TRANSLATIONS.loginSubmit; }
                     } else {
                         document.getElementById('loginFormState')?.classList.add('hidden');
                         document.getElementById('loginSuccessState')?.classList.remove('hidden');
+                        document.getElementById('loginModalTitle').textContent = TRANSLATIONS.loginSuccessTitle || '{{ __("common.login_success_title") }}';
+                        // Hide close button and backdrop click - user must check email
+                        const closeBtn = document.querySelector('#loginModal [onclick="closeLoginModal()"]');
+                        if (closeBtn) closeBtn.style.display = 'none';
+                        const backdrop = document.querySelector('#loginModal .backdrop-blur-sm');
+                        if (backdrop) backdrop.onclick = null;
                     }
                 } catch (err) {
                     if (errEl) { errEl.textContent = TRANSLATIONS.loginNetworkError; errEl.classList.remove('hidden'); }
-                    if (btn) { btn.disabled = false; btn.textContent = TRANSLATIONS.loginSubmit; }
+                    if (btn) { btn.disabled = false; const span = document.getElementById('loginSubmitText'); if (span) span.textContent = TRANSLATIONS.loginSubmit; }
                 }
             });
         }

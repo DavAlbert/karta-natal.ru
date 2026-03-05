@@ -5,7 +5,6 @@ return [
     'tagline' => 'Seu Mapa Astral, Decodificado',
 
     // Navigation
-    'nav_compatibility' => 'Compatibilidade',
     'nav_my_chart' => 'Meu Mapa',
     'nav_logout' => 'Sair',
     'nav_login' => 'Entrar',
@@ -42,6 +41,7 @@ return [
     'form_submit' => 'Calcular Agora',
     'form_privacy_note' => '* Ao clicar, você consente com o processamento de dados pessoais',
     'form_errors_default' => 'Por favor, preencha todos os campos obrigatórios',
+    'email_already_used' => 'Este email já está registrado. Por favor, use outro email ou faça login.',
 
     // Months
     'month_01' => 'Janeiro',
@@ -77,10 +77,15 @@ return [
     'processing_step4' => 'Preparando interpretação por IA...',
     'processing_success_title' => 'Seu Mapa Astral Está Pronto!',
     'processing_success_text' => 'Enviamos um link para o seu e-mail. Verifique sua caixa de entrada para ver seu mapa.',
+    'processing_generation_note' => 'Sua interpretação com IA está sendo gerada e pode levar até 5 minutos. Você receberá o e-mail assim que estiver pronta.',
     'processing_success_btn' => 'Verificar E-mail',
     'processing_error_title' => 'Algo deu errado',
     'processing_error_text' => 'Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.',
     'processing_error_btn' => 'Tentar Novamente',
+    'email_step_1' => 'Abra sua caixa de entrada',
+    'email_step_2' => 'Encontre a mensagem do NatalScope',
+    'email_step_3' => 'Clique no link para ver seu mapa natal',
+    'email_check_spam' => 'Não encontrou o email? Verifique sua pasta de spam.',
 
     // Chart already exists
     'chart_exists_title' => 'Seu mapa já foi calculado!',
@@ -88,10 +93,39 @@ return [
     'chart_exists_btn' => 'Abrir Mapa',
 
     // Language names (for switcher)
+    'language' => 'Idioma',
     'lang_en' => 'English',
     'lang_fr' => 'Français',
     'lang_es' => 'Español',
     'lang_pt' => 'Português',
     'lang_hi' => 'हिन्दी',
     'lang_ru' => 'Русский',
+
+    // Chat errors
+    'chat_error' => 'Erro. Por favor, tente novamente mais tarde.',
+    'chat_connection_error' => 'Erro de conexão.',
+    'chat_response_error' => 'Erro ao obter a resposta.',
+    'chat_timeout' => 'Tempo esgotado. Por favor, tente novamente mais tarde.',
+
+    // Dashboard
+    'dashboard_title' => 'Meus Mapas',
+    'dashboard_empty_title' => 'Você ainda não tem mapas salvos',
+    'dashboard_empty_text' => 'Crie seu primeiro mapa natal agora mesmo.',
+    'dashboard_create_btn' => 'Criar Novo Mapa',
+    'dashboard_open_btn' => 'Abrir Interpretação',
+
+    // Daily horoscope
+    'daily_horoscope_title' => 'Horóscopo do Dia',
+    'daily_score' => 'Pontuação do dia',
+    'daily_love' => 'Amor',
+    'daily_career' => 'Carreira',
+    'daily_health' => 'Saúde',
+    'daily_luck' => 'Sorte',
+    'daily_tomorrow_hint' => 'Amanhã :date — nova previsão',
+    'daily_updates_in' => 'Nova previsão em',
+    'daily_h' => 'h',
+    'daily_m' => 'm',
+    'daily_s' => 's',
+    'daily_read_more' => 'Ler mais',
+    'time_unknown' => 'Desconhecido',
 ];

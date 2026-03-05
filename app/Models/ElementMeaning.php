@@ -8,6 +8,7 @@ class ElementMeaning extends Model
 {
     protected $fillable = [
         'element',
+        'locale',
         'characteristics',
         'strengths',
         'challenges',
@@ -16,8 +17,10 @@ class ElementMeaning extends Model
 
     public $timestamps = false;
 
-    public static function getForElement(string $element): ?self
+    public static function getForElement(string $element, ?string $locale = null): ?self
     {
-        return static::where('element', $element)->first();
+        $locale = $locale ?? app()->getLocale();
+        return static::where('element', $element)->where('locale', $locale)->first()
+            ?? static::where('element', $element)->where('locale', 'en')->first();
     }
 }

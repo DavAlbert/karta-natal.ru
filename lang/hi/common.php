@@ -5,7 +5,6 @@ return [
     'tagline' => 'आपकी जन्म कुंडली, विश्लेषित',
 
     // Navigation
-    'nav_compatibility' => 'अनुकूलता',
     'nav_my_chart' => 'मेरी कुंडली',
     'nav_logout' => 'लॉग आउट',
     'nav_login' => 'साइन इन',
@@ -42,6 +41,7 @@ return [
     'form_submit' => 'अभी गणना करें',
     'form_privacy_note' => '* क्लिक करके, आप व्यक्तिगत डेटा के प्रसंस्करण के लिए सहमति देते हैं',
     'form_errors_default' => 'कृपया सभी आवश्यक फ़ील्ड भरें',
+    'email_already_used' => 'यह ईमेल पहले से पंजीकृत है। कृपया दूसरा ईमेल उपयोग करें या साइन इन करें।',
 
     // Months
     'month_01' => 'जनवरी',
@@ -77,10 +77,15 @@ return [
     'processing_step4' => 'AI व्याख्या तैयार हो रही है...',
     'processing_success_title' => 'आपकी जन्म कुंडली तैयार है!',
     'processing_success_text' => "हमने आपके ईमेल पर एक लिंक भेजा है। अपनी कुंडली देखने के लिए अपना इनबॉक्स जाँचें।",
+    'processing_generation_note' => 'आपकी AI व्याख्या तैयार हो रही है और इसमें 5 मिनट तक लग सकते हैं। तैयार होने पर आपको ईमेल प्राप्त होगा।',
     'processing_success_btn' => 'ईमेल जाँचें',
     'processing_error_title' => 'कुछ गलत हो गया',
     'processing_error_text' => 'आपके अनुरोध को संसाधित करने में एक त्रुटि हुई। कृपया पुनः प्रयास करें।',
     'processing_error_btn' => 'पुनः प्रयास करें',
+    'email_step_1' => 'अपना ईमेल इनबॉक्स खोलें',
+    'email_step_2' => 'NatalScope का संदेश खोजें',
+    'email_step_3' => 'अपनी जन्म कुंडली देखने के लिए लिंक पर क्लिक करें',
+    'email_check_spam' => 'ईमेल नहीं दिख रहा? स्पैम फ़ोल्डर जांचें।',
 
     // Chart already exists
     'chart_exists_title' => 'आपकी कुंडली पहले से गणना की जा चुकी है!',
@@ -88,10 +93,39 @@ return [
     'chart_exists_btn' => 'कुंडली खोलें',
 
     // Language names (for switcher)
+    'language' => 'भाषा',
     'lang_en' => 'English',
     'lang_fr' => 'Français',
     'lang_es' => 'Español',
     'lang_pt' => 'Português',
     'lang_hi' => 'हिन्दी',
     'lang_ru' => 'Русский',
+
+    // Chat errors
+    'chat_error' => 'त्रुटि। कृपया बाद में पुनः प्रयास करें।',
+    'chat_connection_error' => 'कनेक्शन त्रुटि।',
+    'chat_response_error' => 'उत्तर प्राप्त करने में त्रुटि।',
+    'chat_timeout' => 'समय समाप्त। कृपया बाद में पुनः प्रयास करें।',
+
+    // Dashboard
+    'dashboard_title' => 'मेरी कुंडलियां',
+    'dashboard_empty_title' => 'आपने अभी तक कोई कुंडली नहीं बनाई है',
+    'dashboard_empty_text' => 'अभी अपनी पहली जन्म कुंडली बनाएं।',
+    'dashboard_create_btn' => 'नई कुंडली बनाएं',
+    'dashboard_open_btn' => 'व्याख्या खोलें',
+
+    // Daily horoscope
+    'daily_horoscope_title' => 'आज का राशिफल',
+    'daily_score' => 'दिन का स्कोर',
+    'daily_love' => 'प्रेम',
+    'daily_career' => 'करियर',
+    'daily_health' => 'स्वास्थ्य',
+    'daily_luck' => 'भाग्य',
+    'daily_tomorrow_hint' => 'कल :date — नया पूर्वानुमान',
+    'daily_updates_in' => 'नया पूर्वानुमान',
+    'daily_h' => 'घं',
+    'daily_m' => 'मि',
+    'daily_s' => 'से',
+    'daily_read_more' => 'और पढ़ें',
+    'time_unknown' => 'अज्ञात',
 ];

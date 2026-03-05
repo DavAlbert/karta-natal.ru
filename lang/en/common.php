@@ -5,7 +5,6 @@ return [
     'tagline' => 'Your Birth Chart, Decoded',
 
     // Navigation
-    'nav_compatibility' => 'Compatibility',
     'nav_my_chart' => 'My Chart',
     'nav_logout' => 'Log Out',
     'nav_login' => 'Sign In',
@@ -42,6 +41,7 @@ return [
     'form_submit' => 'Calculate Now',
     'form_privacy_note' => '* By clicking, you consent to the processing of personal data',
     'form_errors_default' => 'Please fill in all required fields',
+    'email_already_used' => 'This email is already registered. Please use a different email or sign in.',
 
     // Months
     'month_01' => 'January',
@@ -77,10 +77,17 @@ return [
     'processing_step4' => 'Preparing AI interpretation...',
     'processing_success_title' => 'Your Natal Chart is Ready!',
     'processing_success_text' => "We've sent a link to your email. Check your inbox to view your chart.",
+    'processing_generation_note' => 'Your AI interpretation is being generated and may take up to 5 minutes. You will receive the email once it is ready.',
     'processing_success_btn' => 'Check Email',
     'processing_error_title' => 'Something went wrong',
     'processing_error_text' => 'There was an error processing your request. Please try again.',
     'processing_error_btn' => 'Try Again',
+
+    // Email sent screen
+    'email_step_1' => 'Open your email inbox',
+    'email_step_2' => 'Find the message from NatalScope',
+    'email_step_3' => 'Click the link to view your natal chart',
+    'email_check_spam' => "Don't see the email? Check your spam or junk folder.",
 
     // Chart already exists
     'chart_exists_title' => 'Your chart is already calculated!',
@@ -88,10 +95,39 @@ return [
     'chart_exists_btn' => 'Open Chart',
 
     // Language names (for switcher)
+    'language' => 'Language',
     'lang_en' => 'English',
     'lang_fr' => 'Français',
     'lang_es' => 'Español',
     'lang_pt' => 'Português',
     'lang_hi' => 'हिन्दी',
     'lang_ru' => 'Русский',
+
+    // Chat errors
+    'chat_error' => 'Error. Please try again later.',
+    'chat_connection_error' => 'Connection error.',
+    'chat_response_error' => 'Error getting response.',
+    'chat_timeout' => 'Timeout. Please try again later.',
+
+    // Dashboard
+    'dashboard_title' => 'My Charts',
+    'dashboard_empty_title' => 'You have no saved charts yet',
+    'dashboard_empty_text' => 'Create your first natal chart right now.',
+    'dashboard_create_btn' => 'Create New Chart',
+    'dashboard_open_btn' => 'Open Interpretation',
+
+    // Daily horoscope
+    'daily_horoscope_title' => 'Daily Horoscope',
+    'daily_score' => 'Day Score',
+    'daily_love' => 'Love',
+    'daily_career' => 'Career',
+    'daily_health' => 'Health',
+    'daily_luck' => 'Luck',
+    'daily_tomorrow_hint' => 'Tomorrow :date — new forecast',
+    'daily_updates_in' => 'New forecast in',
+    'daily_h' => 'h',
+    'daily_m' => 'm',
+    'daily_s' => 's',
+    'daily_read_more' => 'Read more',
+    'time_unknown' => 'Unknown',
 ];
