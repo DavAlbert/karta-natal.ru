@@ -94,7 +94,24 @@
         }
         .message.typing {
             color: var(--text-secondary);
-            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 1rem 1.25rem;
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            animation: typing-bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing-bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
         }
         .templates {
             padding: 1rem;
@@ -279,7 +296,7 @@
             const div = document.createElement('div');
             div.className = 'message assistant typing';
             div.id = 'typing';
-            div.textContent = @json(__('astrology.typing'));
+            div.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
             messagesEl.appendChild(div);
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
