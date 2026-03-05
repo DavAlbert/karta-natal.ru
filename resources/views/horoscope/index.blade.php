@@ -27,6 +27,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>{{ __('horoscope.hub_title') }} | NatalScope</title>
     <meta name="description" content="{{ __('horoscope.hub_description') }}">
     <meta name="robots" content="index, follow">
