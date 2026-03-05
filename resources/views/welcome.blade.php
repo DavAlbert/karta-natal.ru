@@ -1184,7 +1184,7 @@
                 if (errBox && errText) {
                     errText.textContent = error.message || TRANSLATIONS.error;
                     errBox.classList.remove('hidden');
-                    errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    document.getElementById('heroSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
                 calcTurnstileToken = null;
                 turnstile.reset('#turnstile-widget');
