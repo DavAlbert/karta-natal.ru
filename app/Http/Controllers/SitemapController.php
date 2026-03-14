@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogPost;
 use App\Models\DailyHoroscope;
 use Illuminate\Http\Response;
 
@@ -42,6 +43,28 @@ class SitemapController extends Controller
             }
         }
 
+        // Blog index per locale
+        foreach ($locales as $loc) {
+            $prefix = $loc === 'en' ? '' : '/' . $loc;
+            $urls[] = [
+                'loc' => $baseUrl . $prefix . '/blog',
+                'changefreq' => 'weekly',
+                'priority' => '0.8',
+            ];
+        }
+
+        // Blog posts
+        $posts = BlogPost::published()->get();
+        foreach ($posts as $post) {
+            $prefix = $post->locale === 'en' ? '' : '/' . $post->locale;
+            $urls[] = [
+                'loc' => $baseUrl . $prefix . '/blog/' . $post->slug,
+                'changefreq' => 'monthly',
+                'priority' => '0.7',
+                'lastmod' => $post->updated_at->toW3cString(),
+            ];
+        }
+
         $xml = $this->buildSitemapXml($urls);
 
         return response($xml, 200, [
@@ -60,6 +83,9 @@ class SitemapController extends Controller
             $xml .= '    <loc>' . htmlspecialchars($u['loc']) . '</loc>' . "\n";
             $xml .= '    <changefreq>' . ($u['changefreq'] ?? 'weekly') . '</changefreq>' . "\n";
             $xml .= '    <priority>' . ($u['priority'] ?? '0.5') . '</priority>' . "\n";
+            if (!empty($u['lastmod'])) {
+                $xml .= '    <lastmod>' . $u['lastmod'] . '</lastmod>' . "\n";
+            }
             $xml .= '  </url>' . "\n";
         }
 

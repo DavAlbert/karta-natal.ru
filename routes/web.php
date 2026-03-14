@@ -59,6 +59,10 @@ $registerRoutes = function () {
         ->middleware('auth')
         ->name('charts.chat.clear');
 
+    // Blog
+    Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+    Route::get('/blog/{slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+
     // Horoscope
     Route::get('/horoscope', [App\Http\Controllers\HoroscopeController::class, 'index'])->name('horoscope.index');
     Route::get('/horoscope/{sign}', [App\Http\Controllers\HoroscopeController::class, 'show'])->name('horoscope.sign');
@@ -78,6 +82,26 @@ $locales = array_filter(config('app.available_locales', ['en']), fn($l) => $l !=
 foreach ($locales as $locale) {
     Route::middleware('set-locale')->prefix($locale)->name("{$locale}.")->group($registerRoutes);
 }
+
+// Admin routes
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/users', [App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users');
+        Route::get('/users/{user}', [App\Http\Controllers\Admin\DashboardController::class, 'userShow'])->name('users.show');
+        Route::get('/charts', [App\Http\Controllers\Admin\DashboardController::class, 'charts'])->name('charts');
+        Route::get('/messages', [App\Http\Controllers\Admin\DashboardController::class, 'messages'])->name('messages');
+        Route::get('/charts/{natalChart}/conversation', [App\Http\Controllers\Admin\DashboardController::class, 'conversation'])->name('conversation');
+        Route::get('/blog', [App\Http\Controllers\Admin\BlogController::class, 'index'])->name('blog.index');
+        Route::get('/blog/create', [App\Http\Controllers\Admin\BlogController::class, 'create'])->name('blog.create');
+        Route::post('/blog', [App\Http\Controllers\Admin\BlogController::class, 'store'])->name('blog.store');
+        Route::get('/blog/{post}/edit', [App\Http\Controllers\Admin\BlogController::class, 'edit'])->name('blog.edit');
+        Route::put('/blog/{post}', [App\Http\Controllers\Admin\BlogController::class, 'update'])->name('blog.update');
+        Route::delete('/blog/{post}', [App\Http\Controllers\Admin\BlogController::class, 'destroy'])->name('blog.destroy');
+        Route::get('/blog/{post}/preview', [App\Http\Controllers\Admin\BlogController::class, 'preview'])->name('blog.preview');
+    });
 
 // Privacy & Terms (always English, no locale prefix)
 Route::get('/privacy', function () {

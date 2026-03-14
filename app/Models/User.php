@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
         'marketing_consent',
         'magic_login_token',
         'magic_login_expires_at',
@@ -55,6 +56,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
             'marketing_consent' => 'boolean',
         ];
     }

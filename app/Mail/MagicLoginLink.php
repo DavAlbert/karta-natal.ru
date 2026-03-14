@@ -15,7 +15,7 @@ class MagicLoginLink extends Mailable
 
     public $user;
     public $token;
-    public string $locale;
+    public $locale;
 
     /**
      * Create a new message instance.
