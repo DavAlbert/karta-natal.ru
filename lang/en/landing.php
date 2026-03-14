@@ -2,15 +2,15 @@
 
 return [
     // Hero section
-    'hero_badge' => 'Free Chart with AI Interpretation',
-    'hero_title' => 'Your Natal Chart',
+    'hero_badge' => 'Free Birth Chart with AI Interpretation',
+    'hero_title' => 'Your Birth Chart',
     'hero_title_accent' => 'Decoded by AI',
-    'hero_description' => 'Calculate your birth chart instantly with precise planetary positions, house placements, and aspects. Get a personalized interpretation from our AI astrologer.',
+    'hero_description' => 'Calculate your free birth chart instantly with precise planetary positions, house placements, and aspects. Get a personalized natal chart interpretation from our AI astrologer.',
     'hero_feature_precision' => 'Swiss Ephemeris — arc-second precision',
     'hero_feature_speed' => 'Ready in 2 minutes',
 
     // Preview section
-    'preview_title' => 'What Your Natal Chart Looks Like',
+    'preview_title' => 'What Your Birth Chart Looks Like',
     'preview_subtitle' => "Here's an example of what you'll receive",
     'preview_planets' => '10 planets in zodiac signs',
     'preview_houses' => '12 astrological houses',
@@ -60,8 +60,8 @@ return [
     'zodiac_pisces_traits' => 'Empathy, creativity, imagination',
 
     // Features section
-    'features_badge' => 'Natal Chart Interpretation',
-    'features_title' => "What's Included in Your Chart Reading",
+    'features_badge' => 'Birth Chart Interpretation',
+    'features_title' => "What's Included in Your Birth Chart Reading",
     'feature_planets_title' => 'Planet Positions',
     'feature_planets_desc' => '10 planets in zodiac signs with exact degrees and meaning',
     'feature_houses_title' => '12 Houses',
@@ -72,7 +72,7 @@ return [
     'feature_ai_desc' => 'Ask about love, career, health — get personalized answers',
 
     // Elements section
-    'elements_badge' => 'Elements in the Natal Chart',
+    'elements_badge' => 'Elements in Your Birth Chart',
     'elements_title' => 'Four Elements of the Zodiac',
     'elements_subtitle' => 'The element of your zodiac sign determines your temperament and how you interact with the world',
     'element_fire' => 'Fire',
@@ -85,25 +85,25 @@ return [
     'element_water_desc' => 'Emotions, intuition, and depth of feeling. Water signs understand the hidden.',
 
     // How it works
-    'how_title' => 'How to Get Your Free Natal Chart',
+    'how_title' => 'How to Get Your Free Birth Chart',
     'how_step1' => 'Enter your birth date and place',
     'how_step2' => 'Get a link via email',
     'how_step3' => 'Explore your chart & chat with AI',
 
     // CTA section
-    'cta_title' => 'Calculate Your Natal Chart Online',
-    'cta_subtitle' => 'Free with detailed AI interpretation',
+    'cta_title' => 'Calculate Your Birth Chart Online Free',
+    'cta_subtitle' => 'Free birth chart calculator with detailed AI interpretation',
     'cta_button' => 'Get Your Free Birth Chart',
 
     // SEO content section
-    'seo_what_title' => 'What Is a Natal Chart?',
-    'seo_what_text' => 'A <strong>natal chart</strong> (birth chart, horoscope) is an astrological map showing the positions of the Sun, Moon, and planets at the moment of your birth. Each planet sits in a specific zodiac sign and house, shaping its influence on your life.',
-    'seo_how_title' => 'How to Calculate a Natal Chart?',
+    'seo_what_title' => 'What Is a Birth Chart (Natal Chart)?',
+    'seo_what_text' => 'A <strong>birth chart</strong>, also known as a <strong>natal chart</strong> or horoscope chart, is an astrological map showing the positions of the Sun, Moon, and planets at the moment of your birth. Each planet sits in a specific zodiac sign and house, shaping its influence on your life.',
+    'seo_how_title' => 'How to Calculate a Birth Chart?',
     'seo_how_text1' => 'Three things are needed: your <strong>date of birth</strong>, <strong>exact time of birth</strong>, and <strong>place of birth</strong>.',
     'seo_how_text2' => 'Our service uses the Swiss Ephemeris — the most precise astronomical library for calculating planetary positions.',
-    'seo_compat_title' => 'Natal Chart Compatibility',
-    'seo_compat_text' => 'Comparing two natal charts (synastry) reveals compatibility. We analyze aspects between partners\' planets, Venus and Mars placements, Moon compatibility, and more.',
-    'seo_included_title' => "What's Included in a Chart Reading?",
+    'seo_compat_title' => 'Birth Chart Compatibility',
+    'seo_compat_text' => 'Comparing two birth charts (synastry) reveals compatibility. We analyze aspects between partners\' planets, Venus and Mars placements, Moon compatibility, and more.',
+    'seo_included_title' => "What's Included in a Birth Chart Reading?",
     'seo_item_planets' => 'Planets',
     'seo_item_planets_desc' => 'Sun, Moon, Mercury, Venus, Mars, and more',
     'seo_item_houses' => 'Houses',

@@ -2,10 +2,10 @@
 
 return [
     // Hero section
-    'hero_badge' => 'Mapa Gratuito com Interpretação por IA',
+    'hero_badge' => 'Mapa Astral Gratuito com Interpretação por IA',
     'hero_title' => 'Seu Mapa Astral',
     'hero_title_accent' => 'Decodificado por IA',
-    'hero_description' => 'Calcule seu mapa astral instantaneamente com posições planetárias precisas, casas astrológicas e aspectos. Receba uma interpretação personalizada do nosso astrólogo de IA.',
+    'hero_description' => 'Calcule seu mapa astral gratuito instantaneamente com posições planetárias precisas, casas astrológicas e aspectos. Receba sua carta astral grátis com interpretação personalizada do nosso astrólogo de IA.',
     'hero_feature_precision' => 'Swiss Ephemeris — precisão em segundos de arco',
     'hero_feature_speed' => 'Pronto em 2 minutos',
 
@@ -85,19 +85,19 @@ return [
     'element_water_desc' => 'Emoções, intuição e profundidade de sentimentos. Os signos de água compreendem o oculto.',
 
     // How it works
-    'how_title' => 'Como Obter Seu Mapa Astral Gratuito',
+    'how_title' => 'Como Fazer Seu Mapa Astral Gratuito',
     'how_step1' => 'Insira sua data e local de nascimento',
     'how_step2' => 'Receba um link por e-mail',
     'how_step3' => 'Explore seu mapa e converse com a IA',
 
     // CTA section
     'cta_title' => 'Calcule Seu Mapa Astral Online',
-    'cta_subtitle' => 'Gratuito com interpretação detalhada por IA',
+    'cta_subtitle' => 'Mapa astral gratuito com interpretação detalhada por IA',
     'cta_button' => 'Obter Meu Mapa Astral Gratuito',
 
     // SEO content section
     'seo_what_title' => 'O Que É um Mapa Astral?',
-    'seo_what_text' => 'Um <strong>mapa astral</strong> (carta natal, horóscopo) é um mapa astrológico que mostra as posições do Sol, da Lua e dos planetas no momento do seu nascimento. Cada planeta está em um signo do zodíaco e uma casa específica, moldando sua influência na sua vida.',
+    'seo_what_text' => 'Um <strong>mapa astral</strong>, também chamado de <strong>carta astral</strong> ou carta natal, é um mapa astrológico que mostra as posições do Sol, da Lua e dos planetas no momento do seu nascimento. Cada planeta está em um signo do zodíaco e uma casa específica, moldando sua influência na sua vida.',
     'seo_how_title' => 'Como Calcular um Mapa Astral?',
     'seo_how_text1' => 'São necessárias três informações: sua <strong>data de nascimento</strong>, <strong>hora exata de nascimento</strong> e <strong>local de nascimento</strong>.',
     'seo_how_text2' => 'Nosso serviço utiliza o Swiss Ephemeris — a biblioteca astronômica mais precisa para calcular posições planetárias.',
