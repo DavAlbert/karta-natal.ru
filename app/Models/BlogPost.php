@@ -80,7 +80,7 @@ class BlogPost extends Model
             '/\[size=(.*?)\](.*?)\[\/size\]/s' => '<span style="font-size:$1">$2</span>',
             '/\[center\](.*?)\[\/center\]/s' => '<div class="text-center">$1</div>',
             '/\[hr\]/s' => '<hr class="border-gray-700 my-6">',
-            '/\[cta\](.*?)\[\/cta\]/s' => '<div class="my-8 p-6 rounded-xl bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-500/30 text-center"><p class="text-lg text-gray-200 mb-4">$1</p><a href="/#calcForm" class="inline-block px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-indigo-500/25">Calculate Your Natal Chart Free</a></div>',
+            '/\[cta\](.*?)\[\/cta\]/s' => '<div class="my-8 p-6 rounded-xl bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-500/30 text-center"><p class="text-lg text-gray-200 mb-4">$1</p><a href="' . ($this->locale && $this->locale !== 'en' ? '/' . $this->locale : '') . '/#calcForm" class="inline-block px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-indigo-500/25">' . __('blog.cta_button', [], $this->locale ?? 'en') . '</a></div>',
         ];
 
         foreach ($bbcode as $pattern => $replacement) {
